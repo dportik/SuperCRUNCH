@@ -72,6 +72,11 @@ def get_args():
     return parser.parse_args()        
 
 def parse_taxa(f):
+    '''
+    Retrieve subspecies (trinomial) names ONLY from user supplied taxon 
+    names file (f). Will return separate lists of subspecies, with all 
+    names in uppercase.
+    '''
     print "\nParsing taxon information from {}.".format(f)
     with open(f, 'r') as fh_f:
         subspecies_set = set([line.upper().strip().replace(" ","_") for line in fh_f if len(line.split()) == int(3)])
@@ -80,6 +85,12 @@ def parse_taxa(f):
     return subspecies
 
 def get_taxon(line):
+    '''
+    Retrieve the taxon name from '>' line (line) in a fasta file.
+    Will fetch the species (binomial) and subspecies (trinomial)
+    names and return both. Input line was converted to uppercase,
+    so names are also in uppercase.
+    '''
     parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.upper().split() if line.split() >= int(3)][1:3]
     taxon_sp = "_".join(parts1)
     parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.upper().split() if line.split() >= int(4)][1:4]
@@ -89,7 +100,9 @@ def get_taxon(line):
 def get_taxa_fasta(f, subspecies):
     '''
     Retrieve the names following the > in all lines
-    from a fasta file, return as a list.
+    from a fasta file (f) based on subspecies option
+    (subspecies = True or False), create a set,
+    then return as a list.
     '''
     taxa_set = set()
     with open(f, 'r') as fh:
@@ -110,8 +123,10 @@ def get_taxa_fasta(f, subspecies):
     
 def collect_taxa(f_list, subspecies):
     '''
-    Collect taxon names from all alignment files
-    and return a sorted list of all unique names.
+    Collect taxon names from all alignment files (f_list)
+    based on subspecies option (subspecies = True or False),
+    create a set of name lists from each file, and return 
+    a sorted list of all unique names from the set.
     '''
     taxon_set = set()
     for f in f_list:
@@ -122,9 +137,10 @@ def collect_taxa(f_list, subspecies):
 
 def f_taxon_dict(f, subspecies):
     '''
-    Function to convert fasta file into
+    Function to convert fasta file (f) into
     dictionary structure with taxon as key
-    and accession number as value.
+    and accession number as value, based on
+    subspecies option (subspecies = True or False).
     '''
     f_dict = {}
     with open(f, 'r') as fh:
@@ -145,6 +161,16 @@ def f_taxon_dict(f, subspecies):
     return f_dict
 
 def taxa_acc_dict(dict_list, taxa):
+    '''
+    Create a dictionary where keys are taxa from
+    taxa list (taxa) and values are sequences from the
+    alignments (or are supplied as missing data values). 
+    All fasta files were previously converted to dictionaries 
+    with taxa as keys and seqs as values, then put into 
+    a larger list (dict_list) which is in alphabetical
+    order by alignment file name (that way we know which
+    alignment a seq is coming from across the list).
+    '''
     writing_dict = {}
     for taxon in taxa:
         writing_dict[taxon] = ""
@@ -156,6 +182,12 @@ def taxa_acc_dict(dict_list, taxa):
     return writing_dict
 
 def write_acc_table(taxa, writing_dict, f_names):
+    '''
+    Writes an accession table for all entries of the taxon list (taxa).
+    Uses the dictionary structure (writing_dict) in which keys are taxa
+    and values are the previously concatenated sequences. Labels columns
+    appropriately with alignment file names (f_names).
+    '''
     with open("GenBank_Accession_Table.txt", 'a') as fh_out:
         fh_out.write('Taxon\t')
         for f in f_names:

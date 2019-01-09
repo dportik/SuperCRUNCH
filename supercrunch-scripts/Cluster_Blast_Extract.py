@@ -218,6 +218,9 @@ def get_args():
     return parser.parse_args()
 
 def delimit(iterable,splitstring):
+    '''
+    Function to split cd-hit-est cluster files in a sensible way.
+    '''
     return [list(g) for k,g in itertools.groupby(iterable,lambda x:x in splitstring) if not k]
 
 def make_nested_dir(in_dir, string):
@@ -246,6 +249,10 @@ def get_seq_dict(search_dir, end_dir, string):
     return record_dict
     
 def Cluster(fasta, out_dir):
+    '''
+    System call structure for cd-hit-est. Moves
+    output to directory 'out_dir'.
+    '''
     names = fasta.split('.')
     call_string = "cd-hit-est -i {0}.fasta -o {0}_Out -c 0.8 -n 4 -M 16000".format(names[0])
     proc = sp.call(call_string, shell=True)
@@ -315,6 +322,13 @@ def Parse_Clusters(cluster_dir, cluster_file, out_dir, main_dir):
     shutil.move(outfile, out_dir)
                 
 def Identify_Clusters(in_dir, main_dir):
+    '''
+    Find the total number of clusters and 
+    number of records within each cluster
+    for all loci included. Returns a list 
+    of lists, where sublists contain:
+    [cluster file name, record count]
+    '''
     os.chdir(in_dir)
     gene_set = set()
     for f in os.listdir('.'):
@@ -339,11 +353,18 @@ def Identify_Clusters(in_dir, main_dir):
     return cluster_info
 
 def make_db(blast_db):
+    '''
+    Function to make a blast database from file 'blast_db'.
+    '''
     mdb_str =  "makeblastdb -in {} -dbtype nucl".format(blast_db)
     print '\n\n', mdb_str
     proc = sp.call(mdb_str, shell=True)
 
 def blastn_to_db(task, blast_db, emp_fasta, outname, max_hits):
+    '''
+    Function blast a fasta file (emp_fast) to a database (blast_db) using a
+    particular blast algorithm (task) with or without a maximum number of hits (max_hits).
+    '''    
     if max_hits is None:
     	blast_str = "blastn -task {0} -db {1} -query {2} -outfmt 6 > {3}".format(task, blast_db, emp_fasta, outname)
     	print blast_str
@@ -468,7 +489,7 @@ def one_coord_nospan(merged_coords):
 
 def get_accs_and_contents(f):
     '''
-    Extract information from blast output file.
+    Extract information from blast output file (f).
     '''
     print "Parsing contents in {}...\n".format(f)
     accn_set = set()
@@ -485,7 +506,7 @@ def get_accs_and_contents(f):
 
 def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
     '''
-    Get information from blast output file.
+    Get information from blast output file (outname).
     '''
     print "\n---------------------------------------------------------------------------\n"
     #extract file lines and sorted list of accession numbers from blast output file
@@ -615,6 +636,9 @@ def pull_records(emp_fasta, parsing_list):
 
     
 def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_dir, task, max_hits, merge_strategy):
+    '''
+    Function to run blast and extraction for each locus after clusters have been created.
+    '''
     #move in to parsing directory
     os.chdir(in_dir)
     #iterate over gene sublists

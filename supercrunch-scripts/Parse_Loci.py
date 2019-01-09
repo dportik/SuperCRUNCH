@@ -170,6 +170,14 @@ def parse_loci_terms(f):
     return loci_info
 
 def parse_taxa(f, no_subspecies):
+    '''
+    Retrieve taxon names from user supplied taxon names file (f).
+    Will load species and subspecies names, and account for 
+    species names that are only represented in subspecies labels.
+    Summarizes number of each depending on whether subspecies
+    are included or excluded (no_subspecies), and regardless will return 
+    separate lists for species and subspecies, with all names in uppercase.
+    '''
     print "\nParsing taxon information from {}.".format(f)
     with open(f, 'r') as fh_f:
         species_set = set([line.upper().strip() for line in fh_f if len(line.split()) == int(2)])
@@ -190,6 +198,7 @@ def parse_taxa(f, no_subspecies):
 
 def lines_fasta_v1(f):
     '''
+    Simply count number of lines in a file (f).
     Turned out to be a faster solution.
     Took 6m 16s for a 16.2 GB file with 1,619,723 lines.
     '''
@@ -205,6 +214,7 @@ def lines_fasta_v1(f):
 
 def lines_fasta_v2(f):
     '''
+    Simply count number of lines in a file (f).
     Turned out to be a slower solution,
     and is no longer used in the workflow.
     Took 9m 20s for a 16.2 GB file with 1,619,723 lines.
@@ -223,7 +233,8 @@ def lines_fasta_v2(f):
 
 def index_fasta(f):
     '''
-    Use SeqIO to index the fasta file, which may be too big to efficiently parse into a list.
+    Use SeqIO to index the fasta file (f), which may be too big 
+    to parse into a list. Returns a dictionary-like structure.
     '''
     tb = datetime.now()
     print "\nIndexing fasta file {}, this could take some time...".format(f)
@@ -235,6 +246,12 @@ def index_fasta(f):
     return record_index
     
 def iter_loci(loci_info, f, record_index, out_dir, high, species, subspecies, no_subspecies):
+    '''
+    Iterate over locus list (loci_info) to search fasta file (f) for 
+    matches to taxon names and loci using function 'search_fasta'. Take
+    collected information and write fasta file for locus using function
+    'write_fasta'.
+    '''
     os.chdir(out_dir)
     with open("Loci_Record_Counts.log",'a') as fh_log:
         fh_log.write("Locus_Name\tRecords_Written\n")
@@ -261,18 +278,36 @@ def get_accession(line):
     return acc
 
 def taxon_match_sp(taxon_sp,species):
+    '''
+    Simple function to check if the species (binomial) name
+    is present in the species (binomial) list obtained from
+    the taxon file. Both will be supplied as uppercase. 
+    Returns True or False.
+    '''
     match = False
     if taxon_sp in species:
         match = True
     return match
 
 def taxon_match_ssp(taxon_ssp,subspecies):
+    '''
+    Simple function to check if the subspecies (trinomial) name
+    is present in the subspecies (trinomial) list obtained from
+    the taxon file. Both will be supplied as uppercase.
+    Returns True or False.
+    '''
     match = False
     if taxon_ssp in subspecies:
         match = True
     return match
 
 def get_taxon(line):
+    '''
+    Retrieve the taxon name from '>' line in a fasta file.
+    Will fetch the species (binomial) and subspecies (trinomial)
+    names and return both. Input line was converted to uppercase,
+    so names are also in uppercase.
+    '''
     parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(3)][1:3]
     taxon_sp = " ".join(parts1)
     parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(4)][1:4]
@@ -281,8 +316,9 @@ def get_taxon(line):
 
 def taxon_match_on_line(line, species, subspecies, no_subspecies):
     '''
-    Check if taxon name in fasta description line is in taxa list,
-    depending on whether subspecies are desired or not.
+    Check if taxon name in fasta description line (line) is in taxon lists
+    (species, subspecies), depending on whether subspecies are desired 
+    or not (no_subspecies = True or False).
     '''
     match = False
     taxon_sp, taxon_ssp = get_taxon(line)
@@ -304,7 +340,7 @@ def taxon_match_on_line(line, species, subspecies, no_subspecies):
             else:
                 match = False
                 #print "{} NOT found in species and {} NOT found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize())
-    #Second set of statements are when subspecies are desired
+    #Second set of statements are when subspecies are NOT desired
     if no_subspecies is True:
         if taxon_match_sp(taxon_sp,species) is True:
             match = True
@@ -316,6 +352,7 @@ def taxon_match_on_line(line, species, subspecies, no_subspecies):
 
 def locus_searchv1(line,terms1):
     '''
+    ***Works but is VERY inefficient. No longer incorporated in the main workflow.
     Search for gene abbreviations within parentheses in the
     description line of a fasta file.
 
@@ -325,8 +362,6 @@ def locus_searchv1(line,terms1):
     The 'CYTB' term from the parentheses is matched against all abbreviations
     provided in column two of the loci information file. All parentheses are
     detected in this way and searched for.
-
-    ***Works but is very inefficient. No longer incorporated in the main workflow.
     '''
     match = False
     if (len(line.split("(")) > int(1)):
@@ -342,10 +377,9 @@ def locus_searchv1(line,terms1):
 
 def locus_searchv2(line,terms1,terms2):
     '''
-    Search for gene descriptions and abbreviations in the
-    description line of a fasta file. Works much faster and
-    also finds all records that the above parentheses search 
-    function will find.
+    Search for gene descriptions (terms1; list) and abbreviations (terms2; list) 
+    in the description line (line) of a fasta file. Works much faster and
+    also finds all records that the above parentheses search function will find.
     '''
     match = False
     #split line by whitespace and remove following characters -> , ; ( )
@@ -360,11 +394,10 @@ def locus_searchv2(line,terms1,terms2):
 
 def find_interval(count):
     '''
-    Find where the number of lines in the empirical fasta
-    file fits in a distribution. Will find when the line
-    count is exceeded by a value in the distribution and
-    returns that value. Needed for the line progress code
-    in the search_fasta function.
+    Find where a number fits in a distribution. Will find 
+    when the number is exceeded by a value in the distribution
+    and returns that value. Needed for tracking progress on
+    big lists (file lines, accession numbers, etc).
     '''
     vala = np.array([100,1000,10000])
     valb = np.arange(100000,1000000000000,100000)
@@ -377,12 +410,13 @@ def find_interval(count):
 
 def search_fasta(f, terms1, terms2, high, species, subspecies, no_subspecies):
     '''
-    Iterate over fasta file lines, finds record lines (with >),
-    checks if locus information is found in description line. 
-    If so, then checks if taxon name is in database. If found, 
-    will add accession number to the set. Returns set of 
-    accession numbers, which is used for writing a new fasta 
-    file for the locus in function 'write_fasta' below.
+    Iterate over lines in fasta file (f), finds record lines (with >),
+    checks if locus information (terms1, terms2; both lists) are found in description 
+    line. If so, then checks if taxon name is in taxon names lists (species,
+    subspecies), depending on subspecies option (no_subspecies = True or False). 
+    If everything matches, will add accession number to the set. Returns set 
+    of accession numbers, which is used for writing a new fasta file for the locus in 
+    function 'write_fasta' below.
     '''
     search_set = set()
     with open(f, 'r') as fh_fasta:
@@ -413,8 +447,8 @@ def search_fasta(f, terms1, terms2, high, species, subspecies, no_subspecies):
 
 def write_fasta(search_set,prefix,record_index):
     '''
-    Write fasta file using BioPython based on list of
-    accession numbers provided.
+    Write fasta file using BioPython based on set of accession numbers 
+    provided (search_set) and dictionary from indexed fasta file (record_index).
     '''
     out_fasta = "{}.fasta".format(prefix)
     acc_list = sorted(search_set)

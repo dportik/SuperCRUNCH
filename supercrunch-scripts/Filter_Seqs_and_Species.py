@@ -174,6 +174,14 @@ def make_nested_dir(in_dir, string):
     return dirname
 
 def parse_taxa(f, no_subspecies):
+    '''
+    Retrieve taxon names from user supplied taxon names file (f).
+    Will load species and subspecies names, and account for 
+    species names that are only represented in subspecies labels.
+    Summarizes number of each depending on whether subspecies
+    are included or excluded (no_subspecies), and regardless will return separate 
+    lists for species and subspecies, with all names in uppercase.
+    '''
     print "\nParsing taxon information from {}.".format(f)
     with open(f, 'r') as fh_f:
         species_set = set([line.upper().strip() for line in fh_f if len(line.split()) == int(2)])
@@ -193,18 +201,36 @@ def parse_taxa(f, no_subspecies):
     return species, subspecies
 
 def taxon_match_sp(taxon_sp,species):
+    '''
+    Simple function to check if the species (binomial) name
+    is present in the species (binomial) list obtained from
+    the taxon file. Both will be supplied as uppercase. 
+    Returns True or False.
+    '''
     match = False
     if taxon_sp in species:
         match = True
     return match
 
 def taxon_match_ssp(taxon_ssp,subspecies):
+    '''
+    Simple function to check if the subspecies (trinomial) name
+    is present in the subspecies (trinomial) list obtained from
+    the taxon file. Both will be supplied as uppercase.
+    Returns True or False.
+    '''
     match = False
     if taxon_ssp in subspecies:
         match = True
     return match
 
 def get_taxon(line):
+    '''
+    Retrieve the taxon name from '>' line in a fasta file.
+    Will fetch the species (binomial) and subspecies (trinomial)
+    names and return both. Input line was converted to uppercase,
+    so names are also in uppercase.
+    '''
     parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(3)][1:3]
     taxon_sp = " ".join(parts1)
     parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(4)][1:4]
@@ -212,6 +238,13 @@ def get_taxon(line):
     return taxon_sp, taxon_ssp
 
 def find_species(f, species, subspecies, no_subspecies):
+    '''
+    For fasta file (f), iterate through lines, find description
+    lines and test if the species and/or subspecies name on the
+    line is present in the taxon lists from the taxon file (species,
+    subspecies) depending on whether subspecies are desired or not 
+    (no_subspecies = True or False) and return set of matched names .
+    '''
     tax_match = set()
     with open(f, 'r') as fh_f:
         for line in fh_f:
@@ -241,11 +274,21 @@ def find_species(f, species, subspecies, no_subspecies):
     return species_list
 
 def translation_val(tcode):
+    '''
+    Convert shortcut translation table terms into the true NCBI
+    nomenclature using a dictionary structure. Term needed for 
+    translation with biopython.
+    '''
     tdict = {"standard":"Standard", "vertmtdna":"Vertebrate Mitochondrial", "invertmtdna":"Invertebrate Mitochondrial", "yeastmtdna":"Yeast Mitochondrial", "plastid":"11", "1":1, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "10":10, "11":11, "12":12, "13":13, "14":14, "15":15, "16":16, "17":17, "18":18, "19":19, "20":20, "21":21, "22":22, "23":23, "24":24, "25":25, "26":26, "27":27, "28":28, "29":29, "30":30, "31":31}
     tval = tdict[tcode]
     return tval
 
 def check_translation(newseq, tcode):
+    '''
+    Function to check translation of a sequence (newseq)
+    based on a specified translation table (tcode). Ultimately
+    returns True or False if sequence was successfully translated.
+    '''
     #adjust starting sequence length to be divisible by three for translation check
     n = Seq("N")
     if len(newseq) % 3 == 0:
@@ -316,6 +359,9 @@ def check_translation(newseq, tcode):
     return match
 
 def species_parser_coding(f, tcode, out_dir, bp_min, randomize, species, subspecies, no_subspecies, allseqs):
+    '''
+    Filter sequences in fasta file (f) by taxon, translation, and minimum length.
+    '''
     print "\n\n--------------------------------------------------------------------------------------"
     print "Processing {}".format(f)
     fasta_dict = SeqIO.index(f, "fasta")
@@ -480,6 +526,9 @@ def species_parser_coding(f, tcode, out_dir, bp_min, randomize, species, subspec
     shutil.move(out_list, out_dir)
 
 def species_parser_noncoding(f, out_dir, bp_min, randomize, species, subspecies, no_subspecies, allseqs):
+    '''
+    Filter sequences in fasta file (f) by taxon and minimum length.
+    '''
     print "\n\n--------------------------------------------------------------------------------------"
     print "Processing {}".format(f)
     fasta_dict = SeqIO.index(f, "fasta")

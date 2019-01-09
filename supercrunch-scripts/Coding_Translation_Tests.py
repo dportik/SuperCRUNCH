@@ -119,19 +119,25 @@ def get_args():
     return parser.parse_args()
 
 def translation_val(tcode):
+    '''
+    Convert shortcut translation table terms into the true NCBI
+    nomenclature using a dictionary structure. Term needed for 
+    translation with biopython.
+    '''
     tdict = {"standard":"Standard", "vertmtdna":"Vertebrate Mitochondrial", "invertmtdna":"Invertebrate Mitochondrial", "yeastmtdna":"Yeast Mitochondrial", "plastid":"11", "1":1, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "10":10, "11":11, "12":12, "13":13, "14":14, "15":15, "16":16, "17":17, "18":18, "19":19, "20":20, "21":21, "22":22, "23":23, "24":24, "25":25, "26":26, "27":27, "28":28, "29":29, "30":30, "31":31}
     tval = tdict[tcode]
     return tval
 
 def directory_orf_adjust(in_dir, tcode, rc):
     '''
-    Iterates over files in a directory to locate those with
-    extension '.fasta' and executes the orf_adjust function
-    for each file found. Produces a summary file called
+    Iterates over files in a directory (in_dir) to locate those with
+    extension '.fasta'or '.fa' and executes the orf_adjust function
+    for each file based on translation table (tcode) and reverse
+    complement option (rc). Produces a summary file called
     Sequence_Filtered.txt that contains the fasta name
     and the number of sequences that passed and failed
     translation. Moves all output files to the output
-    directory: /Output_Translation_Fasta_Files
+    directory: /Output_Translation_Fasta_Files.
     '''
     print "\n\n--------------------------------------------------------------------------------------"
     print "\nBeginning translation tests and length adjustments.\n"
@@ -164,15 +170,15 @@ def directory_orf_adjust(in_dir, tcode, rc):
 
 def orf_adjust(fasta_file, tcode, rc):
     '''
-    This function processes an unaligned fasta file. If necessary, it will adjust sequences with 'N's
-    so they are divisible by 3 to complete the final codon position. Sequences are translated in all
-    forward frames to check for the presence of stop codons. If stop codons are detected
-    in all frames, it will next check to see if there is only one stop codon and it is present in the
-    final two codon positions of the sequence. If the --rc flag is included the translation will also
-    be performed for the reverse complement, however if your sequences are all correctly oriented this
-    is not recommended. The final sequence written such that in the final sequence the
-    first base represents the first codon position (based on the detected reading frame) and the
-    sequence is divisible by three to ensure complete codons.
+    This function processes an unaligned fasta file (fasta_file). If necessary, it will adjust sequences with 'N's
+    so they are divisible by 3 to complete the final codon position. Sequences are translated using 
+    the specified translation table (tcode) in all forward frames to check for the presence of stop codons. 
+    If stop codons are detected in all frames, it will next check to see if there is only one stop codon 
+    and it is present in the final two codon positions of the sequence. If the --rc flag is included the 
+    translation will also be performed for the reverse complement, however if your sequences are all 
+    correctly oriented this is not recommended. The final sequence written such that in the final 
+    sequence the first base represents the first codon position (based on the detected reading frame) 
+    and the sequence is divisible by three to ensure complete codons.
 
     Sequences that have more than one stop codon in all frames fail the translation test. Since no
     reading frame is better than any other, the sequence will be written as is (adjusted for length

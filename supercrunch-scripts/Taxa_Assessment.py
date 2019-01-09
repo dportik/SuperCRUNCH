@@ -114,6 +114,10 @@ def get_args():
     return parser.parse_args()
 
 def index_fasta(f):
+    '''
+    Use SeqIO index function to load fasta file, which
+    is the best option for massive files.
+    '''
     tb = datetime.now()
     print "\nIndexing fasta file, this could take some time..."
     record_index = SeqIO.index(f, "fasta")
@@ -124,6 +128,14 @@ def index_fasta(f):
     return record_index
 
 def parse_taxa(f, no_subspecies):
+    '''
+    Retrieve taxon names from user supplied taxon names file (f).
+    Will load species and subspecies names, and account for 
+    species names that are only represented in subspecies labels.
+    Summarizes number of each depending on whether subspecies
+    are included or excluded, and regardless will return separate 
+    lists for species and subspecies, with all names in uppercase.
+    '''
     print "\nParsing taxon information from {}.".format(f)
     with open(f, 'r') as fh_f:
         species_set = set([line.upper().strip() for line in fh_f if len(line.split()) == int(2)])
@@ -143,18 +155,36 @@ def parse_taxa(f, no_subspecies):
     return species, subspecies
 
 def taxon_match_sp(taxon_sp,species):
+    '''
+    Simple function to check if the species (binomial) name
+    is present in the species (binomial) list obtained from
+    the taxon file. Both will be supplied as uppercase. 
+    Returns True or False.
+    '''
     match = False
     if taxon_sp in species:
         match = True
     return match
 
 def taxon_match_ssp(taxon_ssp,subspecies):
+    '''
+    Simple function to check if the subspecies (trinomial) name
+    is present in the subspecies (trinomial) list obtained from
+    the taxon file. Both will be supplied as uppercase.
+    Returns True or False.
+    '''
     match = False
     if taxon_ssp in subspecies:
         match = True
     return match
 
 def get_taxon(line):
+    '''
+    Retrieve the taxon name from '>' line in a fasta file.
+    Will fetch the species (binomial) and subspecies (trinomial)
+    names and return both. Input line was converted to uppercase,
+    so names are also in uppercase.
+    '''
     parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(3)][1:3]
     taxon_sp = " ".join(parts1)
     parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(4)][1:4]
@@ -162,10 +192,26 @@ def get_taxon(line):
     return taxon_sp, taxon_ssp
 
 def get_accession(line):
+    '''
+    Retrieve the accession number from '>' line in a fasta file.
+    '''
     acc = [l.strip('>') for l in line.split()][0]
     return acc
 
 def search_fasta(f, species, subspecies, no_subspecies):
+    '''
+    Find taxa in the fasta file based on the taxon file supplied,
+    and whether subspecies are desired. Reads line by line through
+    fasta, and when a line starting with '>' is found it obtains
+    the accession number and attempts to construct a species and 
+    subspecies name. If these names match one in the species or 
+    subspecies lists created from the taxon file, then the name
+    is saved as matched and the accession is added to a matched 
+    list. Conversely, if the names do not match the name
+    is saved as unmatched and the accession is added to an 
+    unmatched accession list. The matched and unmatched taxon
+    name lists and accession lists are returned.
+    '''
     acc_match = set()
     acc_unmatch = set()
     tax_match = set()
@@ -224,6 +270,11 @@ def search_fasta(f, species, subspecies, no_subspecies):
     return acc_match, acc_unmatch, tax_match, tax_unmatch
                         
 def write_log(in_set,fname):
+    '''
+    Function to write either a list of taxon names or
+    list of accession numbers (in_set) to an appropriately
+    named file (fname).
+    '''
     print "Writing results to {}\n".format(fname)
     slist = sorted(in_set)
     with open(fname, 'a') as fh_out:
@@ -231,6 +282,11 @@ def write_log(in_set,fname):
             fh_out.write("{}\n".format(i))
 
 def read_accs(f):
+    '''
+    Function to convert file containing 
+    only pure accession numbers to a set.
+    Returns the set.
+    '''
     new_set = set()
     with open(f, 'r') as fh_in:
         for line in fh_in:
@@ -239,6 +295,13 @@ def read_accs(f):
     return new_set
         
 def write_fasta(in_set,prefix,record_index):
+    '''
+    Will write a fasta file (named by 'prefix') with
+    all the accession numbers containing in 'in_set'
+    using an indexed dictionary structure (record_index)
+    from a larger fasta file containing all these accession 
+    numbers and more. Tracks progress.
+    '''
     fasta = "{}.fasta".format(prefix)
     print "Writing sequence records to {}".format(fasta)
     tb = datetime.now()
@@ -261,6 +324,12 @@ def write_fasta(in_set,prefix,record_index):
     print "\tTotal time to write fasta file: {0} (H:M:S)\n\n".format(te)
     
 def find_upper(count):
+    '''
+    Find where a number fits in a distribution. Will find 
+    when the number is exceeded by a value in the distribution
+    and returns that value. Needed for tracking progress on
+    big lists (file lines, accession numbers, etc).
+    '''
     vala = np.array([100,1000,10000])
     valb = np.arange(100000,1000000000,100000)
     vals = np.append(vala,valb)
@@ -274,21 +343,21 @@ def main():
     args = get_args()
     tb = datetime.now()
     species, subspecies = parse_taxa(args.taxa, args.no_subspecies)
-    
+    #get list of accession numbers and names for records that match and do not match
+    #a name in the user-supplied taxon file (converted to lists above)
     acc_match, acc_unmatch, tax_match, tax_unmatch = search_fasta(args.input, species, subspecies, args.no_subspecies)
-    
+    #prepare to write log files
     results = [[tax_match,"Matched_Records_Taxon_Names.log"],
                [tax_unmatch,"Unmatched_Records_Taxon_Names.log"],
                [acc_match,"Matched_Records_Accession_Numbers.log"],
                [acc_unmatch,"Unmatched_Records_Accession_Numbers.log"]]
-    
     os.chdir(args.out_dir)
     for r in results:
         write_log(r[0],r[1])
-
+    #read accession numbers from log files
     filtered_acc_match = read_accs(results[2][1])
     filtered_acc_unmatch = read_accs(results[3][1])
-    
+    #write new fasta files with matched or unmatched names using above accession lists
     record_index = index_fasta(args.input)    
     write_fasta(filtered_acc_unmatch,"Unmatched_Taxa",record_index)
     write_fasta(filtered_acc_match,"Matched_Taxa",record_index)

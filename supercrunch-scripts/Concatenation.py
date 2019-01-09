@@ -91,7 +91,7 @@ def get_args():
 def get_taxa_fasta(f):
     '''
     Retrieve the names following the > in all lines
-    from a fasta file, return as a list.
+    from a fasta file (f), return as a list.
     '''
     with open(f, 'r') as fh:
         taxa = [l.replace(">",'').replace("\n",'') for l in fh if l.startswith(">")]
@@ -100,7 +100,7 @@ def get_taxa_fasta(f):
 def get_taxa_phylip(f):
     '''
     Retrieve the names of each sequence
-    from a phylip file, return as a list.
+    from a phylip file (f), return as a list.
     '''
     with open(f, 'r') as fh:
         next(fh)
@@ -109,8 +109,9 @@ def get_taxa_phylip(f):
 
 def collect_taxa(f_list, in_format):
     '''
-    Collect taxon names from all alignment files
-    and return a sorted list of all unique names.
+    Collect taxon names from all alignment files (f_list)
+    in specified format (in_format) and return a sorted 
+    list of all unique names.
     '''
     taxon_set = set()
     for f in f_list:
@@ -125,8 +126,9 @@ def collect_taxa(f_list, in_format):
 
 def fasta_dict1(f):
     '''
-    Function to convert non-interleaved fasta file into
-    dictionary structure with taxon as key
+    ****Not used because fasta formatting should be irrelevant.
+    Function to convert non-interleaved fasta file (f) 
+    into dictionary structure with taxon as key
     and sequence as value.
     '''
     f_dict = {}
@@ -139,9 +141,9 @@ def fasta_dict1(f):
 
 def fasta_dict2(f):
     '''
-    Function to convert any fasta file into
-    dictionary structure with taxon as key
-    and sequence as value.
+    Function to convert any fasta file (f) into
+    dictionary structure with taxon as key and 
+    sequence as value.
     '''
     f_dict = {}
     with open(f, 'r') as fh:
@@ -156,7 +158,7 @@ def fasta_dict2(f):
         
 def phylip_dict(f):
     '''
-    Function to convert phylip file into
+    Function to convert phylip file (f) into
     dictionary structure with taxon as key
     and sequence as value.
     '''
@@ -170,9 +172,10 @@ def phylip_dict(f):
 def collect_dicts(f_list, in_format):
     '''
     Create a list of dictionaries, in which each dictionary is
-    created from a fasta or phylip file, with taxon name as the
-    key and sequence as the value. List will be in the same order
-    as the file list, which was sorted alphabetically.
+    created from a list of fasta or phylip files (f_list, in_format),
+    with taxon name as the key and sequence as the value. List will 
+    be in the same order as the file list (f_list), which was sorted 
+    alphabetically.
     '''
     if in_format == "fasta":
         dict_list = [fasta_dict2(f) for f in f_list]
@@ -183,8 +186,9 @@ def collect_dicts(f_list, in_format):
 def collect_bp_lengths(dict_list):
     '''
     Gather the alignment lengths from the alignment
-    dictionaries. Uses random.choice function which draws
-    an aribitrary key + value pair from the dictionary. 
+    dictionaries in the larger list (dict_list). Uses 
+    random.choice function which draws an aribitrary 
+    key + value pair from the dictionary. 
     List comprehension here gets the length of the 
     value resulting from each random.choice key
     returned for each dictionary, resulting in a 
@@ -205,11 +209,13 @@ def symbol_dict(symbol):
 
 def create_concat_dict(fdata, taxa, lengths, f_list, sym):
     '''
-    Iterate through taxon list and create a concatenated
-    sequence for each taxon, storing in a final dictionary.
-    If sequence doesn't exist in an alignment, generate a
-    missing data sequence based on the symbol selected by
-    the user. Counts number of sequences/loci available
+    Iterate through taxon list (taxa) and create a concatenated
+    sequence for each taxon based on alignment dictionaries
+    contained in the list (fdata). The lengths list is used to 
+    generate an appropriate length of missing data string using
+    the symbol selected (sym). The larger dictionary structure
+    has taxa as keys and concatenated sequences as their values.
+    Counts number of sequences/loci available
     for each taxon and writes to output log file. 
     '''
     concat_dict = {}
@@ -236,7 +242,8 @@ def write_partitions(f_list, lengths):
     '''
     Writes a partitions file that can be used or 
     translated to use with different phylogenetic 
-    programs. 
+    programs, based on the file name list (f_list)
+    and corresponding list of sequence lengths (lengths).
     '''
     bp_count = int(0)
     with open("Data_Partitions.txt", 'a') as fh_out:
@@ -249,8 +256,8 @@ def write_partitions(f_list, lengths):
 
 def write_concatenated(taxa, concat_dict, out_format):
     '''
-    Write output file in correct format using the 
-    concatenated sequence dictionary and the list of taxa.
+    Write output file in correct format (out_format) using the 
+    concatenated sequence dictionary (concat_dict) and the list of taxa (taxa).
     '''
     print "\tTotal alignment length = {} bp.".format(len(concat_dict[random.choice(concat_dict.keys())]))
     if out_format == "fasta":

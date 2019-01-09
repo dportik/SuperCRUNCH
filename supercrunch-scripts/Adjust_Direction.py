@@ -140,13 +140,13 @@ def directory_mafft_adjust(in_dir):
 def mafft_adjust(f):
     print "\n\nAdjusting direction of sequences for {}\n\n".format(f)
     tb = datetime.now()
-    
+    #find correct filename prefix to use
     prefix = f.split('.')[0]
-    
+    #create command line string and use
     call_string = "mafft --adjustdirectionaccurately {0} > {1}_temp.fasta".format(f, prefix)
     print call_string, '\n'
     proc = sp.call(call_string, shell=True)
-
+    #load adjusted fasta file as indexed dictionary structure
     fasta_dict = SeqIO.index("{0}_temp.fasta".format(prefix), "fasta")
     
     out_fasta = "{0}_Adjusted.fasta".format(prefix)
@@ -156,7 +156,8 @@ def mafft_adjust(f):
     
     adjusted = int(0)
     fine = int(0)
-    
+    #search for signs a sequence was adjusted, noted by the _R_ at the beginning of the seq description
+    #record adjusted or not and ungap all seqs to strip alignments
     with open(out_fasta, 'a') as fh_out:
         for record in fasta_dict:
             if fasta_dict[record].description.startswith('_R_'):

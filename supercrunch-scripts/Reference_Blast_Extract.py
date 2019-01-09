@@ -163,12 +163,19 @@ def get_args():
 #-----------------------------------------------------------------------------------------------
 
 def make_db(blast_db):
+    '''
+    Function to make a blast database from file 'blast_db'.
+    '''
     print "\n---------------------------------------------------------------------------\n"
     mdb_str =  "makeblastdb -in {} -dbtype nucl".format(blast_db)
     print '\n\n', mdb_str
     proc = sp.call(mdb_str, shell=True)
 
 def blastn_to_db(task, blast_db, emp_fasta, outname, max_hits):
+    '''
+    Function blast a fasta file (emp_fast) to a database (blast_db) using a
+    particular blast algorithm (task) with or without a maximum number of hits (max_hits).
+    '''    
     print "\n---------------------------------------------------------------------------\n"
     if max_hits is None:
     	blast_str = "blastn -task {0} -db {1} -query {2} -outfmt 6 > {3}".format(task, blast_db, emp_fasta, outname)

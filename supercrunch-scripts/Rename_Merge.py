@@ -111,6 +111,10 @@ def get_args():
     return parser.parse_args()
 
 def index_fasta(f):
+    '''
+    Use SeqIO index function to load fasta file (f), which
+    is the best option for massive files.
+    '''
     tb = datetime.now()
     print "\nIndexing fasta file {}, this could take some time...".format(f)
     record_index = SeqIO.index(f, "fasta")
@@ -121,6 +125,10 @@ def index_fasta(f):
     return record_index
 
 def parse_current_taxa(f):
+    '''
+    Retrieve original taxon names from first column in user supplied 
+    taxon renaming file (f). Returns as a list with all names in uppercase.
+    '''
     print "\nGathering list of taxon names to replace from {}.".format(f)
     taxa = []
     with open(f, 'r') as fh_f:
@@ -130,6 +138,12 @@ def parse_current_taxa(f):
     return taxa
 
 def make_taxa_dictionary(f):
+    '''
+    Retrieve original and replacement taxon names from the two 
+    columns in user supplied taxon renaming file (f). Returns 
+    a dictionary where original name is key and replacement name
+    is value.
+    '''
     taxa_dict = {}
     with open(f, 'r') as fh_f:
         for line in fh_f:
@@ -138,16 +152,33 @@ def make_taxa_dictionary(f):
     return taxa_dict
 
 def get_accession(line):
+    '''
+    Retrieve the accession number from '>' line in a fasta file.
+    '''
     acc = [l.strip('>') for l in line.split()][0]
     return acc
 
 def get_taxon(line):
+    '''
+    Retrieve the taxon name from '>' line in a fasta file.
+    Will fetch the species (binomial) name. Input line is 
+    in uppercase so returned name is also uppercase.
+    '''
     if line.split() >= int(3):
         parts = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split()][1:3]
         taxon = " ".join(parts)
     return taxon
 
-def search_fasta_and_write(f,taxa_list,taxa_dict,record_index,out_f):    
+def search_fasta_and_write(f,taxa_list,taxa_dict,record_index,out_f):
+    '''
+    Input fasta file (f) is searched using a list of names recovered from the
+    taxon renaming file (taxa_list), if name match is found then it is 
+    replaced with an updated name from the taxon renaming file using a
+    dictionary built (taxa_dict). To simplify, the original fasta file
+    was indexed as a dictionary (record_index) and the output file (out_f) is 
+    manually created from the new composite description line and the 
+    original sequence (found by the accession number). Tracks progress.
+    '''
     tb = datetime.now()
     replace_cnt = int(0)
     record_cnt = int(0)
@@ -183,6 +214,12 @@ def search_fasta_and_write(f,taxa_list,taxa_dict,record_index,out_f):
     print "Total time to write fasta file with updated names: {0} (H:M:S)\n\n".format(te)
 
 def find_upper(count):
+    '''
+    Find where a number fits in a distribution. Will find 
+    when the number is exceeded by a value in the distribution
+    and returns that value. Needed for tracking progress on
+    big lists (file lines, accession numbers, etc).
+    '''
     vala = np.array([100,1000,10000])
     valb = np.arange(100000,1000000000,100000)
     vals = np.append(vala,valb)

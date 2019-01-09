@@ -83,6 +83,10 @@ def get_args():
     return parser.parse_args()
 
 def trim_align_gt(aln_file, out_format, gt):
+    '''
+    Trim alns in correct format using gap threshold option 
+    and unless user provides value, use default of 0.05.
+    '''
     print "\n\nTrimming alignment {}:".format(aln_file)
     prefix = aln_file.split('.')[0]
     if out_format == "fasta":
@@ -95,6 +99,9 @@ def trim_align_gt(aln_file, out_format, gt):
     proc = sp.call(call_string, shell=True)
     
 def trim_align_nag(aln_file, out_format):
+    '''
+    Trim alns in correct format using noallgaps option.
+    '''
     print "\n\nTrimming alignment {}:".format(aln_file)
     prefix = aln_file.split('.')[0]
     if out_format == "fasta":
@@ -108,6 +115,11 @@ def trim_align_nag(aln_file, out_format):
 
 
 def trim_align_both(aln_file, out_format, gt):
+    '''
+    Trim alns in correct format using gap threshold option 
+    and unless user provides value, use default of 0.05. 
+    Follow with noallgaps option to be sure no gapped columns.
+    '''
     print "\n\nTrimming alignment {}:".format(aln_file)
     prefix = aln_file.split('.')[0]
     if out_format == "fasta":
