@@ -7,7 +7,7 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
                         --mem [An integer for how much memory to assign to macse (in GB), default=1] (Optional for -a macse)
                         --table [Specifies translation table for macse (standard, vmtdna), default=standard] (Optional for -a macse)
                         --pass_fail (Optional for -a macse)
-						--accurate (Optional for -a mafft/macse)
+                        --accurate (Optional for -a mafft/macse)
 						
     Align: Perform alignments for a directory of unaligned fasta files using mafft, macse, 
     muscle, or clustalo. 
