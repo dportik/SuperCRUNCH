@@ -26,7 +26,7 @@ Helpful installation instructions for these dependencies can be found on the wik
 
 Complete instructions for running **SuperCRUNCH** analyses are available on the wiki page [here](to fill in), including detailed usage for all modules, proposed workflows, and common issues.
 
-Several example analyses are available two unrelated clades:
+Several complete example analyses are available two unrelated clades:
 
 + ***Iguania*** - an infraorder of squamate reptiles
 + ***Dipsacales*** - an order of flowering plants 
