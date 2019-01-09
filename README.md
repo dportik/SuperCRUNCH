@@ -8,7 +8,18 @@
 
 ## Installation
 
-**SuperCRUNCH** consists of several Python modules that can be used as command line scripts, and therefore does not require any installation. The scripts do not require being in the same directory, and can function independently. There are some external dependencies that should be installed prior to use of **SuperCRUNCH**, and a list of these dependencies and installation instructions can be found on the wiki page [here](to fill in).
+**SuperCRUNCH** consists of several Python modules that can be used as command line scripts, and therefore does not require any installation. The scripts function independently, and do not require being used in the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
+
++ [Biopython](https://biopython.org/)
++ [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
++ [CD-HIT-EST](http://weizhongli-lab.org/cd-hit/)
++ [MAFFT](https://mafft.cbrc.jp/alignment/software/)
++ [Muscle](https://www.drive5.com/muscle/)
++ [Clustal-O](http://www.clustal.org/omega/)
++ [MACSE](https://bioweb.supagro.inra.fr/macse/)
++ [trimAl](http://trimal.cgenomics.org/)
+
+Helpful installation instructions for these dependencies can be found on the wiki page [here](to fill in).
 
 
 ## Tutorials and Example Analyses
@@ -16,8 +27,10 @@
 Complete instructions for running **SuperCRUNCH** analyses are available on the wiki page [here](to fill in), including detailed usage for all modules, proposed workflows, and common issues.
 
 Several example analyses are available two unrelated clades:
-***Iguania*** - an infraorder of squamate reptiles
-***Dipsacales*** - a order of flowering plants 
+
++ ***Iguania*** - an infraorder of squamate reptiles
++ ***Dipsacales*** - a order of flowering plants 
+
 The complete set of material for these analyses, including all command instructions and all output files, is freely available [here](https://osf.io/bpt94/) on the **SuperCRUNCH** Open Science Framework project page.
 
 ## Citation
