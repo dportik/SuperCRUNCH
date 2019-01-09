@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Cluster_Blast_Extract module
+
 Usage: python Cluster_Blast_Extract.py -i [directory containing fasta files] REQUIRED
 									-b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
                                     -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
@@ -113,19 +115,22 @@ Usage: python Cluster_Blast_Extract.py -i [directory containing fasta files] REQ
 						    		Accn	Original_Length		Retained_Length		Coordinates_Used
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython (using SeqIO module)
 Other dependencies:
 	-cd-hit-est (installed in path)
 	-blastn (installed in path)
-	-must also be able to call makeblastdb from command line
+	    -must be able to call makeblastdb from command line
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import argparse
 import os

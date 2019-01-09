@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Concatenation module
+
 Usage: python Concatenation.py  -i [full path to directory with all fasta files] (REQUIRED)
                         -f [fasta or phylip] (REQUIRED)
                         -s [dash, N, or ?] (REQUIRED)
@@ -29,14 +31,17 @@ Usage: python Concatenation.py  -i [full path to directory with all fasta files]
                                    format specified. Taxa are written in alphabetical order.
 
 -------------------------
-Written for Python 2.7
--No Dependencies Required
+For Python 2.7
+Dependencies: None
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 
 import os

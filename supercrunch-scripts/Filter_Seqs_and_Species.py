@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Filter_Seqs_and_Species module
+
 Usage: python Filter_Seqs_and_Species.py -i [directory containing both files] REQUIRED
                              -f [sequence filtering method (translate,length)] REQUIRED
                              -l [minimum number of base pairs required to pass] REQUIRED
@@ -91,15 +93,18 @@ Output files:
                                 filter from the fasta file.
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import argparse
 import os

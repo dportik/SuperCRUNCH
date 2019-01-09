@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Contamination_Filter module
+
 Usage: python Contamination_Filter.py -i [directory containing both files] REQUIRED
 										-d [name of reference fasta to make blast database] REQUIRED
 										-e [name of empirical fasta to blast to db] REQUIRED
@@ -43,16 +45,19 @@ Usage: python Contamination_Filter.py -i [directory containing both files] REQUI
 
 
 -------------------------
-Written for Python 2.7
-Python modules required:
+For Python 2.7
+Dependencies:
 	-blastn (installed in path)
 	-BioPython (using SeqIO module here)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import sys
 import os

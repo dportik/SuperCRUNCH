@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Adjust_Direction module
+
 Usage: python Adjust_Direction.py -i [directory with all fasta files] (REQUIRED)
 
     Adjust_Direction: The purpose of this script is to check sequences to ensure their proper direction
@@ -45,10 +47,13 @@ Dependencies:
     -mafft (in path)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import os
 import argparse

@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Align module
+
 Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
                         -a [mafft, macse, muscle, clustalo] (REQUIRED)
                         --mpath [Full path to a macse.jar file] (Required for -a macse)
@@ -71,7 +73,7 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
            [fasta name]_CLUSTALO_Aligned.fasta - The nucleotide alignment produced by clustalo.
     
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython
 Dependencies:
@@ -81,10 +83,13 @@ Dependencies:
     -clustalo (in path)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import argparse
 import os

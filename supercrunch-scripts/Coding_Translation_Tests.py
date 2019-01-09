@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Coding_Translation_Tests module
+
 Usage: python Coding_Translation_Tests.py -i [directory with all fasta files] (REQUIRED)
                                       --table ["standard","vertmtdna","invertmtdna","yeastmtdna","plastid","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"] (REQUIRED)
                                       --rc (Optional; also translate sequences in reverse complement)
@@ -42,15 +44,18 @@ Usage: python Coding_Translation_Tests.py -i [directory with all fasta files] (R
     sequences passed translation and failed translation for each fasta file processed.
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import os
 import subprocess as sp

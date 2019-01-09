@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Taxa_Assessment module
+
 Usage: python Taxa_Assessment.py -i [fasta file] REQUIRED
 							-t [text file with taxon names to cross-reference] REQUIRED
 							-o [path to output directory] REQUIRED
@@ -55,16 +57,19 @@ Usage: python Taxa_Assessment.py -i [fasta file] REQUIRED
      to a binomial name, so all subspecies would be considered a single species. 
     
  -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython (using SeqIO module)
 	-NumPy 
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import sys
 import os

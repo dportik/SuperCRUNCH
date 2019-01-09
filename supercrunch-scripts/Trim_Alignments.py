@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Trim_Alignments module
+
 Usage: python Trim_Alignments.py  -i [directory with all alignment files] (REQUIRED)
                         -a [trimal method (choices: gt, noallgaps, both)] (REQUIRED)
                         -f [output format (choices: fasta, nexus, or phylip)] (REQUIRED)
@@ -25,15 +27,18 @@ Usage: python Trim_Alignments.py  -i [directory with all alignment files] (REQUI
            [NAME]_trimmed.[phy, fasta, or nex extension]
     
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Dependencies:
 	-trimal (installed in path)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import argparse
 import os

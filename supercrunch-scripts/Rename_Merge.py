@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Rename_Merge module
+
 Usage: python Rename_Merge.py -i [full path to fasta file] REQUIRED
 							-r [text file with taxon names and replacement names] REQUIRED
 							-o [path to output directory] REQUIRED
@@ -54,15 +56,18 @@ Usage: python Rename_Merge.py -i [full path to fasta file] REQUIRED
     
     
  -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython (using SeqIO module)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import sys
 import os

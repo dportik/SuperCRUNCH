@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Make_Acc_Table module
+
 Usage: python Make_Acc_Table.py -i [directory containing fasta files] REQUIRED
                                 -s [full path to text file with subspecies names to include] OPTIONAL
 
@@ -22,13 +24,17 @@ Usage: python Make_Acc_Table.py -i [directory containing fasta files] REQUIRED
     should not contain any periods or spaces, but can contain underscores. 
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
+Dependencies: None
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated December 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import os
 import shutil

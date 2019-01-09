@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Reference_Blast_Extract module
+
 Usage: python Reference_Blast_Extract.py -i [directory containing both files] REQUIRED
 										-d [name of reference fasta to make blast database] REQUIRED
 										-e [name of empirical fasta to blast to db and trim] REQUIRED
@@ -69,16 +71,19 @@ Usage: python Reference_Blast_Extract.py -i [directory containing both files] RE
 
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-blastn (installed in path)
 	-BioPython (using SeqIO module)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import sys
 import os

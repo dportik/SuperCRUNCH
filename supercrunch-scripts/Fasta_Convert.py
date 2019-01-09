@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Fasta_Convert module
+
 Usage: python Fasta_Convert.py -i [directory with all fasta files]
 
     Fasta_Convert: Converts a directory of aligned fasta files into both phylip and nexus formats.
@@ -18,15 +20,18 @@ Usage: python Fasta_Convert.py -i [directory with all fasta files]
            [NAME].nex - The nexus format alignment
            
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 
 import argparse

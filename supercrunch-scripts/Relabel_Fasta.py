@@ -1,4 +1,6 @@
 ''''
+SuperCRUNCH: Relabel_Fasta module
+
 Usage: Usage: python Relabel_Fasta.py -i [directory with all fasta files] (REQUIRED)
                                       -r [strategy for relabeling: "species", "accession", "species_acc"] REQUIRED
                                       -s [full path to text file with subspecies names to include] (OPTIONAL)
@@ -97,13 +99,17 @@ Usage: Usage: python Relabel_Fasta.py -i [directory with all fasta files] (REQUI
         								No modifications have been made to the actual sequences.
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
+Dependencies: None
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated December 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import os
 import shutil

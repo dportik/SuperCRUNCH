@@ -1,4 +1,6 @@
 '''
+SuperCRUNCH: Remove_Duplicate_Accessions module
+
 Usage: python Remove_Duplicate_Accessions.py -i [fasta file] REQUIRED
 							                 -o [path to output directory] REQUIRED
                             
@@ -8,15 +10,18 @@ Usage: python Remove_Duplicate_Accessions.py -i [fasta file] REQUIRED
     function used here makes it efficient to run this for massively large files. 
 
 -------------------------
-Written for Python 2.7
+For Python 2.7
 Python modules required:
 	-BioPython (using SeqIO module)
 -------------------------
 
-Daniel Portik
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
 daniel.portik@gmail.com
-https://github.com/dportik
-Updated November 2018
+January 2019
+Distributed under the 
+GNU General Public Lincense
 '''
 import argparse
 import os
