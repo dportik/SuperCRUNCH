@@ -2,9 +2,9 @@
 SuperCRUNCH: Rename_Merge module
 
 Usage: python Rename_Merge.py -i [full path to fasta file] REQUIRED
-							-r [text file with taxon names and replacement names] REQUIRED
-							-o [path to output directory] REQUIRED
-                            -m [fasta file with matched taxa] OPTIONAL
+                              -r [text file with taxon names and replacement names] REQUIRED
+                              -o [path to output directory] REQUIRED
+                              -m [fasta file with matched taxa] OPTIONAL
                             
     Rename_Merge: The goal of this script is to replace the taxon names in a sequence record description
     line with an updated/corrected name. If using the Taxa_Assessment.py script, the fasta

@@ -2,9 +2,9 @@
 SuperCRUNCH: Concatenation module
 
 Usage: python Concatenation.py  -i [full path to directory with all fasta files] (REQUIRED)
-                        -f [fasta or phylip] (REQUIRED)
-                        -s [dash, N, or ?] (REQUIRED)
-                        -o [fasta or phylip] (REQUIRED)
+                                -f [fasta or phylip] (REQUIRED)
+                                -s [dash, N, or ?] (REQUIRED)
+                                -o [fasta or phylip] (REQUIRED)
 						
     Concatenation: Combine multiple alignments into a single concatenated alignment.
     The input file format can be non-interleaved fasta or phylip, and is selected using the -f flag.

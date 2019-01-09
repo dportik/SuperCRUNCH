@@ -55,21 +55,6 @@ Usage: python Filter_Seqs_and_Species.py -i [directory containing both files] RE
     gene/locus. The NAME portion should not contain any periods or spaces, but can contain
     underscores. Output files are labeled using a prefix identical to NAME.
 
-    Major Steps:
-
-    1. Finds all species names in fasta file.
-    2. Iterates over species names and find accession numbers of all sequence records matching taxon.
-    3. Tests if sequence is longer than the user-supplied length requirement, adds to list for taxon.
-    4. Sorts sequences by length, then iterates over sequences. If optional flag --randomize is provided,
-       the sequences are shuffled into random order before the subsequent steps. This 'randomize'
-       feature can be used to generate a nearly infinite number of permutations of the supermatrix
-       if there are many sequences available for a given taxon. 
-    5a. If standard or vmtdna, sequences undergo a translation test to see if a correct reading
-        frame can be identified. If so, it is taken as the sequence for the taxon. If not, moves
-        to the next sequence and tests. If no sequences pass translation the first sequence
-        (which is the longest) will be used for the taxon.
-    5b. If noncoding, the longest sequence is taken for the taxon.
-
 
 Output files:
 

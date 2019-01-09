@@ -2,10 +2,10 @@
 SuperCRUNCH: Parse_Loci module
 
 Usage: python Parse_Loci.py -i [fasta file] REQUIRED
-							-l [tab-delimited text file with locus information] REQUIRED 
-							-t [text file with taxon names to cross-reference] REQUIRED
-							-o [path to output directory] REQUIRED
-							--no_subspecies (OPTIONAL flag, excludes subspecies names from searches)
+			-l [tab-delimited text file with locus information] REQUIRED 
+			-t [text file with taxon names to cross-reference] REQUIRED
+			-o [path to output directory] REQUIRED
+			--no_subspecies (OPTIONAL flag, excludes subspecies names from searches)
 
     Parse_Loci: The goal of this script is to automate the creation of locus/gene-specific fasta files 
     from a larger fasta file of sequences downloaded from GenBank. The user supplies a 

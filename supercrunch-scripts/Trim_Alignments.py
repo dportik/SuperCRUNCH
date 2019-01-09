@@ -2,9 +2,9 @@
 SuperCRUNCH: Trim_Alignments module
 
 Usage: python Trim_Alignments.py  -i [directory with all alignment files] (REQUIRED)
-                        -a [trimal method (choices: gt, noallgaps, both)] (REQUIRED)
-                        -f [output format (choices: fasta, nexus, or phylip)] (REQUIRED)
-                        --gt [value for gap threshold arg in trimal (0.01-1)] (Optional)
+                                  -a [trimal method (choices: gt, noallgaps, both)] (REQUIRED)
+                                  -f [output format (choices: fasta, nexus, or phylip)] (REQUIRED)
+                                  --gt [value for gap threshold arg in trimal (0.01-1)] (Optional)
 
 	Trim_Alignments: Use the program trimal to batch trim all alignment files in a directory.
     There are three options (-a) for using trimal in this script. The first is to use the 'gt' method. The

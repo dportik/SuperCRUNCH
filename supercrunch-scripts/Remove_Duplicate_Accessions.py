@@ -2,7 +2,7 @@
 SuperCRUNCH: Remove_Duplicate_Accessions module
 
 Usage: python Remove_Duplicate_Accessions.py -i [fasta file] REQUIRED
-							                 -o [path to output directory] REQUIRED
+                                             -o [path to output directory] REQUIRED
                             
     Remove_Duplicate_Accessions: Search through a GenBank fasta file and remove any duplicate records (based
     on identical accession numbers). This prevents errors from happening in BioPython when a fasta

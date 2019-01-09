@@ -2,9 +2,9 @@
 SuperCRUNCH: Taxa_Assessment module
 
 Usage: python Taxa_Assessment.py -i [fasta file] REQUIRED
-							-t [text file with taxon names to cross-reference] REQUIRED
-							-o [path to output directory] REQUIRED
-                            --no_subspecies (OPTIONAL flag, excludes subspecies names from searches)
+                                 -t [text file with taxon names to cross-reference] REQUIRED
+                                 -o [path to output directory] REQUIRED
+                                 --no_subspecies (OPTIONAL flag, excludes subspecies names from searches)
                             
     Taxa_Assessment: The goal of this script is to examine a large fasta file of sequences downloaded from
     GenBank and examine taxon names in the decription line of sequence records to see if

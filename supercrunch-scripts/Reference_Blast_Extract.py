@@ -2,11 +2,11 @@
 SuperCRUNCH: Reference_Blast_Extract module
 
 Usage: python Reference_Blast_Extract.py -i [directory containing both files] REQUIRED
-										-d [name of reference fasta to make blast database] REQUIRED
-										-e [name of empirical fasta to blast to db and trim] REQUIRED
-										-b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
-										--max_hits [integer of maximum number of matches to record] (OPTIONAL)
-                                        -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
+                                         -d [name of reference fasta to make blast database] REQUIRED
+                                         -e [name of empirical fasta to blast to db and trim] REQUIRED
+                                         -b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
+                                         --max_hits [integer of maximum number of matches to record] (OPTIONAL)
+                                         -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
 										
     Reference_Blast_Extract: Create a blast database and blast an empirical file to the database. The max number of hits
     to the reference allowed is optionally user defined, with the default set to no limit. 

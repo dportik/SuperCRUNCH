@@ -2,10 +2,10 @@
 SuperCRUNCH: Contamination_Filter module
 
 Usage: python Contamination_Filter.py -i [directory containing both files] REQUIRED
-										-d [name of reference fasta to make blast database] REQUIRED
-										-e [name of empirical fasta to blast to db] REQUIRED
-										-b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
-										--max_hits [integer of maximum number of matches to record] (OPTIONAL)
+                                    -d [name of reference fasta to make blast database] REQUIRED
+                                    -e [name of empirical fasta to blast to db] REQUIRED
+                                    -b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
+                                    --max_hits [integer of maximum number of matches to record] (OPTIONAL)
 
     Contamination_Filter: Create a blast database from 'contamination' sequences and blast an empirical file 
     to this database. Any query sequence that scores a pident of > 95% with length > 100 bp

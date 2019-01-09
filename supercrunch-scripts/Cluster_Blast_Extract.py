@@ -1,10 +1,10 @@
 '''
 SuperCRUNCH: Cluster_Blast_Extract module
 
-Usage: python Cluster_Blast_Extract.py -i [directory containing fasta files] REQUIRED
-									-b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
-                                    -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
-                                    --max_hits [integer] (OPTIONAL)
+Usage: python Cluster_Blast_Extract.py  -i [directory containing fasta files] REQUIRED
+                                        -b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
+                                        -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
+                                        --max_hits [integer] (OPTIONAL)
 									
     Cluster_Blast_Extract: A stringent paralogy filter for sorting GenBank data of a putative locus.
     
