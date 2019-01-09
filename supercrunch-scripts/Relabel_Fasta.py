@@ -96,7 +96,7 @@ Usage: Usage: python Relabel_Fasta.py -i [directory with all fasta files] (REQUI
     Output files:
     
         [fasta name]_relabeled.fasta - Contains all the relabeled sequences from original input fasta.
-        								No modifications have been made to the actual sequences.
+                                       No modifications have been made to the actual sequences.
 
 -------------------------
 For Python 2.7

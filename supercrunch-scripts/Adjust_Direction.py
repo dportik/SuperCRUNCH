@@ -26,16 +26,16 @@ Usage: python Adjust_Direction.py -i [directory with all fasta files] (REQUIRED)
     Output_mafft_Adjust_Fasta_Files:
     
     	[NAME]_Direction.fasta - The UNALIGNED fasta file from mafft adjustment,
-    							in which all sequences are now correctly oriented.
+                                 in which all sequences are now correctly oriented.
     	
     	[NAME]_Adjusted_Name_Log.txt - Contains the full names of the sequences 
-    								that were reversed in this particular fasta file.
+                                       that were reversed in this particular fasta file.
     
     Another single output file is created:
     
-        	Log_Sequences_Adjusted.txt - Contains the names of all fasta files and the number of 
-    								sequences that were found correctly oriented or had to 
-    								be reversed.
+        Log_Sequences_Adjusted.txt - Contains the names of all fasta files and the number of 
+                                     sequences that were found correctly oriented or had to 
+                                     be reversed.
 
 
 -------------------------

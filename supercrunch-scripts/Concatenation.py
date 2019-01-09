@@ -25,10 +25,12 @@ Usage: python Concatenation.py  -i [full path to directory with all fasta files]
 
            Data_Partitions.txt - File containing the order of loci concatenated and their
                                  corresponding base pairs within the alignment.
+                                 
            Taxa_Loci_Count.log - A simple count of the number of sequences that were available for
-                                 each taxon, in other words how many alignments the taxon was present in. 
+                                 each taxon, in other words how many alignments the taxon was present in.
+                                  
            Concatenated_Alignment.[fasta or phylip] - The final concatenated alignment in the output
-                                   format specified. Taxa are written in alphabetical order.
+                                                    format specified. Taxa are written in alphabetical order.
 
 -------------------------
 For Python 2.7

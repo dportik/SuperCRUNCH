@@ -63,7 +63,7 @@ Usage: python Parse_Loci.py -i [fasta file] REQUIRED
 	Outputs Files:
 	
 	Loci_Record_Counts.log - Tab-delimited text file summarizing the number of records 
-							written per locus.
+                             written per locus.
 							
 		Example output contents:
 		
@@ -74,14 +74,14 @@ Usage: python Parse_Loci.py -i [fasta file] REQUIRED
 		DNAH3	1063
 	
 	[locus name].fasta - The locus-specific fasta file containing all records that match
-						at least one locus/gene search term and contain a valid taxon name
-						(that is present in the taxon information file supplied). A fasta
-						file is created for every locus included in the locus information
-						file supplied.
+                         at least one locus/gene search term and contain a valid taxon name
+                         (that is present in the taxon information file supplied). A fasta
+                         file is created for every locus included in the locus information
+                         file supplied.
 
 [--no_subspecies] Excludes all subspecies names from searches, regardless of whether the
-     taxon names file contains them or not. This essentially reduces all subspecies names
-     to a binomial name, so all subspecies would be considered a single species. 
+        taxon names file contains them or not. This essentially reduces all subspecies names
+        to a binomial name, so all subspecies would be considered a single species. 
 
 -------------------------
 For Python 2.7

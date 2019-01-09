@@ -85,34 +85,34 @@ Usage: python Cluster_Blast_Extract.py  -i [directory containing fasta files] RE
     02_Parsed_Results:
 
     	[fasta name]_Out_Cluster_# - Fasta files representing each numbered cluster. These are 
-    								used for blast searches, and the largest fasta is used to
-	    							create the blast database.
+                                     used for blast searches, and the largest fasta is used to
+                                     create the blast database.
 								
 
     03_Blast_Results:
 
 	    [fasta name]_blast_results_merged.txt - The complete, merged blastn results for all the
-                								clusters found for that locus.
+                                                clusters found for that locus.
 								
 	    [fasta name]_Out_Cluster_#_blast_results.txt - The blastn results for all the numbered
-    			                					cluster fasta files found for that locus.
+                                                      cluster fasta files found for that locus.
 
 
     04_Trimmed_Results:
 
 	    [fasta name]_extracted.fasta - A new fasta file that is created from the sequences extracted
-		    						based on the blastn coordinates found. Only sequences with 
-			    					significant blast results will be included, and depending
-				    				on the blast coordinates found, sequences may or may not 
-					    			have been trimmed from their original length (see file below).
+                                     based on the blastn coordinates found. Only sequences with 
+                                     significant blast results will be included, and depending
+                                     on the blast coordinates found, sequences may or may not 
+                                     have been trimmed from their original length (see file below).
 								
     	Log_File_[fasta name].txt - A summary file that shows all records included in the filtered
-	    							fasta file. Includes accession number, the original length
-		    						of the unfiltered sequence, the final length of the extracted
-			    					sequence, and the bp coordinates used to extract the sequence
-				    				(which come directly from the merged blast hits for that 
-					    			record). The headers of this file include:
-						    		Accn	Original_Length		Retained_Length		Coordinates_Used
+                                     fasta file. Includes accession number, the original length
+                                     of the unfiltered sequence, the final length of the extracted
+                                     sequence, and the bp coordinates used to extract the sequence
+                                     (which come directly from the merged blast hits for that 
+                                     record). The headers of this file include:
+                                     Accn	Original_Length		Retained_Length		Coordinates_Used
 
 -------------------------
 For Python 2.7

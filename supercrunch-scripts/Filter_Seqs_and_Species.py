@@ -59,23 +59,23 @@ Usage: python Filter_Seqs_and_Species.py -i [directory containing both files] RE
 Output files:
 
     [fasta name]_single_taxon.fasta - The output fasta file which contains a single filtered sequence
-                                    per taxon.
+                                      per taxon.
                 OR
     [fasta name]_all_seqs.fasta - The output fasta file which contains all filtered sequences available
-                                    per taxon.
+                                  per taxon.
 
 
     [fasta name]_species_log.txt - A summary file containing the following columns of information
-                                    for each taxon entry:
-                                    Taxon  Accession  SeqLength   PassedTranslation  SeqsAvailable
+                                  for each taxon entry:
+                                  Taxon  Accession  SeqLength   PassedTranslation  SeqsAvailable
 
     [fasta name]_accession_list_by_species.txt - A tab-delimited file in which each line starts
-                                    with a taxon name and is followed by all accession numbers of
-                                    sequences passing the length filter from the fasta file.
+                                  with a taxon name and is followed by all accession numbers of
+                                  sequences passing the length filter from the fasta file.
 
     [fasta name]_accession_list_for_Batch_Entrez.txt - a batch entrez style file which simply
-                                contains all accession numbers of sequences passing length
-                                filter from the fasta file.
+                                  contains all accession numbers of sequences passing length
+                                  filter from the fasta file.
 
 -------------------------
 For Python 2.7
