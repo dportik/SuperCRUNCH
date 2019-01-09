@@ -8,7 +8,7 @@
 
 ## Installation
 
-**SuperCRUNCH** consists of several Python modules that can be used as command line scripts, and therefore does not require any installation. The scripts function independently, and do not require being used in the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
+**SuperCRUNCH** consists of several Python modules that can be used as command line scripts, and therefore does not require any installation. The scripts function independently, and do not require being contained and used from the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
@@ -26,7 +26,7 @@ Helpful installation instructions for these dependencies can be found on the wik
 
 Complete instructions for running **SuperCRUNCH** analyses are available on the wiki page [here](to fill in), including detailed usage for all modules, proposed workflows, and common issues.
 
-Several complete example analyses are available two unrelated clades:
+Several complete example analyses are available for two unrelated clades:
 
 + ***Iguania*** - an infraorder of squamate reptiles
 + ***Dipsacales*** - an order of flowering plants 
