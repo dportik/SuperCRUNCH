@@ -51,6 +51,10 @@ Something.
 
 #### Usage:
 
+`python Remove_Duplicate_Accessions.py -i <full-path-to-file> -o <path-to-directory>`
+
+#### Argument Explanations:
+
 ##### `-i <full-path-to-file>` 
  
 > **Required**:  The full path to a fasta file with GenBank sequence data to filter.
