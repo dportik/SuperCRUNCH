@@ -115,7 +115,7 @@ Something
 | Argument Flag | Type | Description |
 | ---------- | ----- | ----- | 
 | -i \<path-to-directory> | Required | The full path to a directory containing the parsed locus-specific fasta files. |
-| -b \<blast algorithm> | Required | The blast algorithm to use. Choices = *blastn, blastn-short, dc-megablast, megablast*. Recommended: *dc-megablast*. | 
+| -b \<choice> | Required | The blast algorithm to use. Choices = *blastn, blastn-short, dc-megablast, megablast*. Recommended: *dc-megablast*. | 
 | -m \<choice> | *Optional* | The strategy for dealing with multiple non-overlapping blast coordinates. Choices = *span, nospan, all*. Default = *span*. | 
 | --max_hits \<integer> | *Optional* | The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. | 
 
