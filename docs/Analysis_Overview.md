@@ -55,6 +55,17 @@ Something.
 | -i \<full-path-to-file>    | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file.  | 
 
+|---
+| Default aligned | Left aligned | Center aligned | Right aligned
+|-|:-|:-:|-:
+| First body part | Second cell | Third cell | fourth cell
+| Second line |foo | **strong** | baz
+| Third line |quux | baz | bar
+|---
+| Second body
+| 2 line
+|===
+| Footer row
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
 
