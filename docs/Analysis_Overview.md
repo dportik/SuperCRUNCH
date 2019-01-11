@@ -71,7 +71,7 @@ Something
 
 #### Usage:
 | Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
-| :----- | :----- | :----- | 
+| ----- | ----- | ----- | 
 | -i | Required | The full path to a fasta file of GenBank sequence data. |
 | -t  | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o  | Required | The full path to an existing directory to write output files. | 
@@ -95,7 +95,7 @@ Something
 Something
 
 #### Usage:
-| Argument | Type | Description |
+| Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
 | ---------------- | ----- | ----- | 
 | -i | Required | The full path to a fasta file of GenBank sequence data. |
 | -l | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
@@ -114,7 +114,7 @@ Something
 Something
 
 #### Usage:
-| Argument | Type | Description |
+| Argument &nbsp; | Type | Description |
 | ---------- | ----- | ----- | 
 | -i | Required | The full path to a directory containing the parsed locus-specific fasta files. |
 | -b | Required | The blast algorithm to use. Options = blastn, blastn-short, dc-megablast, megablast. | 
@@ -126,7 +126,7 @@ Something
 Something
 
 #### Usage:
-| Argument | Type | Description |
+| Argument &nbsp; | Type | Description |
 | ---------- | ----- | ----- | 
 | -i | Required | The full path to a directory containing the reference fasta file and the empirical fasta file. |
 | -d | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
