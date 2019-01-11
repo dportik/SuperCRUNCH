@@ -50,7 +50,7 @@ Something
 Something.
 
 #### Usage:
-| Argument Flag <img width=200/>| Type     | Description                                                         |
+| Argument Flag <img width=100/>| Type     | Description                                                         |
 | :---------------------- | -------- | ------------------------------------------------------------------- | 
 | -i \<full-path-to-file>    | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file.  | 
