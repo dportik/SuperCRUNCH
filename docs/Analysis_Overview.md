@@ -49,7 +49,7 @@ Something
 
 Something.
 
-#### Arguments:
+#### Usage:
 | Argument | Type | Description |
 | ----- | ----- | ----- | 
 | -i | Required | The full path to a fasta file with GenBank sequence data to filter. |
@@ -64,17 +64,44 @@ Something.
 
 Something
 
+
 ### Taxa_Assessment.py <a name="TA"></a>
 
 Something
+
+#### Usage:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a fasta file of GenBank sequence data. |
+| -t | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| -o | Required | The full path to an existing directory to write output files. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ### Rename_Merge.py <a name="RM"></a>
 
 Something
 
+#### Usage:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*). |
+| -r | Required | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
+| -o | Required | The full path to an existing directory to write output files. | 
+| -m | *Optional* | The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). | 
+
+
 ### Parse_Loci.py <a name="PL"></a>
 
 Something
+
+#### Usage:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a fasta file of GenBank sequence data. |
+| -l | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
+| -t | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| -o | Required | The full path to an existing directory to write output files. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ## **Orthology Filtering** <a name="OF"></a>
 
@@ -86,9 +113,27 @@ Something
 
 Something
 
+#### Usage:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a directory containing the parsed locus-specific fasta files. |
+| -b | Required | The blast algorithm to use. Options = blastn, blastn-short, dc-megablast, megablast. | 
+| -m | *Optional* | The strategy for dealing with multiple non-overlapping blast coordinates. Options = span, nospan, all. Default = span. | 
+| --max_hits | *Optional* | The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. | 
+
 ### Reference_Blast_Extract.py <a name="RBE"></a>
 
 Something
+
+#### Usage:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a directory containing the reference fasta file and the empirical fasta file. |
+| -d | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
+| -e | Required | The name of the empirical fasta file to blast to the database to prune sequences. Requires file name only, NOT full path, as it should be located in the input directory (-i). | 
+| -b | Required | The blast algorithm to use. Options = blastn, blastn-short, dc-megablast, megablast. | 
+| -m | *Optional* | The strategy for dealing with multiple non-overlapping blast coordinates. Options = span, nospan, all. Default = span. | 
+| --max_hits | *Optional* | The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. | 
 
 ### Contamination_Filter.py <a name="CF"></a>
 
