@@ -73,7 +73,7 @@ Something
 | -i \<full path to file> | Required | The full path to a fasta file of GenBank sequence data. |
 | -t  \<full path to file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o  \<path to directory> | Required | The full path to an existing directory to write output files. | 
-| --no_subspecies &nbsp;  &nbsp; &nbsp;  | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ### Rename_Merge.py <a name="RM"></a>
 
@@ -82,7 +82,7 @@ Something
 #### Usage:
 | Argument Flag | Type | Description |
 | ----- | ----- | ----- | 
-| -i \<full path to file>> | Required | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*). |
+| -i \<full path to file> | Required | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*). |
 | -r \<full path to file> | Required | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
 | -o \<path to directory> | Required | The full path to an existing directory to write output files. | 
 | -m \<full path to file> | *Optional* | The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). | 
@@ -99,7 +99,7 @@ Something
 | -l \<full path to file> | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
 | -t \<full path to file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o \<path to directory> | Required | The full path to an existing directory to write output files. | 
-| --no_subspecies &nbsp;  &nbsp; &nbsp; | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ## **Orthology Filtering** <a name="OF"></a>
 
@@ -166,7 +166,7 @@ Something
 | --table | Required for `-f translate` | Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*.  | 
 | --randomize | *Optional* | For taxa with multiple sequences, shuffle order randomly. Overrides sorting by length for all methods (-f). | 
 | --allseqs | *Optional* | For taxa with multiple sequences, select all sequences passing the filters instead of a single representative sequence. | 
-| --no_subspecies &nbsp;  &nbsp; &nbsp; | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 
 ### Make_Acc_Table.py <a name="MAT"></a>
