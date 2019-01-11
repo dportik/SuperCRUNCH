@@ -39,7 +39,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
 
-![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.png =100x)
+![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.png)
 
 Something
 
