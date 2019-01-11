@@ -6,19 +6,19 @@
 
 Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. 
 
-[Taxon Filtering and Locus Extraction](#TFLE):
+### [**Taxon Filtering and Locus Extraction**](#TFLE):
 
 + [Taxa_Assessment](#TA)
 + [Rename_Merge](#RM)
 + [Parse_Loci](#PL)
 
-[Orthology Filtering](#OF)
+### [Orthology Filtering](#OF)
 
 + [Cluster_Blast_Extract](#CBE)
 + [Reference_Blast_Extract](#RBE)
 + [Contamination_Filter](#CF)
 
-[Sequence Quality Filtering and Selection](#SQFS)
+### [Sequence Quality Filtering and Selection](#SQFS)
 
 + [Filter_Seqs_and_Species](#FSS)
 + [Make_Acc_Table](#MAT)
