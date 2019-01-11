@@ -70,12 +70,12 @@ Something
 Something
 
 #### Usage:
-| Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type       | Description |
-| ---------------- | ---------- | ----- | 
-| -i               | Required   | The full path to a fasta file of GenBank sequence data. |
-| -t               | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
-| -o               | Required   | The full path to an existing directory to write output files. | 
-| --no_subspecies  | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
+| Argument &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a fasta file of GenBank sequence data. |
+| -t  | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| -o  | Required | The full path to an existing directory to write output files. | 
+| --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ### Rename_Merge.py <a name="RM"></a>
 
