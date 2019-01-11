@@ -23,12 +23,12 @@
 
 After installation, please check to make sure that the relevant executables are in PATH (type their name on the command line and they should run) and that they have the following names which are case-sensitive (if not, relabel them accordingly):
 
-+ NCBI-BLAST+: *blastn*, *makeblastdb*, tested for version 2.7.1+
-+ CD-HIT-EST: *cd-hit-est*, tested for version 4.7 (non-openmp)
-+ MAFFT: *mafft*, tested for version 7.407
-+ Muscle: *muscle*, tested for version 3.8.31
-+ Clustal-O: *clustalo*, tested for version 1.2.3
-+ trimAl: *trimal*, tested for version 1.4.22
++ **NCBI-BLAST+**: *blastn*, *makeblastdb*, tested for version 2.7.1+
++ **CD-HIT-EST**: *cd-hit-est*, tested for version 4.7 (non-openmp)
++ **MAFFT**: *mafft*, tested for version 7.407
++ **Muscle**: *muscle*, tested for version 3.8.31
++ **Clustal-O**: *clustalo*, tested for version 1.2.3
++ **trimAl**: *trimal*, tested for version 1.4.22
 
 This should allow everything to run properly. For quick reference, here is a list of the currently available **SuperCRUNCH** modules and their dependencies:
 
