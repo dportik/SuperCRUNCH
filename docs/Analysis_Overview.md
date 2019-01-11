@@ -2,9 +2,12 @@
 
 ---------------
 
-## Overview
+## Analysis Overview
 
-Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. 
+Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest.
+
+### [Getting the Starting Material](#GSM):
++ Optional tool: [Remove_Duplicate_Accessions](#RDA)
 
 ### [Taxon Filtering and Locus Extraction](#TFLE):
 
@@ -35,6 +38,24 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Relabel_Fasta](#RF)
 + [Fasta_Convert](#FC)
 + [Concatenation](#C)
+
+The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and  epending on the analysis goals.   
+
+## **Getting the Starting Material** <a name="GSM"></a>
+
+Something
+
+### Remove_Duplicate_Accessions.py <a name="RDA"></a>
+
+Something.
+
+#### Arguments:
+| Argument | Type | Description |
+| ----- | ----- | ----- | 
+| -i | Required | The full path to a fasta file with GenBank sequence data to filter. |
+| -o | Required | The full path to an existing directory to write output fasta file. | 
+> ``
+> ``
 
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
