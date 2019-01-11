@@ -52,7 +52,7 @@ Something.
 #### Usage:
 | Argument Flag | Type | Description |
 |-------------------------|----------|---------------------------------------------------------------------|
-| -i \<full-path-to-file> | Required | The full path to a fasta file with GenBank sequence <br /> data to filter. |
+| -i \<full-path-to-file> | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o \<path-to-directory> | Required | The full path to an existing directory to write  output fasta file. |
 
 
@@ -173,6 +173,12 @@ Something
 
 Something
 
+#### Usage:
+| Argument Flag | Type | Description |
+| ---------- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory containing the fasta files (single sequence per taxon). |
+| -s \<path-to-file> | *Optional* | The full path to a text file containing all subspecies names to cross-reference in the fasta file. |
+
 ## **Sequence Alignment** <a name="SA"></a>
 
 ![F4](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig4.jpg)
@@ -183,17 +189,50 @@ Something
 
 Something
 
+#### Usage:
+| Argument Flag | Type | Description |
+| ----- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory which contains the unaligned fasta files. |
+
 ### Coding_Translation_Tests.py <a name="CTT"></a>
 
 Something
+
+#### Usage:
+| Argument Flag | Type | Description |
+| ----- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory which contains the locus-specific fasta files to filter. |
+| --table \<choice> | Required for `-f translate` | Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*.  | 
+| --rc | *Optional* | In addition to forward frames, use reverse complement for translation tests. Not recommended if direction of sequences has already been adjusted. | 
 
 ### Align.py <a name="A"></a>
 
 Something
 
+#### Usage:
+| Argument Flag | Type | Description |
+| ----- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory which contains the unaligned fasta files. |
+| -a \<choice> | Required | Specify whether alignment is by mafft, macse, muscle, or clustalo. If macse, MUST provide flags --mpath and --table. Choices = *mafft, macse, muscle, clustalo, all*. | 
+| --mpath | Required for `-a macse` | Full path to a macse jar file. | 
+| --table \<choice> | Required for `-a macse` | Specifies translation table. Choices = *standard, vmtdna*.  | 
+| --mem | *Optional* for `-a macse` | An integer for how much memory to assign to macse (in GB). Default = 1. | 
+| --pass_fail | *Optional* for `-a macse`| Specifies macse to perform dual alignment. Files in -i directory must follow labeling format: NAME_Passed.fasta, NAME_Failed.fasta. | 
+| --accurate | *Optional*  | Specifies more thorough search settings in mafft, clustalo, or macse (see below). | 
+
+
+
 ### Trim_Alignments.py <a name="TAS"></a>
 
 Something
+
+#### Usage:
+| Argument Flag | Type | Description |
+| ----- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory which contains the input alignment files. File formats can include fasta, nexus, or phylip (see below). |
+| -f \<choice> | Required | Specifies the output file format for trimmed alignments. Choices = *fasta, nexus, phylip*. | 
+| -a \<choice> | Required | Specifies the trimal method for trimming alignments. Choices = *gt,noallgaps,both*. | 
+| --gt \<value> | *Optional* | Specifies the gap threshold (gt) value for trimal, the minimum fraction of sequences without a gap. Must be between 0 and 1. Default = 0.05. | 
 
 ## **File Formatting Tasks** <a name="FFT"></a>
 
@@ -205,10 +244,33 @@ Something
 
 Something
 
+#### Usage:
+| Argument Flag | Type | Description |
+| ---------- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory containing the unaligned or aligned fasta files. |
+| -r \<choice> | Required | The strategy for relabeling sequence records. Choices = *species, accession, species_acc*. | 
+| -s \<path-to-file> | *Optional* | The full path to a text file containing all subspecies names to cross-reference in the fasta file. |
+
 ### Fasta_Convert.py <a name="FC"></a>
 
 Something
 
+#### Usage:
+| Argument Flag | Type | Description |
+| ----- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory which contains the aligned fasta files. |
+
 ### Concatenation.py <a name="C"></a>
 
 Something
+
+#### Usage:
+| Argument Flag | Type | Description |
+| ---------- | ----- | ----- | 
+| -i \<path-to-directory> | Required | The full path to a directory containing the aligned files. |
+| -f \<choice> | Required | The input file format of the alignments. Choices = *fasta, phylip*. | 
+| -s \<choice> | Required | A base pair symbol used to represent missing data sequences. Choices = *dash, N, ?*. | 
+| -o \<choice> | Required | The output file format for the final concatenated alignment. Choices = *fasta, phylip*. | 
+
+
+The end.
