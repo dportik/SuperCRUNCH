@@ -55,7 +55,9 @@ Something.
 | -i \<full-path-to-file> | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file. |
 
-> `-i <full-path-to-file>` > **Required:** The full path to a fasta file with GenBank sequence data to filter.
+`-i <full-path-to-file>` 
+
+> **Required:** The full path to a fasta file with GenBank sequence data to filter.
 
 > `-o <path-to-directory>>` **Required:** The full path to an existing directory to write output fasta file.
 
