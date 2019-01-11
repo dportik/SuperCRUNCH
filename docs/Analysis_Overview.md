@@ -55,6 +55,8 @@ Something.
 | -i \<full-path-to-file>    | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file.  | 
 
+> `-i \<full-path-to-file>` Required The full path to a fasta file with GenBank sequence data to filter.
+
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
 
 ![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.jpg)
