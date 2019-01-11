@@ -101,7 +101,7 @@ Something
 | -l | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
 | -t | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o | Required | The full path to an existing directory to write output files. | 
-| --no_subspecies &nbsp;  | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
+| --no_subspecies &nbsp;  &nbsp; | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
 ## **Orthology Filtering** <a name="OF"></a>
 
