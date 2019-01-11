@@ -39,7 +39,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
 
-![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.png)
+![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.jpg)
 
 Something
 
@@ -57,7 +57,7 @@ Something
 
 ## **Orthology Filtering** <a name="OF"></a>
 
-![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.png)
+![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.jpg)
 
 Something
 
@@ -75,7 +75,7 @@ Something
 
 ## **Sequence Quality Filtering and Selection** <a name="SQFS"></a>
 
-![F3](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig3.png)
+![F3](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig3.jpg)
 
 Something
 
@@ -89,7 +89,7 @@ Something
 
 ## **Sequence Alignment** <a name="SA"></a>
 
-![F4](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig4.png)
+![F4](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig4.jpg)
 
 Something
 
@@ -111,7 +111,7 @@ Something
 
 ## **File Formatting Tasks** <a name="FFT"></a>
 
-![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.png)
+![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
 
 Something
 
