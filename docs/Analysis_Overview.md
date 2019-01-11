@@ -50,7 +50,7 @@ Something
 Something.
 
 #### Usage:
-| Argument | Type | Description |
+| Flag Argument | Type | Description |
 | ----- | ----- | ----- | 
 | -i | Required | The full path to a fasta file with GenBank sequence data to filter. |
 | -o | Required | The full path to an existing directory to write output fasta file. | 
@@ -70,7 +70,7 @@ Something
 Something
 
 #### Usage:
-| Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| Flag Argument  | Type | Description |
 | ----- | ----- | ----- | 
 | -i | Required | The full path to a fasta file of GenBank sequence data. |
 | -t  | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
@@ -96,7 +96,7 @@ Something
 
 #### Usage:
 | Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
-| ---------------- | ----- | ----- | 
+| ----- | ----- | ----- | 
 | -i | Required | The full path to a fasta file of GenBank sequence data. |
 | -l | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
 | -t | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
