@@ -71,8 +71,8 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Type       | Description                                                                                   |
-| :---------------------- | ---------- | --------------------------------------------------------------------------------------------- | 
+| Argument Flag | Type | Description |
+|-------------------------|------------|-----------------------------------------------------------------------------------------------| 
 | -i \<full-path-to-file> | Required   | The full path to a fasta file of GenBank sequence data.                                       |
 | -t \<full-path-to-file> | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o \<path-to-directory> | Required   | The full path to an existing directory to write output files.                                 | 
