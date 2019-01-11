@@ -70,7 +70,7 @@ Something
 Something
 
 #### Usage:
-| Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Type       | Description |
+| Argument &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Type       | Description |
 | ---------------- | ---------- | ----- | 
 | -i               | Required   | The full path to a fasta file of GenBank sequence data. |
 | -t               | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
