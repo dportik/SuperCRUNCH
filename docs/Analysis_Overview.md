@@ -52,14 +52,9 @@ Something.
 #### Usage:
 | Argument Flag | Type | Description |
 |-------------------------|----------|---------------------------------------------------------------------|
-| -i \<full-path-to-file> | Required | The full path to a fasta file with GenBank sequence data to filter. |
-| -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file. |
+| -i \<full-path-to-file> | Required | The full path to a fasta file with GenBank sequence  data to filter. |
+| -o \<path-to-directory> | Required | The full path to an existing directory to write  output fasta file. |
 
-`-i <full-path-to-file>` 
-
-> **Required:** The full path to a fasta file with GenBank sequence data to filter.
-
-> `-o <path-to-directory>>` **Required:** The full path to an existing directory to write output fasta file.
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
 
@@ -75,20 +70,20 @@ Something
 #### Usage:
 | Argument Flag | Type | Description |
 |-------------------------|------------|-----------------------------------------------------------------------------------------------| 
-| -i \<full-path-to-file> | Required   | The full path to a fasta file of GenBank sequence data.                                       |
-| -t \<full-path-to-file> | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
-| -o \<path-to-directory> | Required   | The full path to an existing directory to write output files.                                 | 
-| --no_subspecies         | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file.                     | 
+| -i \<path-to-file> | Required   | The full path to a fasta file of GenBank sequence data.                                       |
+| -t \<path-to-file> | Required   | The full path to a text file containing all taxon names  to cross-reference in the fasta file. | 
+| -o \<path-to-directory> | Required   | The full path to an existing directory to write  output files.                                 | 
+| --no_subspecies         | *Optional* | Ignore subspecies labels in both the taxon names  file and the fasta file.                     | 
 
 ### Rename_Merge.py <a name="RM"></a>
 
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type       | Description                                                                                                   |
+| Argument Flag  | Type       | Description                                                                                                   |
 | :---------------------- | ---------- | ------------------------------------------------------------------------------------------------------------- | 
-| -i \<full-path-to-file> | Required   | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*).                           |
-| -r \<full-path-to-file> | Required   | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
+| -i \<path-to-file> | Required   | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*).                           |
+| -r \<path-to-file> | Required   | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
 | -o \<path-to-directory> | Required   | The full path to an existing directory to write output files.                                                 | 
 | -m \<full-path-to-file> | *Optional* | The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*).                            | 
 
@@ -98,11 +93,11 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| Argument Flag | Type | Description |
 | :----- | ----- | ----- | 
-| -i \<full-path-to-file> | Required | The full path to a fasta file of GenBank sequence data. |
-| -l \<full-path-to-file> | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
-| -t \<full-path-to-file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| -i \<path-to-file> | Required | The full path to a fasta file of GenBank sequence data. |
+| -l \<path-to-file> | Required | The full path to a three-column text file containing loci information to search for within the fasta file. | 
+| -t \<path-to-file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | -o \<path-to-directory> | Required | The full path to an existing directory to write output files. | 
 | --no_subspecies | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file. | 
 
@@ -117,7 +112,7 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| Argument Flag | Type | Description |
 | ---------- | ----- | ----- | 
 | -i \<path-to-directory> | Required | The full path to a directory containing the parsed locus-specific fasta files. |
 | -b \<blast algorithm> | Required | The blast algorithm to use. Choices = *blastn, blastn-short, dc-megablast, megablast*. Recommended: *dc-megablast*. | 
@@ -129,11 +124,11 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Type | Description |
+| Argument Flag | Type | Description |
 | ---------- | ----- | ----- | 
 | -i \<path-to-directory> | Required | The full path to a directory containing the reference fasta file and the empirical fasta file. |
-| -d | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
-| -e | Required | The name of the empirical fasta file to blast to the database to prune sequences. Requires file name only, NOT full path, as it should be located in the input directory (-i). | 
+| -d \<filename> | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
+| -e \<filename> | Required | The name of the empirical fasta file to blast to the database to prune sequences. Requires file name only, NOT full path, as it should be located in the input directory (-i). | 
 | -b \<choice> | Required | The blast algorithm to use. Choices = *blastn, blastn-short, dc-megablast, megablast*. Recommended: *dc-megablast*. | 
 | -m \<choice> | *Optional* | The strategy for dealing with multiple non-overlapping blast coordinates. Choices = *span, nospan, all*. Default = *span*. | 
 | --max_hits \<integer> | *Optional* | The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. | 
@@ -143,11 +138,11 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| Argument Flag | Type | Description |
 | ---------- | ----- | ----- | 
 | -i \<path-to-directory> | Required | The full path to a directory containing the reference fasta file and the empirical fasta file. |
-| -d | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
-| -e | Required | The name of the empirical fasta file to blast to the database to find bad sequences. Requires file name only, NOT full path, as it should be located in the input directory (-i). | 
+| -d \<filename> | Required | The name of the reference fasta file that will be used to create the blast database. Requires file name only, NOT full path, as it should be located in the input directory (-i). |
+| -e \<filename> | Required | The name of the empirical fasta file to blast to the database to find bad sequences. Requires file name only, NOT full path, as it should be located in the input directory (-i). | 
 | -b \<choice> | Required | The blast algorithm to use. Choices = *blastn, blastn-short, dc-megablast, megablast*. Recommended: *megablast*. | 
 | --max_hits \<integer> | *Optional* | The maximum number of blast matches allowed per input sequence. | 
 
@@ -162,12 +157,12 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type | Description |
+| Argument Flag | Type | Description |
 | ----- | ----- | ----- | 
 | -i \<path-to-directory> | Required | The full path to a directory which contains the locus-specific fasta files to filter. |
-| -f | Required | Strategy for filtering sequence data. Options = translate, length. | 
-| -l | Required | An integer for the minimum number of base pairs required to keep a sequence (ex. 150). | 
-| -t \<full path to file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| -f \<choice> | Required | Strategy for filtering sequence data. Choices = *translate, length*. | 
+| -l \<integer> | Required | An integer for the minimum number of base pairs required to keep a sequence (ex. 150). | 
+| -t \<path-to-file> | Required | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
 | --table \<choice> | Required for `-f translate` | Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*.  | 
 | --randomize | *Optional* | For taxa with multiple sequences, shuffle order randomly. Overrides sorting by length for all methods (-f). | 
 | --allseqs | *Optional* | For taxa with multiple sequences, select all sequences passing the filters instead of a single representative sequence. | 
