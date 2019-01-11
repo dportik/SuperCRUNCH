@@ -53,7 +53,7 @@ Something.
 | Argument Flag | Type     | Description                                                         |
 | :---------------------- | -------- | ------------------------------------------------------------------- | 
 | `-i <full-path-to-file>` | Required | The full path to a fasta file with GenBank sequence data to filter. |
-| -o \<path-to-directory> | Required | The full path to an existing directory to write output fasta file.  | 
+| `-o <path-to-directory>` | Required | The full path to an existing directory to write output fasta file.  | 
 
 `-i <full-path-to-file>` > **Required:** The full path to a fasta file with GenBank sequence data to filter.
 
@@ -71,12 +71,12 @@ Something
 Something
 
 #### Usage:
-| Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Type       | Description                                                                                   |
+| Argument Flag | Type       | Description                                                                                   |
 | :---------------------- | ---------- | --------------------------------------------------------------------------------------------- | 
-| -i \<full-path-to-file> | Required   | The full path to a fasta file of GenBank sequence data.                                       |
-| -t \<full-path-to-file> | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
-| -o \<path-to-directory> | Required   | The full path to an existing directory to write output files.                                 | 
-| --no_subspecies         | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file.                     | 
+| `-i \<full-path-to-file>` | Required   | The full path to a fasta file of GenBank sequence data.                                       |
+| `-t \<full-path-to-file>` | Required   | The full path to a text file containing all taxon names to cross-reference in the fasta file. | 
+| `-o \<path-to-directory>` | Required   | The full path to an existing directory to write output files.                                 | 
+| `--no_subspecies `        | *Optional* | Ignore subspecies labels in both the taxon names file and the fasta file.                     | 
 
 ### Rename_Merge.py <a name="RM"></a>
 
@@ -85,10 +85,10 @@ Something
 #### Usage:
 | Argument Flag &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Type       | Description                                                                                                   |
 | :---------------------- | ---------- | ------------------------------------------------------------------------------------------------------------- | 
-| -i \<full-path-to-file> | Required   | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*).                           |
-| -r \<full-path-to-file> | Required   | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
-| -o \<path-to-directory> | Required   | The full path to an existing directory to write output files.                                                 | 
-| -m \<full-path-to-file> | *Optional* | The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*).                            | 
+| `-i \<full-path-to-file>` | Required   | The full path to a fasta file with taxon names to replace (*Unmatched_Taxa.fasta*).                           |
+| `-r \<full-path-to-file>` | Required   | The full path to a two-column text file containing all taxon names to be replaced, and the replacement names. | 
+| `-o \<path-to-directory>` | Required   | The full path to an existing directory to write output files.                                                 | 
+| `-m \<full-path-to-file>` | *Optional* | The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*).                            | 
 
 
 ### Parse_Loci.py <a name="PL"></a>
