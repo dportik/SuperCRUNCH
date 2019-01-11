@@ -51,7 +51,9 @@ Something.
 
 #### Usage:
 
-`python Remove_Duplicate_Accessions.py -i <full-path-to-file> -o <path-to-directory>`
+```
+python Remove_Duplicate_Accessions.py -i <full-path-to-file> -o <path-to-directory>
+```
 
 #### Argument Explanations:
 
