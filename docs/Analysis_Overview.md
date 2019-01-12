@@ -57,7 +57,8 @@ python Remove_Duplicate_Accessions.py -i <fasta file> -o <output directory>
 
 #### Argument Explanations:
 
-##### `-i <full-path-to-file>` **Required**:  The full path to a fasta file with GenBank sequence data to filter.
+##### `-i <full-path-to-file>` 
+**Required**:  The full path to a fasta file with GenBank sequence data to filter.
  
 ##### `-o <path-to-directory>` 
 
