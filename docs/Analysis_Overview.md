@@ -52,7 +52,7 @@ Something.
 #### Usage:
 
 ```
-python Remove_Duplicate_Accessions.py -i <path to fasta> -o <directory>
+python Remove_Duplicate_Accessions.py -i <fasta file> -o <output directory>
 ```
 
 #### Argument Explanations:
