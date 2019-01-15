@@ -53,6 +53,8 @@ The steps involved in a typical run include executing a majority of these steps.
 
 To run **SuperCRUNCH**, you will need a fasta file of downloaded nucleotide sequence records, a list of taxa, and a list of loci with associated search terms.
 
+---------------
+
 ### Obtaining Sequence Data <a name="OSD"></a>
 
 The starting molecular data for **SuperCRUNCH** consists of a fasta file of downloaded nucleotide sequence records from the [NCBI nucleotide database (GenBank)](https://www.ncbi.nlm.nih.gov/nucleotide/). The simplest way to obtain these data is to search for a taxonomic term on the nucleotide database and download all the available records in fasta format. However, for larger taxonomic groups (ex. all birds or frogs) this may not be possible as there will be too much data to download directly. In this case, it is better to split searches using the taxonomy of the group (order, clade, family, etc), download each record set in fasta format, and then combine the resulting fasta files. The [NCBI taxonomy browser](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi) is particularly useful for identifying the relevant taxonomic search terms. Advanced users may choose to use additional search terms to filter the results, which could help reduce the resulting file size, but this is not necessary. The downloaded fasta files may be quite large in size (several GB) and it is unlikely you can use a text editor to open and edit them, so combining files requires a different approach. The fasta files will all have the extension '.fasta', and they can be quickly combined using Unix. If the fasta files are all in the same working directory, you can use the following command to accomplish this:
@@ -97,6 +99,8 @@ AATCCGGAGGACCCGTGGTTACACGGCTCACCGTGGCTTTGCTCTCGTGGTGAACCCGGTTTGCGACCGG
 
 If your starting sequence set is in this format, you will need to convert it to the simpler whitespace fasta format before attempting to run **SuperCRUNCH**.
 
+---------------
+
 ### Remove_Duplicate_Accessions.py <a name="RDA"></a>
 
 Sometimes combining several fasta files can produce duplicate entries, in other words records with identical accession numbers. This will cause problems with the way **SuperCRUNCH** loads fasta files, as there can be no duplicate accession numbers. You will know this is the case if you try to run a script and it produces the following error:
@@ -124,6 +128,8 @@ python Remove_Duplicate_Accessions.py -i <fasta file> -o <output directory>
 
 By running this script, all duplicate entries will be removed and a new fasta file will be written to the output directory called *Cleaned.fasta*. This fasta file should be used to run **SuperCRUNCH**.
 
+---------------
+
 ### Obtaining Taxon Names Lists <a name="OTNL"></a>
 
 **SuperCRUNCH** requires a list of taxon names that is used to filter sequences. Lists of taxon names can be obtained through general databases, such as the NCBI Taxonomy Browser. In many cases there are specific databases dedicated to major groups, for example the [Reptile Database](http://www.reptile-database.org/), [AmphibiaWeb](https://amphibiaweb.org/), and [Amphibian Species of the World](http://research.amnh.org/vz/herpetology/amphibia/), which usually contain up-to-date taxonomies in a downloadable format. 
@@ -131,7 +137,7 @@ By running this script, all duplicate entries will be removed and a new fasta fi
 The taxon names list required is a simple text file which contains one taxon name per line. The file can contain a mix of species (binomial) and subspecies (trinomial) names, and components of each taxon name should be separated by a space (rather than undescore). Sometimes using Excel or other applications to generate the taxon names text file will include hidden characters not compatible with **SuperCRUNCH**, so make sure to open the file in a text editor and ensure the format includes Unix line breaks and UTF-8 encoding.
 Below are some example contents from suitable taxon name lists:
 
-A partial list containing species (binomial) names:
+Partial contents of a list containing species (binomial) names:
 
 ```
 Lygodactylus regulus
@@ -142,7 +148,7 @@ Lygodactylus scorteccii
 Lygodactylus somalicus
 ```
 
-A partial list containing species (binomial) and subspecies (trinomial) names:
+Partial contents of a list containing species (binomial) and subspecies (trinomial) names:
 
 ```
 Leycesteria crocothyrsos
@@ -153,6 +159,8 @@ Linnaea borealis longiflora
 ```
 
 **SuperCRUNCH** offers the option to exclude subspecies from searches, so a taxon list containing a mix of species and subspecies does not need to be pruned by hand if subspecies are not desired in the analysis. The effect of this option with different types of taxon lists is explained in usage of the *Taxa_Assessment.py* script.
+
+---------------
 
 ### Obtaining Loci and Search Terms <a name="OLST"></a>
 
@@ -250,7 +258,7 @@ The success of finding loci depends on defining appropriate locus abbreviations 
 Something
 
 
-
+---------------
 
 ### Taxa_Assessment.py <a name="TA"></a>
 
@@ -281,7 +289,7 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
 
 
-
+---------------
 
 ### Rename_Merge.py <a name="RM"></a>
 
@@ -312,7 +320,7 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 > **Optional**: The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). 
 
 
-
+---------------
 
 ### Parse_Loci.py <a name="PL"></a>
 
@@ -359,7 +367,7 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 Something
 
 
-
+---------------
 
 ### Cluster_Blast_Extract.py <a name="CBE"></a>
 
@@ -390,7 +398,7 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 > **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets.
 
 
-
+---------------
 
 ### Reference_Blast_Extract.py <a name="RBE"></a>
 
@@ -429,7 +437,7 @@ python Reference_Blast_Extract.py -i <input directory> -d <reference fasta name>
 > **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets.
 
 
-
+---------------
 
 ### Contamination_Filter.py <a name="CF"></a>
 
@@ -475,7 +483,7 @@ python Contamination_Filter.py -i <input directory> -d <contamination fasta name
 Something
 
 
-
+---------------
 
 ### Filter_Seqs_and_Species.py <a name="FSS"></a>
 
@@ -522,7 +530,7 @@ python Filter_Seqs_and_Species.py -i <input directory> -f <filter strategy> -l <
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
 
 
-
+---------------
 
 ### Make_Acc_Table.py <a name="MAT"></a>
 
@@ -557,7 +565,7 @@ python Make_Acc_Table.py -i <input directory>
 Something
 
 
-
+---------------
 
 ### Adjust_Direction.py <a name="AD"></a>
 
@@ -576,7 +584,7 @@ python Adjust_Direction.py -i <input directory>
 > **Required**: The full path to a directory which contains the unaligned fasta files.
 
 
-
+---------------
 
 ### Coding_Translation_Tests.py <a name="CTT"></a>
 
@@ -601,7 +609,7 @@ python Coding_Translation_Tests.py -i <input directory> --table <translation tab
 > **Optional**: In addition to forward frames, use reverse complement for translation tests. Not recommended if direction of sequences has already been adjusted.
 
 
-
+---------------
 
 ### Align.py <a name="A"></a>
 
@@ -642,7 +650,7 @@ python Align.py -i <input directory> -a <aligner>
 > **Optional**: Specifies more thorough search settings in mafft, clustalo, or macse (see below).
 
 
-
+---------------
 
 ### Trim_Alignments.py <a name="TAS"></a>
 
@@ -684,7 +692,7 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 Something
 
 
-
+---------------
 
 ### Relabel_Fasta.py <a name="RF"></a>
 
@@ -709,7 +717,7 @@ python Relabel_Fasta.py -i <input directory> -r <relabel option>
 > **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
 
 
-
+---------------
 
 ### Fasta_Convert.py <a name="FC"></a>
 
@@ -726,7 +734,7 @@ python Fasta_Convert.py -i <input directory>
 > **Required**: The full path to a directory which contains the aligned fasta files.
 
 
-
+---------------
 
 ### Concatenation.py <a name="C"></a>
 
@@ -754,7 +762,7 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 
 > **Required**: The output file format for the final concatenated alignment. Choices = *fasta, phylip*.
 
-
+---------------
 
 The end.
 
