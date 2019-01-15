@@ -156,9 +156,9 @@ Linnaea borealis longiflora
 
 ### Obtaining Loci and Search Terms <a name="OLST"></a>
 
-**SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and full description in the record label. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). 
+**SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and longer label in the sequence record. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help to identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). 
 
-The format of the locus text file involves three tab-delimited columns. The first column should contain the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column should contain the known abbreviation for the gene or marker. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column should contain the full label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels).
+The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contain(s) the long label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels).
 
 Here is an example of the formatting for a locus file containing three genes to search for:
 
@@ -173,9 +173,9 @@ In this file:
 + EXPH5 contains one abbreviation and four label search terms.
 + PTPN contains two abbreviations and two label search terms. 
 
-How does the actual locus searching work? 
+**How does the actual locus searching work?**
 
-For locus abbreviations, the sequence record label is split by spaces, stripped of punctuation, and converted to uppercase. Each resulting component is checked to see if it is identical to an included locus abbreviation. If so, a match is found. 
++ For locus abbreviations, the sequence record label is split by spaces, stripped of punctuation, and converted to uppercase. Each resulting component is checked to see if it is identical to an included locus abbreviation. If so, a match is found. 
 
 > If the locus file contains:
 
@@ -214,7 +214,7 @@ CDS
 
 > Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
 
-For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
++ For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
 
 > If the locus file contains:
 
