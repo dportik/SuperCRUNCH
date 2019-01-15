@@ -4,7 +4,7 @@
 
 ## Analysis Overview
 
-Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can be displayed for all scripts on the command line by running them using only the -h flag. 
+Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can be displayed for all scripts on the command line by running them using the -h flag. 
 
 ### [Starting Materials](#GSM):
 + [Obtaining Sequence Data](#OSD)
@@ -42,7 +42,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Fasta_Convert](#FC)
 + [Concatenation](#C)
 
-The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to different analysis goals.   
+The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to achieve various analysis goals.   
 
 
 
@@ -51,7 +51,7 @@ The steps involved in a typical run include executing a majority of these steps.
 
 ## **Starting Material** <a name="GSM"></a>
 
-To run **SuperCRUNCH**, you will need a fasta file of downloaded nucleotide sequence records, a list of taxa, and a list of loci with associated search terms.
+To run **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms.
 
 ---------------
 
@@ -255,6 +255,39 @@ It will be converted to the following search line:
 
 Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
  
+
+And finally, here is an example of the partial contents of a locus file used to retrieve UCE loci, and examples of the sequence records to be searched. Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, so you may have to examine records to determine the best way to define search terms.
+
+Locus search term file partial contents:
+
+```
+UCE-5806	UCE-5806	ultra conserved element locus uce-5806
+UCE-5807	UCE-5807	ultra conserved element locus uce-5807
+UCE-5808	UCE-5808	ultra conserved element locus uce-5808
+```
+
+Example truncated sequence records to search:
+
+```
+>KY160876.1 Kaloula kalingensis voucher RMB1887 ultra conserved element locus uce-5806 genomic sequence
+ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTCAAGGGAATCAGTGTTC
+CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
+
+>KY160875.1 Kaloula pulchra voucher KU328278 ultra conserved element locus uce-5806 genomic sequence
+ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTTAAGGGAATCATTGTTG
+CCATTTTATGCACTCTATTTTAAAATGCATACAGTGGTAGAACAGATGTGTTTTTTTAACCCCATAG...
+
+>KY160874.1 Kaloula picta voucher KU321376 ultra conserved element locus uce-5806 genomic sequence
+ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTCAAGGGAATCAGTGTTG
+CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
+
+>KY160873.1 Kaloula conjuncta negrosensis voucher KU328639 ultra conserved element locus uce-5806 genomic sequence
+ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTCAAGGGAATCAGTGTTG
+CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
+```
+
+Creating the UCE locus search terms file may require more time, but once complete it can be used to perform repeated searches. 
+
 
 ---------------
 
