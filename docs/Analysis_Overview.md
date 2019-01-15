@@ -42,7 +42,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Fasta_Convert](#FC)
 + [Concatenation](#C)
 
-The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and  epending on the analysis goals.   
+The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to different analysis goals.   
 
 
 
