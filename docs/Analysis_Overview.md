@@ -166,7 +166,7 @@ Linnaea borealis longiflora
 
 **SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and longer label in the sequence record. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help to identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). 
 
-The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contain(s) the long label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels).
+The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contain(s) the long label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels). Although the locus text file can be created using Excel or other applications, it must be in tab-delimited text format. Similar to the taxon names file, make sure to open the file in a text editor and ensure the format includes Unix line breaks and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
 
 Here is an example of the formatting for a locus file containing three genes to search for:
 
@@ -185,24 +185,28 @@ In this file:
 
 + For locus abbreviations, the sequence record label is split by spaces, stripped of punctuation, and converted to uppercase. Each resulting component is checked to see if it is identical to an included locus abbreviation. If so, a match is found. 
 
-> If the locus file contains:
++ For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
 
-> `CMOS	cmos;c-mos	oocyte maturation factor`
+**Example of locus abbreviation search:**
 
-> The abbreviations will include:
+If the locus file contains:
+
+`CMOS	cmos;c-mos	oocyte maturation factor`
+
+The abbreviations will include:
 
 ```
 CMOS
 C-MOS
 ```
 
-> Notice the search terms are converted to uppercase
+Notice the search terms are converted to uppercase
 
-> If the sequence record contains the following label:
+If the sequence record contains the following label:
 
-> `>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
+`>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
 
-> Then it will result in the following components:
+Then it will result in the following components:
 
 ```
 >JX838886.1
@@ -220,15 +224,15 @@ PARTIAL
 CDS
 ```
 
-> Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
+Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
 
-+ For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
+**Example of locus label search:**
 
-> If the locus file contains:
+If the locus file contains:
 
-> `EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5`
+`EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5`
 
-> The labels will include:
+The labels will include:
 
 ```
 EXOPHILIN
@@ -237,15 +241,15 @@ EXOPHILIN-5
 EXOPHILIN PROTEIN 5
 ```
 
-> If the sequence record contains the following label:
+If the sequence record contains the following label:
 
-> `>JX999516.1 Liolaemus pictus voucher LP111; exophilin 5 (EXPH5) gene, partial cds`
+`>JX999516.1 Liolaemus pictus voucher LP111; exophilin 5 (EXPH5) gene, partial cds`
 
-> It will be converted to the following search line:
+It will be converted to the following search line:
 
-> `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
+`>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
-> Notice punctuation and parentheses are left intact. In this example, the EXOPHILIN 5 and EXOPHILIN labels will both find a match, but not EXOPHILIN-5 or EXOPHILIN PROTEIN 5.
+Notice punctuation and parentheses are left intact. In this example, the EXOPHILIN 5 and EXOPHILIN labels will both find a match, but not EXOPHILIN-5 or EXOPHILIN PROTEIN 5.
 
 The success of finding loci depends on defining appropriate locus abbreviations and labels. 
 
