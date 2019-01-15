@@ -4,10 +4,13 @@
 
 ## Analysis Overview
 
-Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest.
+Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can be displayed for all scripts on the command line by running them using only the -h flag. 
 
-### [Getting the Starting Material](#GSM):
+### [Starting Materials](#GSM):
++ [Obtaining Sequence Data](#OSD)
 + Optional tool: [Remove_Duplicate_Accessions](#RDA)
++ [Obtaining Taxon Names Lists](#OTNL)
++ [Obtaining Loci and Search Terms](#OLST)
 
 ### [Taxon Filtering and Locus Extraction](#TFLE):
 
@@ -46,16 +49,62 @@ The steps involved in a typical run include executing a majority of these steps.
 
 ---------------
 
-## **Getting the Starting Material** <a name="GSM"></a>
+## **Starting Material** <a name="GSM"></a>
 
-Something
+To run **SuperCRUNCH**, you will need a fasta file of downloaded nucleotide sequence records, a list of taxa, and a list of loci with associated search terms.
 
+### Obtaining Sequence Data <a name="OSD"></a>
 
+The starting molecular data for **SuperCRUNCH** consists of a fasta file of downloaded nucleotide sequence records from the [NCBI nucleotide database (GenBank)](https://www.ncbi.nlm.nih.gov/nucleotide/). The simplest way to obtain these data is to search for a taxonomic term on the nucleotide database and download all the available records in fasta format. However, for larger taxonomic groups (ex. all birds or frogs) this may not be possible as there will be too much data to download directly. In this case, it is better to split searches using the taxonomy of the group (order, clade, family, etc), download each record set in fasta format, and then combine the resulting fasta files. The [NCBI taxonomy browser](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi) is particularly useful for identifying the relevant taxonomic search terms. Advanced users may choose to use additional search terms to filter the results, which could help reduce the resulting file size, but this is not necessary. The downloaded fasta files may be quite large in size (several GB) and it is unlikely you can use a text editor to open and edit them, so combining files requires a different approach. The fasta files will all have the extension '.fasta', and they can be quickly combined using Unix. If the fasta files are all in the same working directory, you can use the following command to accomplish this:
 
+`cat *.fasta > Combined.fasta`
+
+The starting fasta file can be in the interleaved format or sequential format, as demonstrated below: 
+
+**Interleaved format:**
+```
+>KP820543.1 Callisaurus draconoides voucher MVZ265543 aryl hydrocarbon receptor (anr) gene, partial cds
+TAAAATTTCCTTTGAAAGGAACCTTTTTGTGGACACCAGGGATGAATTGGGTAATGTAATGGCGAGCGAT
+TGGCAGGAAAATATTTTGCCAGTGAGGAATAACAGCATTCTCAAACAAGAGCAGACAGAGTGCCCCCAGG
+
+>KP820544.1 Urosaurus ornatus voucher UWBM7587 aryl hydrocarbon receptor (anr) gene, partial cds
+TAAAATCTCCTTTGAAAGGAACCTTTTTGTGGACACCAGGGATGAATTAGGTAATGTAATGGCCAGCGAT
+TGGCAGGAAAATATTTTGCCAGTGAGGAATAACAGCATCCTCAAACAAGAACAGACTGAGTGCCCCCAGG
+```
+
+**Sequential format:**
+```
+>KP820543.1 Callisaurus draconoides voucher MVZ265543 aryl hydrocarbon receptor (anr) gene, partial cds
+TAAAATTTCCTTTGAAAGGAACCTTTTTGTGGACACCAGGGATGAATTGGGTAATGTAATGGCGAGCGATTGGCAGGAAAATATTTTGCCAGTGAGGAATAACAGCATTCTCAAACAAGAGCAGACAGAGTGCCCCCAGG
+
+>KP820544.1 Urosaurus ornatus voucher UWBM7587 aryl hydrocarbon receptor (anr) gene, partial cds
+TAAAATCTCCTTTGAAAGGAACCTTTTTGTGGACACCAGGGATGAATTAGGTAATGTAATGGCCAGCGATTGGCAGGAAAATATTTTGCCAGTGAGGAATAACAGCATCCTCAAACAAGAACAGACTGAGTGCCCCCAGG
+```
+
+The record labels must have a > with a unique accession number, followed by a sequence description. If curated properly, the description line will contain a taxon name, locus information, and possibly several other identifiers, all separated by whitespace. There should not be any vertical bars (|) separating information contained in the sequence label. **SuperCRUNCH** cannot properly parse this format.
+
+The following vertical bar fasta format is ***NOT*** supported by **SuperCRUNCH**:
+
+```
+>gi|2765657|emb|Z78532.1|CCZ78532 C.californicum 5.8S rRNA gene and ITS1 and ITS2 DNA
+CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAACAGAATATATGATCGAGTG
+AATCTGGAGGACCTGTGGTAACTCAGCTCGTCGTGGCACTGCTTTTGTCGTGACCCTGCTTTGTTGTTGG
+
+>gi|2765656|emb|Z78531.1|CFZ78531 C.fasciculatum 5.8S rRNA gene and ITS1 and ITS2 DNA
+CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAGCAGAACATACGATCGAGTG
+AATCCGGAGGACCCGTGGTTACACGGCTCACCGTGGCTTTGCTCTCGTGGTGAACCCGGTTTGCGACCGG
+```
+
+If your starting sequence set is in this format, you will need to convert it to the simpler whitespace fasta format before attempting to run **SuperCRUNCH**.
 
 ### Remove_Duplicate_Accessions.py <a name="RDA"></a>
 
-Something.
+Sometimes combining several fasta files can produce duplicate entries, in other words records with identical accession numbers. This will cause problems with the way **SuperCRUNCH** loads fasta files, as there can be no duplicate accession numbers. You will know this is the case if you try to run a script and it produces the following error:
+
+`ValueError: Duplicate key 'AF443291.2'`
+
+In this instance, there are two records each containing the accession number AF443291.2. In order to use **SuperCRUNCH**, you'll need to clean the fasta file to remove any duplicate accession numbers. This script can be used for this purpose.
+
 
 #### Basic Usage:
 
@@ -73,7 +122,92 @@ python Remove_Duplicate_Accessions.py -i <fasta file> -o <output directory>
 
 > **Required**: The full path to an existing directory to write  output fasta file.
 
+By running this script, all duplicate entries will be removed and a new fasta file will be written to the output directory called *Cleaned.fasta*. This fasta file should be used to run **SuperCRUNCH**.
 
+### Obtaining Taxon Names Lists <a name="OTNL"></a>
+
+**SuperCRUNCH** requires a list of taxon names that is used to filter sequences. Lists of taxon names can be obtained through general databases, such as the NCBI Taxonomy Browser. In many cases there are specific databases dedicated to major groups, for example the [Reptile Database](http://www.reptile-database.org/), [AmphibiaWeb](https://amphibiaweb.org/), and [Amphibian Species of the World](http://research.amnh.org/vz/herpetology/amphibia/), which usually contain up-to-date taxonomies in a downloadable format. 
+
+The taxon names list required is a simple text file which contains one taxon name per line. The file can contain a mix of species (binomial) and subspecies (trinomial) names, and components of each taxon name should be separated by a space (rather than undescore). Sometimes using Excel or other applications to generate the taxon names text file will include hidden characters not compatible with **SuperCRUNCH**, so make sure to open the file in a text editor and ensure the format includes Unix line breaks and UTF-8 encoding.
+Below are some example contents from suitable taxon name lists:
+
+A partial list containing species (binomial) names:
+
+```
+Lygodactylus regulus
+Lygodactylus rex
+Lygodactylus roavolana
+Lygodactylus scheffleri
+Lygodactylus scorteccii
+Lygodactylus somalicus
+```
+
+A partial list containing species (binomial) and subspecies (trinomial) names:
+
+```
+Leycesteria crocothyrsos
+Leycesteria formosa
+Linnaea borealis americana
+Linnaea borealis borealis
+Linnaea borealis longiflora
+```
+
+**SuperCRUNCH** offers the option to exclude subspecies from searches, so a taxon list containing a mix of species and subspecies does not need to be pruned by hand if subspecies are not desired in the analysis. The effect of this option with different types of taxon lists is explained in usage of the *Taxa_Assessment.py* script.
+
+### Obtaining Loci and Search Terms <a name="OLST"></a>
+
+**SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and full description in the record label. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). 
+
+The format of the locus text file involves three tab-delimited columns. The first column should contain the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column should contain the known abbreviation for the gene or marker. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column should contain the full label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels).
+
+Here is an example of the formatting for a locus file containing three genes to search for:
+
+```
+CMOS	CMOS;C-MOS	oocyte maturation factor
+EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5
+PTPN	PTPN;PTPN12	protein tyrosine phosphatase;tyrosine phosphatase non-receptor type 12
+```
+
+In this file:
++ CMOS contains two abbreviations and one label search term. 
++ EXPH5 contains one abbreviation and four label search terms.
++ PTPN contains two abbreviations and two label search terms. 
+
+How does the actual locus searching work? 
+
+For abbreviations, the sequence record label is split by spaces and checked to see if the abbreviation is contained within. 
+
+> If the locus file contains:
+`CMOS	cmos;c-mos	oocyte maturation factor`
+
+> The abbreviations will include:
+```
+CMOS
+C-MOS
+```
+
+> Notice the search terms are converted to uppercase
+
+> If the sequence record contains the following label:
+`>JX838886.1 Acanthocercus annectens voucher CAS 227508 oocyte maturation factor (CMOS) gene, partial cds`
+
+> Then it will result in the following components:
+```
+ACANTHOCERCUS
+ANNECTENS
+VOUCHER
+CAS
+227508
+OOCYTE
+MATURATION
+FACTOR
+CMOS
+GENE
+PARTIAL
+CDS
+```
+
+> Notice the line is stripped of all punctuation and converted to uppercase. In this case, a match will be found using the CMOS search term, but not the C-MOS term. 
 
 
 ---------------
