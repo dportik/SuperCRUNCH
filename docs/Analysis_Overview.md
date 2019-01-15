@@ -51,7 +51,7 @@ The steps involved in a typical run include executing a majority of these steps.
 
 ## **Starting Material** <a name="GSM"></a>
 
-To run **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms.
+To run **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms. Information on how to create these files is below.
 
 ---------------
 
@@ -253,10 +253,10 @@ It will be converted to the following search line:
 
 `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
-Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
+Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. The line is then checked to see if any supplied locus label is contained within. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
  
 
-And finally, here is an example of the partial contents of a locus file used to retrieve UCE loci, and examples of the sequence records to be searched. Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, so you may have to examine records to determine the best way to define search terms.
+And finally, here is an example of the partial contents of a locus file used to retrieve UCE loci, and examples of the sequence records to be searched. Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, so you may have to examine records to determine the best way to define search terms. These are specific to UCE records I found for a set of frog species.
 
 Locus search term file partial contents:
 
@@ -286,7 +286,7 @@ ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTCAAGGGAATCAGTGTTG
 CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 ```
 
-Creating the UCE locus search terms file may require more time, but once complete it can be used to perform repeated searches. 
+The locus search terms would successfully retrieve the corresponding loci in the example above. Creating the UCE locus search terms file may require more time, but once complete it can be used to perform any number of searches. 
 
 
 ---------------
@@ -295,8 +295,7 @@ Creating the UCE locus search terms file may require more time, but once complet
 
 ![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.jpg)
 
-Something
-
+This section deals with the first filtering steps, which include screening sequence records for taxon names and gene/marker/locus identity. To run these steps in **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms. Information on obtaining these files is provided in the section above. The *Taxa_Assessment.py* and *Rename_Merge.py* scripts are optional, but highly recommended. *Taxa_Assessment.py* identifies all valid and invalid taxon names contained within the starting fasta file. *Rename_Merge.py* is an optional data cleaning step that can be used to replace invalid taxon names with updated valid names for corresponding  sequence records. This relabeling step allows the records to pass the taxonomy filter, whereas before the invalid taxon name would have caused them to be discarded. The original or updated fasta file can then be processed using *Parse_Loci.py*. For each locus included, a fasta file is produced from records containing valid taxon names that also matched one or more of the locus-specific search terms.
 
 ---------------
 
