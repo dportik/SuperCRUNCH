@@ -178,10 +178,11 @@ How does the actual locus searching work?
 For abbreviations, the sequence record label is split by spaces and checked to see if the abbreviation is contained within. 
 
 > If the locus file contains:
-`CMOS	cmos;c-mos	oocyte maturation factor`
+
+> `CMOS	cmos;c-mos	oocyte maturation factor`
 
 > The abbreviations will include:
-```
+> ```
 CMOS
 C-MOS
 ```
@@ -189,10 +190,11 @@ C-MOS
 > Notice the search terms are converted to uppercase
 
 > If the sequence record contains the following label:
-`>JX838886.1 Acanthocercus annectens voucher CAS 227508 oocyte maturation factor (CMOS) gene, partial cds`
+
+> `>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
 
 > Then it will result in the following components:
-```
+> ```
 ACANTHOCERCUS
 ANNECTENS
 VOUCHER
@@ -207,7 +209,7 @@ PARTIAL
 CDS
 ```
 
-> Notice the line is stripped of all punctuation and converted to uppercase. In this case, a match will be found using the CMOS search term, but not the C-MOS term. 
+> Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
 
 
 ---------------
