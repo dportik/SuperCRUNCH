@@ -179,7 +179,7 @@ For locus abbreviations, the sequence record label is split by spaces, stripped 
 
 > If the locus file contains:
 
-`CMOS	cmos;c-mos	oocyte maturation factor`
+> `CMOS	cmos;c-mos	oocyte maturation factor`
 
 > The abbreviations will include:
 
@@ -192,7 +192,7 @@ C-MOS
 
 > If the sequence record contains the following label:
 
-`>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
+> `>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
 
 > Then it will result in the following components:
 
@@ -218,7 +218,7 @@ For locus labels, the sequence record label is converted to uppercase (punctuati
 
 > If the locus file contains:
 
-`EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5`
+> `EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5`
 
 > The labels will include:
 
@@ -231,11 +231,11 @@ EXOPHILIN PROTEIN 5
 
 > If the sequence record contains the following label:
 
-`>JX999516.1 Liolaemus pictus voucher LP111; exophilin 5 (EXPH5) gene, partial cds`
+> `>JX999516.1 Liolaemus pictus voucher LP111; exophilin 5 (EXPH5) gene, partial cds`
 
 > It will be converted to the following search line:
 
-`>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
+> `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
 > Notice punctuation and parentheses are left intact. In this example, the EXOPHILIN 5 and EXOPHILIN labels will both find a match, but not EXOPHILIN-5 or EXOPHILIN PROTEIN 5.
 
