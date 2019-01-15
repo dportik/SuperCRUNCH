@@ -168,6 +168,8 @@ Linnaea borealis longiflora
 
 The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contain(s) the long label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels). Although the locus text file can be created using Excel or other applications, it must be in tab-delimited text format. Similar to the taxon names file, make sure to open the file in a text editor and ensure the format includes Unix line breaks and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
 
+The success of finding loci depends on defining appropriate locus abbreviations and labels. Examples of how searches work can be found below, which should guide how to select good search terms. For any locus, it is a good idea to examine several records using GenBank to identify commonly used labels.
+
 Here is an example of the formatting for a locus file containing three genes to search for:
 
 ```
@@ -186,6 +188,8 @@ In this file:
 + For locus abbreviations, the sequence record label is split by spaces, stripped of punctuation, and converted to uppercase. Each resulting component is checked to see if it is identical to an included locus abbreviation. If so, a match is found. 
 
 + For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
+
++ If a locus abbreviation *or* a locus label is matched to the contents of a sequence record, the record will pass the filtering step. 
 
 **Example of locus abbreviation search:**
 
@@ -224,7 +228,7 @@ PARTIAL
 CDS
 ```
 
-Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
+Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term.
 
 **Example of locus label search:**
 
@@ -249,9 +253,8 @@ It will be converted to the following search line:
 
 `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
-Notice punctuation and parentheses are left intact. In this example, the EXOPHILIN 5 and EXOPHILIN labels will both find a match, but not EXOPHILIN-5 or EXOPHILIN PROTEIN 5.
-
-The success of finding loci depends on defining appropriate locus abbreviations and labels. 
+Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
+ 
 
 ---------------
 
