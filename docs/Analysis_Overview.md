@@ -44,9 +44,9 @@ The steps involved in a typical run include executing a majority of these steps.
 
 
 
+---------------
 
 ## **Getting the Starting Material** <a name="GSM"></a>
----------------
 
 Something
 
@@ -76,10 +76,9 @@ python Remove_Duplicate_Accessions.py -i <fasta file> -o <output directory>
 
 
 
+---------------
 
 ## **Taxon Filtering and Locus Extraction** <a name="TFLE"></a>
-
----------------
 
 ![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.jpg)
 
@@ -186,10 +185,9 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 
 
 
+---------------
 
 ## **Orthology Filtering** <a name="OF"></a>
-
----------------
 
 ![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.jpg)
 
@@ -303,11 +301,9 @@ python Contamination_Filter.py -i <input directory> -d <contamination fasta name
 
 
 
-
+---------------
 
 ## **Sequence Quality Filtering and Selection** <a name="SQFS"></a>
-
----------------
 
 ![F3](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig3.jpg)
 
@@ -387,11 +383,9 @@ python Make_Acc_Table.py -i <input directory>
 
 
 
-
+---------------
 
 ## **Sequence Alignment** <a name="SA"></a>
-
----------------
 
 ![F4](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig4.jpg)
 
@@ -515,11 +509,10 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 
 
 
-
+---------------
 
 ## **File Formatting Tasks** <a name="FFT"></a>
 
----------------
 
 ![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
 
@@ -601,5 +594,4 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 The end.
 
 ------
-
 *Last updated: January 2019*
