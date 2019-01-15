@@ -175,14 +175,15 @@ In this file:
 
 How does the actual locus searching work? 
 
-For abbreviations, the sequence record label is split by spaces and checked to see if the abbreviation is contained within. 
+For locus abbreviations, the sequence record label is split by spaces, stripped of punctuation, and converted to uppercase. Each resulting component is checked to see if it is identical to an included locus abbreviation. If so, a match is found. 
 
 > If the locus file contains:
 
-> `CMOS	cmos;c-mos	oocyte maturation factor`
+`CMOS	cmos;c-mos	oocyte maturation factor`
 
 > The abbreviations will include:
-> ```
+
+```
 CMOS
 C-MOS
 ```
@@ -191,10 +192,12 @@ C-MOS
 
 > If the sequence record contains the following label:
 
-> `>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
+`>JX838886.1 Acanthocercus annectens voucher CAS 227508; oocyte maturation factor (CMOS) gene, partial cds`
 
 > Then it will result in the following components:
-> ```
+
+```
+>JX838886.1
 ACANTHOCERCUS
 ANNECTENS
 VOUCHER
@@ -211,6 +214,32 @@ CDS
 
 > Notice the line is stripped of all punctuation (including parentheses) and converted to uppercase. In this example, a match will be found using the CMOS search term, but not the C-MOS term. 
 
+For locus labels, the sequence record label is converted to uppercase (punctuation is left intact). The line is then checked to see if contains an included locus label. If so, a match is found. 
+
+> If the locus file contains:
+
+`EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5`
+
+> The labels will include:
+
+```
+EXOPHILIN
+EXOPHILIN 5
+EXOPHILIN-5
+EXOPHILIN PROTEIN 5
+```
+
+> If the sequence record contains the following label:
+
+`>JX999516.1 Liolaemus pictus voucher LP111; exophilin 5 (EXPH5) gene, partial cds`
+
+> It will be converted to the following search line:
+
+`>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
+
+> Notice punctuation and parentheses are left intact. In this example, the EXOPHILIN 5 and EXOPHILIN labels will both find a match, but not EXOPHILIN-5 or EXOPHILIN PROTEIN 5.
+
+The success of finding loci depends on defining appropriate locus abbreviations and labels. 
 
 ---------------
 
