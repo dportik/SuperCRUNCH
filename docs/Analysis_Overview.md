@@ -447,7 +447,7 @@ KP297496.1 -> Linnaea borealis borealis
 KP297498.1 -> Linnaea borealis longiflora
 ```
 
-Any record of `Linnaea borealis` missing a valid subspecies label will be lumped in with all other `Linnaea borealis`, whereas those containing valid subspecies labels will be assigned to those subspecies. 
+Any record of `Linnaea borealis` missing a valid subspecies label will be lumped in with all other `Linnaea borealis`, whereas those containing valid subspecies labels will be assigned to the correct subspecies. 
 
 The following taxa would be detected and included from each record if the `--no_subspecies` flag is included:
 
@@ -461,10 +461,11 @@ This effectively groups all the subspecies under the species name `Linnaea borea
 
 To summarize: 
 
-+ If the taxon names list contains only species then there can be no searching for subspecies labels, and the presence or absence of the `--no_subspecies` flag has no effect.
-+ If the taxon names list contains a mix of species and subspecies labels, the `--no_subspecies` flag can change the outcome. 
-+ Using the `--no_subspecies` flag reduces subspecies names to species names, and will result in less taxa (ie three subspecies all become one equivalent species). 
-+ Omitting the `--no_subspecies` flag will produce a greater number of taxa if there are valid subspecies present in the starting sequences.
++ If the taxon names list contains only species then searches for subspecies labels cannot occur, and therefore the presence or absence of the `--no_subspecies` flag has no effect.
++ If the taxon names list contains a mix of species and subspecies labels, then the `--no_subspecies` flag can substantially change the outcome. 
++ Using the `--no_subspecies` flag reduces all subspecies names to corresponding species names, and is expected to result in less taxa recovered.
++ Omitting the `--no_subspecies` flag is expected to produce a greater number of taxa if valid subspecies are present in the starting sequences.
++ There is no downside to having subspecies labels in the taxon list file, because they can effectively be ignored while capturing all relevant species labels.
 
 ---------------
 
