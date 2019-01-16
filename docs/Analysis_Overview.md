@@ -2,9 +2,9 @@
 
 ---------------
 
-## Analysis Overview
+## Analysis Overview and Detailed Instructions
 
-Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can be displayed for all scripts on the command line by running them using the -h flag. 
+Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can also be displayed for all scripts on the command line by running them using the -h flag. 
 
 ### [Starting Materials](#GSM):
 + [Obtaining Sequence Data](#OSD)
@@ -271,7 +271,7 @@ uce-5808	uce-5808	xxxxxxxxxxxx
 uce-5810	uce-5810	xxxxxxxxxxxx
 ```
 
-Notice the third column is junk. Unfortunately, UCE loci have been numbered in a suboptimal way. For example, uce-1 instead of uce-0001. This causes problems when searching for locus labels, because the term `uce-1` is contained in `uce-10`, `uce-104`, `uce-1038`, etc. Because of this the label search will not work properly, and so we rely exclusively on the abbreviation to find the correct sequences.
+Notice the third column is junk. Unfortunately, UCE loci have been numbered in a suboptimal way. For example, uce-1 instead of uce-0001. This causes problems when searching for locus labels, because the term `uce-1` is contained inside of `uce-10`, `uce-104`, `uce-1038`, etc. Because of this, the label search will not work properly, and so we have to rely exclusively on the abbreviation to find the correct sequences.
 
 Here is an example of some frog UCE records I searched:
 
@@ -357,16 +357,18 @@ The resulting parsed lists are:
 
 `subspecies = [Linnaea borealis americana, Linnaea borealis borealis, Linnaea borealis longiflora]`
 
-Notice that even though there wasn't a binomial name provided for *Linnaea borealis*, it was automatically created based on the subspecies present. The genus+species of any subspecies label will always be included in the species list. This is true regardless of whether the `--no_subspecies` flag is included or not. 
+Notice that even though there wasn't a binomial name provided for *Linnaea borealis*, it was automatically generated based on the subspecies labels. This is true regardless of whether the `--no_subspecies` flag is included or not. 
 
-How does the `--no_subspecies` flag impact searches? I will use the above taxon list and the following example records to illustrate:
+**How does the `--no_subspecies` flag impact searches?**
+
+I will use the above taxon list and the following example records to illustrate:
 
 ```
 >FJ745393.1 Leycesteria crocothyrsos voucher N. Pyck 1992-1691 maturase K (matK) gene, partial cds; chloroplast
 >KC474956.1 Linnaea borealis americana voucher Bennett_06-432_CAN maturase K (matK) gene, partial cds; chloroplast
 ```
 
-Each record is always parsed to construct a species (binomial) and subspecies (trinomial) name. This would produce the following results:
+Each sequence record is always parsed to construct a species (binomial) and subspecies (trinomial) name. This would produce the following results:
 
 ```
 Leycesteria crocothyrsos #species
@@ -384,7 +386,7 @@ As you can see above, every subspecies contains a species label. This allows a s
     1. If no, the species name will be used. 
     2. If yes, the subspecies name will be used instead.
 
-In the example above, `Leycesteria crocothyrsos` is in the species list, but `Leycesteria crocothyrsos voucher` is an obviously incorrect name and is absent from the subspecies list. In this case, the species name `Leycesteria crocothyrsos` will be used for that record. In the other example, `Linnaea borealis` is in the species list, and `Linnaea borealis americana` is present in the subspecies list, so `Linnaea borealis americana` is the name used.
+In the example above, `Leycesteria crocothyrsos` is in the species list, but `Leycesteria crocothyrsos voucher` is an obviously incorrect name and is absent from the subspecies list. In this case, the species name `Leycesteria crocothyrsos` will be used for that record. In the other example, `Linnaea borealis` is in the species list, but `Linnaea borealis americana` is also present in the subspecies list, so `Linnaea borealis americana` will be used for that record.
 
 If the `--no_subspecies` flag is included, the following checks are performed:
 
@@ -394,7 +396,9 @@ If the `--no_subspecies` flag is included, the following checks are performed:
 
 In the example above, `Leycesteria crocothyrsos` and `Linnaea borealis` would be the names used. Essentially, the `--no_subspecies` flag elevates all the subspecies to the species level.
 
-If the taxon list file contains only species (binomial) names:
+Let's use another example.
+
+Here, the taxon list file contains only species (binomial) names:
 
 ```
 Draco beccarii
@@ -407,15 +411,15 @@ Draco cornutus
 Draco cristatellus
 ```
 
-Then the species list will be populated and the subspecies list will be empty:
+If only binomial names are present, then the resulting species list will be populated and the resulting subspecies list will be empty:
 
 `species = [Draco beccarii, Draco biaro, Draco bimaculatus, Draco blanfordii, Draco boschmai, Draco bourouniensis, Draco cornutus, Draco cristatellus]`
 
 `subspecies = []`
 
-If this happens then the `--no_subspecies` flag will have no effect on the analysis. That is, even is the `--no_subspecies` flag is omitted, there aren't any subspecies to reference and the only possible outcome is to find species names.
+In this example the `--no_subspecies` flag will have no effect on the analysis. That is, even is the `--no_subspecies` flag is omitted, there aren't any subspecies to reference and the only possible outcome is to find species names.
 
-There are also some special cases depending on the taxon list and sequence set.
+There are also some special cases depending on combinations of the taxon list and sequence set.
 
 Given the following taxon list:
 
