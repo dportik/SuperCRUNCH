@@ -313,7 +313,7 @@ The goal of this script is to search through records in a fasta file of NCBI nuc
 
 Two output fasta files are written to the specified output directory: one containing only records with valid taxon names, and one containing records with invalid taxon names. Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the **Rename_Merge.py** script. 
 
-The decision to include or exclude subspecies labels is up to the user, and can be specified using the `--no_subspecies` flag. For a thorough explanation of how this flag affects the analysis, please see below.
+The decision to include or exclude subspecies labels is up to the user, and can be specified using the `--no_subspecies` flag. For a thorough explanation of how taxonomy searches are conducted and how this flag affects this step (and others), please see below.
 
 #### Basic Usage:
 
