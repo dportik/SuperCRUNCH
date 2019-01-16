@@ -459,7 +459,7 @@ KP297498.1 -> Linnaea borealis
 ```
 This effectively groups all the subspecies under the species name `Linnaea borealis`.
 
-To summarize: 
+**To summarize:**
 
 + If the taxon names list contains only species then searches for subspecies labels cannot occur, and therefore the presence or absence of the `--no_subspecies` flag has no effect.
 + If the taxon names list contains a mix of species and subspecies labels, then the `--no_subspecies` flag can substantially change the outcome. 
