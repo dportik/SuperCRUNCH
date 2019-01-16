@@ -455,7 +455,12 @@ def write_fasta(search_set,prefix,record_index):
     with open(out_fasta, 'a') as fh_out:
         for acc in acc_list:
             fh_out.write(">{0}\n{1}\n".format(record_index[acc].description,record_index[acc].seq))
-    print "\t\tWrote {0} records to {1}\n".format(len(search_set),out_fasta)
+    if os.stat(out_fasta).st_size == 0:
+    	print "\t\tNo records produced for {1}, removing file.".format(len(search_set),out_fasta)
+    	os.remove(out_fasta)
+    else:
+        print "\t\tWrote {0} records to {1}\n".format(len(search_set),out_fasta)
+
 
 def main():
     '''

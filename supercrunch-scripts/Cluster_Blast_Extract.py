@@ -243,7 +243,7 @@ def split_name(string, index, delimiter):
 def get_seq_dict(search_dir, end_dir, string):
     os.chdir(search_dir)
     for f in os.listdir('.'):
-        if f.startswith(string):
+        if f.split('.')[0] == string:
             record_dict = SeqIO.index(f, "fasta")
     os.chdir(end_dir)
     return record_dict
@@ -679,7 +679,7 @@ def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_di
 
         #locate the name of the original gene fasta file
         for f in fasta_list:
-            if f.startswith(gene_name):
+            if f.split('.')[0] == gene_name:
                 emp_fasta = f
         #move to main directory and write sequences (based on coordinates) to fasta file
         os.chdir(main_dir)
@@ -727,6 +727,7 @@ def main():
     os.chdir(args.in_dir)
 
     cluster_info = Identify_Clusters(parse_dir, args.in_dir)
+    # [Gene1 [cluster file name, record count],[cluster file name, record count] ], [Gene 2 [cluster file name, record count],[cluster file name, record count] ]
     print '\n\n\n====================================================\n'
     print "Summary of clusters generated for all loci\n"
     print '======================================================\n\n'

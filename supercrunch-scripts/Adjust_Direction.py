@@ -2,17 +2,19 @@
 SuperCRUNCH: Adjust_Direction module
 
 Usage: python Adjust_Direction.py -i [directory with all fasta files] (REQUIRED)
+                                  --accurate (OPTIONAL)
 
     Adjust_Direction: The purpose of this script is to check sequences to ensure their proper direction
     before performing alignments or additional filtering (for example based on translation). 
     The input is an unaligned fasta file and the output is an unaligned fasta file with 
     all sequences in the 'correct' direction.
      
-    This function processes an unaligned fasta file and adjusts sequence directions based on
-    the --adjustdirectionaccurately implementation of mafft. The output from mafft is an
-    interleaved fasta with sequences in all lowercase, and sequences that have been
-    reversed are flagged with an '_R_' at the beginning of the record ID. This script
-    takes that file and converts it to a cleaner format. Sequences are written in
+    This function processes an unaligned fasta file and adjusts sequence directions by default 
+    using the --adjustdirection implementation of mafft. If the optional --accurate flag is included,
+    it will use the --adjustdirectionaccurately option, which is slower but more accurate.
+    The output from mafft is an interleaved fasta with sequences in all lowercase, and sequences 
+    that have been reversed are flagged with an '_R_' at the beginning of the record ID. This 
+    script takes that file and converts it to a cleaner format. Sequences are written in
     uppercase, are ungapped (stripping alignment), and the '_R_' is removed from
     sequence records containing sequences that were reversed. A log file is produced
     that indicates how many sequences were reversed vs. not, and the record IDs of the
@@ -72,11 +74,12 @@ def get_args():
     The input is an unaligned fasta file and the output is an unaligned fasta file with 
     all sequences in the 'correct' direction.
      
-    This function processes an unaligned fasta file and adjusts sequence directions based on
-    the --adjustdirectionaccurately implementation of mafft. The output from mafft is an
-    interleaved fasta with sequences in all lowercase, and sequences that have been
-    reversed are flagged with an '_R_' at the beginning of the record ID. This script
-    takes that file and converts it to a cleaner format. Sequences are written in
+    This function processes an unaligned fasta file and adjusts sequence directions by default 
+    using the '--adjustdirection' implementation of mafft. If the optional --accurate flag is included,
+    it will use the '--adjustdirectionaccurately' option, which is slower but more accurate.
+    The output from mafft is an interleaved fasta with sequences in all lowercase, and sequences 
+    that have been reversed are flagged with an '_R_' at the beginning of the record ID. This 
+    script takes that file and converts it to a cleaner format. Sequences are written in
     uppercase, are ungapped (stripping alignment), and the '_R_' is removed from
     sequence records containing sequences that were reversed. A log file is produced
     that indicates how many sequences were reversed vs. not, and the record IDs of the
@@ -102,9 +105,10 @@ def get_args():
     DEPENDENCIES: Python: BioPython; Executables in path: mafft.
 	---------------------------------------------------------------------------""")
     parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input fasta files. Follow labeling format: NAME.fasta")
+    parser.add_argument("--accurate", action='store_true', help="OPTIONAL: Use --adjustdirectionaccurately MAFFT implementation, rather than --adjustdirection.")
     return parser.parse_args()
 
-def directory_mafft_adjust(in_dir):
+def directory_mafft_adjust(in_dir, accurate):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the mafft_adjust function
@@ -126,7 +130,7 @@ def directory_mafft_adjust(in_dir):
 
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for f in f_list:
-        summary = mafft_adjust(f)
+        summary = mafft_adjust(f, accurate)
         with open(log_name, 'a') as fh_log:
             fh_log.write("{}\t{}\t{}\n".format(summary[0],summary[1],summary[2]))
         for fout in os.listdir('.'):
@@ -137,13 +141,16 @@ def directory_mafft_adjust(in_dir):
     print "Finished sequence direction adjustments."
     print "--------------------------------------------------------------------------------------\n\n"
 
-def mafft_adjust(f):
+def mafft_adjust(f, accurate):
     print "\n\nAdjusting direction of sequences for {}\n\n".format(f)
     tb = datetime.now()
     #find correct filename prefix to use
     prefix = f.split('.')[0]
     #create command line string and use
-    call_string = "mafft --adjustdirectionaccurately {0} > {1}_temp.fasta".format(f, prefix)
+    if accurate is True:
+        call_string = "mafft --adjustdirectionaccurately {0} > {1}_temp.fasta".format(f, prefix)
+    else:
+        call_string = "mafft --adjustdirection {0} > {1}_temp.fasta".format(f, prefix)
     print call_string, '\n'
     proc = sp.call(call_string, shell=True)
     #load adjusted fasta file as indexed dictionary structure
@@ -186,7 +193,7 @@ def mafft_adjust(f):
 def main():
     tb = datetime.now()
     args = get_args()
-    directory_mafft_adjust(args.in_dir)
+    directory_mafft_adjust(args.in_dir, args.accurate)
     tf = datetime.now()
     te = tf - tb
     print "\n\nTotal time to adjust sequences across all fasta files: {0} (H:M:S)\n\n".format(te)

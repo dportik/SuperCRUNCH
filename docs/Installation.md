@@ -13,7 +13,7 @@
 
 ### ***Python Packages***
 
-**SuperCRUNCH** is written in Python (2.7). It requires having the [Numpy](http://www.numpy.org/) and [Biopython]((https://biopython.org/)) python packages installed. Numpy is a package for scientific computing, and it is generally included with the Python library in newer platforms. Numpy can also be installed as part of the SciPy package collection and instructions for doing so can be found [here](http://www.numpy.org/). Biopython is used to read and write sequence data files and perform various functions. Biopython can be installed using pip or installed from source, and instructions for doing so can be found [here](https://biopython.org/wiki/Download).
+**SuperCRUNCH** is written in Python (2.7). It requires having the [Numpy](http://www.numpy.org/) and [Biopython]((https://biopython.org/)) python packages installed. Numpy is a package for scientific computing, and it is generally included with the Python library in newer platforms. Numpy can also be installed as part of the SciPy package collection and instructions for doing so can be found [here](http://www.numpy.org/). Biopython is used to read and write sequence data files and perform various functions. Biopython can be installed using pip or installed from source, and instructions for doing so can be found [here](https://biopython.org/wiki/Download). **SuperCRUNCH** has been tested for BioPython v1.7.2 and 1.7.3.
 
 ### ***External Dependencies***
 
