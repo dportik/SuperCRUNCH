@@ -301,7 +301,11 @@ This section deals with the first filtering steps, which include screening seque
 
 ### Taxa_Assessment.py <a name="TA"></a>
 
-Something
+The goal of this script is to search through records in a fasta file of NCBI nucleotide sequences to determine whether or not they contain a taxon name present in the user-supplied taxon list. The taxon names list can contain a mix of species (binomial name) and subspecies (trinomial name) labels, and searches are not case-sensitive. 
+
+Two output fasta files are written to the specified output directory: one containing only records with valid taxon names, and one containing records with invalid taxon names. Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the **Rename_Merge.py** script. 
+
+The decision to include or exclude subspecies labels is up to the user, and can be specified using the `--no_subspecies` flag. For a thorough explanation of how this flag affects the analysis, please see below.
 
 #### Basic Usage:
 
@@ -317,7 +321,7 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 
 ##### `-t <path-to-file>`
 
-> **Required**: The full path to a text file containing all taxon names  to cross-reference in the fasta file.
+> **Required**: The full path to a text file containing all taxon names to cross-reference in the fasta file.
 
 ##### `-o <path-to-directory>`
 
@@ -327,6 +331,30 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
 
+To understand how the `--no_subspecies` flag can impact analyses, it is important to demonstrate how the taxon list is being parsed. Regardless of the type of names present in this file (species or subspecies), two lists are constructed. One if filled with species (binomial) names, and the other with subspecies (trinomial) names.
+
+Example taxon list file:
+
+```
+Leycesteria crocothyrsos
+Leycesteria formosa
+Linnaea borealis americana
+Linnaea borealis borealis
+Linnaea borealis longiflora
+```
+
+The resulting parsed lists are:
+
+`species = [Leycesteria crocothyrsos, Leycesteria formosa, Linnaea borealis]`
+
+`subspecies = [Linnaea borealis americana, Linnaea borealis borealis, Linnaea borealis longiflora]`
+
+Notice that even though there wasn't a binomial name provided for *Linnaea borealis*, it was automatically created based on the subspecies present. This is true regardless of whether the `--no_subspecies` flag is included or not.
+
+The main difference 
+
+
+If the taxon list file only contains species (binomial) names, the resulting subspecies list will be empty and the `--no_subspecies flag` will have no effect on the analysis.
 
 ---------------
 
