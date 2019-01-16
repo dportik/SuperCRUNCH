@@ -11,6 +11,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + Optional tool: [Remove_Duplicate_Accessions](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
 + [Obtaining Loci and Search Terms](#OLST)
+    + [Searching for UCE loci](#SFUL)
 
 ### [Taxon Filtering and Locus Extraction](#TFLE):
 
@@ -254,19 +255,25 @@ It will be converted to the following search line:
 `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
 Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. The line is then checked to see if any supplied locus label is contained within. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
- 
 
-And finally, here is an example of the partial contents of a locus file used to retrieve UCE loci, and examples of the sequence records to be searched. Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, so you may have to examine records to determine the best way to define search terms. These are specific to UCE records I found for a set of frog species.
+### Searching for UCE loci <a name="SFUL"></a> 
 
-Locus search term file partial contents:
+The strategy for obtaining sets of UCE sequences is a little different from the smaller locus sets. First, you'll want to do a specific GenBank search for the taxonomic term of interest *and* 'ultra conserved element' and/or 'uce'. This will produce a much more manageable set of sequences to work with, as searching for several thousand loci on very large sequence sets will inevitably take a very long time. 
+
+To generate a locus search terms file, I retrieved the uce names from the uce-5k-probes.fasta file located [here](https://github.com/faircloth-lab/uce-probe-sets/tree/master/uce-5k-probe-set). Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, but the if curated properly then the description lines should contain the uce name somewhere. This will appear as uce-10, uce-453, uce-5810, etc. 
+
+Here are partial contents from the UCE locus search term file:
 
 ```
-UCE-5806	UCE-5806	ultra conserved element locus uce-5806
-UCE-5807	UCE-5807	ultra conserved element locus uce-5807
-UCE-5808	UCE-5808	ultra conserved element locus uce-5808
+uce-5805	uce-5805	xxxxxxxxxxxx
+uce-5806	uce-5806	xxxxxxxxxxxx
+uce-5808	uce-5808	xxxxxxxxxxxx
+uce-5810	uce-5810	xxxxxxxxxxxx
 ```
 
-Example truncated sequence records to search:
+Notice the third column is junk. Unfortunately, UCE loci have been numbered in a suboptimal way. For example, uce-1 instead of uce-0001. This causes problems when searching for locus labels, because the term `uce-1` is contained in `uce-10`, `uce-104`, `uce-1038`, etc. Because of this the label search will not work properly, and so we rely exclusively on the abbreviation to find the correct sequences.
+
+Here is an example of some frog UCE records I searched:
 
 ```
 >KY160876.1 Kaloula kalingensis voucher RMB1887 ultra conserved element locus uce-5806 genomic sequence
@@ -286,8 +293,9 @@ ATATTTGTGTTTATTTTCTACTTGTATTAATTGACAACATTTGCCTGTTGGCTCAAGGGAATCAGTGTTG
 CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 ```
 
-The locus search terms would successfully retrieve the corresponding loci in the example above. Creating the UCE locus search terms file may require more time, but once complete it can be used to perform any number of searches. 
+The locus abbreviation terms successfully retrieved the corresponding loci in the example above. 
 
+I've made the 5k UCE locus search terms file available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
 
 ---------------
 
