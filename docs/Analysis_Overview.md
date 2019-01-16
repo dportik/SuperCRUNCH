@@ -369,8 +369,12 @@ Linnaea borealis americana #subspecies
 
 As you can see above, every subspecies contains a species label. This allows a series of checks to be performed. If the `--no_subspecies` flag is omitted, the following checks are performed:
 
-1. Is the reconstructed species name in the species list? If not, the record is ignored.
-2. Is the reconstructed subspecies name in the subspecies list? If not, the species name will be used. If yes, the subspecies name will be used instead.
+1. Is the reconstructed species name in the species list? 
+    1. If not, the record is ignored.
+    2. If yes, the subspecies is examined.
+2. Is the reconstructed subspecies name in the subspecies list? 
+    1. If not, the species name will be used. 
+    2. If yes, the subspecies name will be used instead.
 
 In the example above, `Leycesteria crocothyrsos` is in the species list, but `Leycesteria crocothyrsos voucher` is an obviously incorrect name and is absent from the subspecies list. In this case, the species name `Leycesteria crocothyrsos` will be used for that record. In the other example, `Linnaea borealis` is in the species list, and `Linnaea borealis americana` is present in the subspecies list, so `Linnaea borealis americana` is the name used.
 
