@@ -417,7 +417,7 @@ If only binomial names are present, then the resulting species list will be popu
 
 `subspecies = []`
 
-In this example the `--no_subspecies` flag will have no effect on the analysis. That is, even is the `--no_subspecies` flag is omitted, there aren't any subspecies to reference and the only possible outcome is to find species names.
+In this example the `--no_subspecies` flag will have no effect on the analysis. That is, regardless of whether the `--no_subspecies` flag is used or not, there aren't any subspecies to reference and the only possible outcome is to find species names.
 
 There are also some special cases depending on combinations of the taxon list and sequence set.
 
