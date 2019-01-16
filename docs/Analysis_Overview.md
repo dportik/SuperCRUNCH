@@ -258,9 +258,9 @@ Notice punctuation and parentheses are left intact and the line is simply conver
 
 ### Searching for UCE loci <a name="SFUL"></a> 
 
-The strategy for obtaining sets of UCE sequences is a little different from the smaller locus sets. First, you'll want to do a specific GenBank search for the taxonomic term of interest *and* `ultra conserved element` and/or `uce`. This will produce a much more manageable set of sequences to work with, as searching for several thousand loci on very large sequence sets will inevitably take a very long time. 
+The strategy for obtaining sets of UCE sequences is a little different from the smaller locus sets. First, you'll want to do a specific GenBank search for the taxonomic term of interest *and* `ultra conserved element` and/or `uce`. This will produce a much more manageable set of sequences to work with, as searching for several thousand loci in a large sequence set will inevitably take a very long time. 
 
-To generate a locus search terms file, I retrieved the uce names from the uce-5k-probes.fasta file located [here](https://github.com/faircloth-lab/uce-probe-sets/tree/master/uce-5k-probe-set). Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, but the if curated properly then the description lines should contain the uce name somewhere. This will appear as uce-10, uce-453, uce-5810, etc. 
+To generate a locus search terms file, I retrieved the uce names from the ***uce-5k-probes.fasta*** file located [here](https://github.com/faircloth-lab/uce-probe-sets/tree/master/uce-5k-probe-set). Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, but the if curated properly then the description lines should contain the uce name somewhere (uce-10, uce-453, uce-5810, etc). 
 
 Here are partial contents from the UCE locus search term file:
 
