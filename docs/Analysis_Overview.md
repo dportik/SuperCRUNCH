@@ -370,21 +370,23 @@ Linnaea borealis americana #subspecies
 As you can see above, every subspecies contains a species label. This allows a series of checks to be performed. If the `--no_subspecies` flag is omitted, the following checks are performed:
 
 1. Is the reconstructed species name in the species list? 
-    1. If not, the record is ignored.
+    1. If no, the record is ignored.
     2. If yes, the subspecies is examined.
 2. Is the reconstructed subspecies name in the subspecies list? 
-    1. If not, the species name will be used. 
+    1. If no, the species name will be used. 
     2. If yes, the subspecies name will be used instead.
 
 In the example above, `Leycesteria crocothyrsos` is in the species list, but `Leycesteria crocothyrsos voucher` is an obviously incorrect name and is absent from the subspecies list. In this case, the species name `Leycesteria crocothyrsos` will be used for that record. In the other example, `Linnaea borealis` is in the species list, and `Linnaea borealis americana` is present in the subspecies list, so `Linnaea borealis americana` is the name used.
 
 If the `--no_subspecies` flag is included, the following checks are performed:
 
-1. Is the reconstructed species name in the species list? If not, the record is ignored.
+1. Is the reconstructed species name in the species list? 
+    1. If no, the record is ignored.
+    2. If yes, the species name is used.
 
 In the example above, `Leycesteria crocothyrsos` and `Linnaea borealis` would be the names used. Essentially, the `--no_subspecies` flag elevates all the subspecies to the species level.
 
-If the taxon list file contains only species (binomial) names like this:
+If the taxon list file contains only species (binomial) names:
 
 ```
 Draco beccarii
@@ -403,10 +405,54 @@ Then the species list will be populated and the subspecies list will be empty:
 
 `subspecies = []`
 
+If this happens then the `--no_subspecies` flag will have no effect on the analysis. That is, even is the `--no_subspecies` flag is omitted, there aren't any subspecies to reference and the only possible outcome is to find species names.
 
+There are also some special cases depending on the taxon list and sequence set.
 
+Given the following taxon list:
 
-If the taxon list file only contains species (binomial) names, the resulting subspecies list will be empty and the `--no_subspecies flag` will have no effect on the analysis.
+```
+Linnaea borealis americana
+Linnaea borealis borealis
+Linnaea borealis longiflora
+```
+
+And the following record description lines:
+
+```
+>KJ593010.1 Linnaea borealis voucher WAB_0132469163 maturase K (matK) gene, partial cds; chloroplast
+>KC474956.1 Linnaea borealis americana voucher Bennett_06-432_CAN maturase K (matK) gene, partial cds; chloroplast
+>KP297496.1 Linnaea borealis borealis isolate BOP012344 internal transcribed spacer 1, partial sequence; 5.8S ribosomal RNA gene, complete sequence; and internal transcribed spacer 2, partial sequence
+>KP297498.1 Linnaea borealis longiflora isolate BOP022790 internal transcribed spacer 1, partial sequence; 5.8S ribosomal RNA gene, complete sequence; and internal transcribed spacer 2, partial sequence
+```
+
+The following taxa would be detected and included from each record if the `--no_subspecies` flag is omitted:
+
+```
+KJ593010.1 -> Linnaea borealis
+KC474956.1 -> Linnaea borealis americana
+KP297496.1 -> Linnaea borealis borealis
+KP297498.1 -> Linnaea borealis longiflora
+```
+
+Any record of `Linnaea borealis` missing a valid subspecies label will be lumped in with all other `Linnaea borealis`, whereas those containing valid subspecies labels will be assigned to those subspecies. 
+
+The following taxa would be detected and included from each record if the `--no_subspecies` flag is included:
+
+```
+KJ593010.1 -> Linnaea borealis
+KC474956.1 -> Linnaea borealis
+KP297496.1 -> Linnaea borealis
+KP297498.1 -> Linnaea borealis
+```
+This effectively groups all the subspecies under the species name `Linnaea borealis`.
+
+To summarize: 
+
++ If the taxon names list contains only species then there can be no searching for subspecies labels, and the presence or absence of the `--no_subspecies` flag has no effect.
++ If the taxon names list contains a mix of species and subspecies labels, the `--no_subspecies` flag can change the outcome. 
++ Using the `--no_subspecies` flag reduces subspecies names to species names, and will result in less taxa (ie three subspecies all become one equivalent species). 
++ Omitting the `--no_subspecies` flag will produce a greater number of taxa if there are valid subspecies present in the starting sequences.
 
 ---------------
 
