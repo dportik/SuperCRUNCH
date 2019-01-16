@@ -349,9 +349,57 @@ The resulting parsed lists are:
 
 `subspecies = [Linnaea borealis americana, Linnaea borealis borealis, Linnaea borealis longiflora]`
 
-Notice that even though there wasn't a binomial name provided for *Linnaea borealis*, it was automatically created based on the subspecies present. This is true regardless of whether the `--no_subspecies` flag is included or not.
+Notice that even though there wasn't a binomial name provided for *Linnaea borealis*, it was automatically created based on the subspecies present. The genus+species of any subspecies label will always be included in the species list. This is true regardless of whether the `--no_subspecies` flag is included or not. 
 
-The main difference 
+How does the `--no_subspecies` flag impact searches? I will use the above taxon list and the following example records to illustrate:
+
+```
+>FJ745393.1 Leycesteria crocothyrsos voucher N. Pyck 1992-1691 maturase K (matK) gene, partial cds; chloroplast
+>KC474956.1 Linnaea borealis americana voucher Bennett_06-432_CAN maturase K (matK) gene, partial cds; chloroplast
+```
+
+Each record is always parsed to construct a species (binomial) and subspecies (trinomial) name. This would produce the following results:
+
+```
+Leycesteria crocothyrsos #species
+Leycesteria crocothyrsos voucher #subspecies
+Linnaea borealis #species
+Linnaea borealis americana #subspecies
+```
+
+As you can see above, every subspecies contains a species label. This allows a series of checks to be performed. If the `--no_subspecies` flag is omitted, the following checks are performed:
+
+1. Is the reconstructed species name in the species list? If not, the record is ignored.
+2. Is the reconstructed subspecies name in the subspecies list? If not, the species name will be used. If yes, the subspecies name will be used instead.
+
+In the example above, `Leycesteria crocothyrsos` is in the species list, but `Leycesteria crocothyrsos voucher` is an obviously incorrect name and is absent from the subspecies list. In this case, the species name `Leycesteria crocothyrsos` will be used for that record. In the other example, `Linnaea borealis` is in the species list, and `Linnaea borealis americana` is present in the subspecies list, so `Linnaea borealis americana` is the name used.
+
+If the `--no_subspecies` flag is included, the following checks are performed:
+
+1. Is the reconstructed species name in the species list? If not, the record is ignored.
+
+In the example above, `Leycesteria crocothyrsos` and `Linnaea borealis` would be the names used. Essentially, the `--no_subspecies` flag elevates all the subspecies to the species level.
+
+If the taxon list file contains only species (binomial) names like this:
+
+```
+Draco beccarii
+Draco biaro
+Draco bimaculatus
+Draco blanfordii
+Draco boschmai
+Draco bourouniensis
+Draco cornutus
+Draco cristatellus
+```
+
+Then the species list will be populated and the subspecies list will be empty:
+
+`species = [Draco beccarii, Draco biaro, Draco bimaculatus, Draco blanfordii, Draco boschmai, Draco bourouniensis, Draco cornutus, Draco cristatellus]`
+
+`subspecies = []`
+
+
 
 
 If the taxon list file only contains species (binomial) names, the resulting subspecies list will be empty and the `--no_subspecies flag` will have no effect on the analysis.
@@ -649,6 +697,10 @@ python Adjust_Direction.py -i <input directory>
 ##### -i <path-to-directory>
 
 > **Required**: The full path to a directory which contains the unaligned fasta files.
+
+##### --acc
+
+> **Optional**: Use the --adjustdirectionaccurately implementation in MAFFT, rather than --adjustdirection. It is slower but more accurate, especially for divergent sequences.
 
 
 ---------------
