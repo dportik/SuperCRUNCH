@@ -340,7 +340,7 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 
 ##### `--no_subspecies`
 
-> **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
+> **Optional**: Ignore the subspecies component of taxon labels in the taxon names file and in the fasta file to search.
 
 To understand how the `--no_subspecies` flag can impact analyses, it is important to demonstrate how the taxon list is being parsed. Regardless of the type of names present in this file (species or subspecies), two lists are constructed. One if filled with species (binomial) names, and the other with subspecies (trinomial) names.
 
@@ -466,7 +466,7 @@ This effectively groups all the subspecies under the species name `Linnaea borea
 
 + If the taxon names list contains only species then searches for subspecies labels cannot occur, and therefore the presence or absence of the `--no_subspecies` flag has no effect.
 + If the taxon names list contains a mix of species and subspecies labels, then the `--no_subspecies` flag can substantially change the outcome. 
-+ Using the `--no_subspecies` flag reduces all subspecies names to corresponding species names, and is expected to result in less taxa recovered.
++ Using the `--no_subspecies` flag reduces all subspecies names to corresponding species names, and is expected to result in less taxa recovered. Depending on your conceptual view of subspecies, you may find this to be an awesome choice, or you may find it to be a terrible choice. 
 + Omitting the `--no_subspecies` flag is expected to produce a greater number of taxa, but only if valid subspecies are present in the starting sequences.
 + There is no downside to having subspecies labels in the taxon list file, because they can effectively be ignored while capturing all relevant species labels.
 
