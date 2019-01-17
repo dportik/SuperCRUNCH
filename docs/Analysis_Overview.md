@@ -962,6 +962,54 @@ python Filter_Seqs_and_Species.py -i /bin/Filter/ -f translate --table vertmtdna
 ```
 > Above command will select all sequences per taxon per locus that pass translation (using vertebrate mitochondrial code) and the minimum base pair length of 150. Subspecies are included.
 
+Several outputs are created in the specified input directory (one for every input fasta file):
+
++ `[fasta name]_single_taxon.fasta`: An output fasta file which contains a single filtered sequence per taxon. Produced if the `--allseqs` flag is **not** used.
+
++ `[fasta name]_all_seqs.fasta`: An output fasta file which contains all available sequences per taxon that passed the relevant filters. Produced if the `--allseqs` flag is used.
+
++ `[fasta name]_species_log.txt`: A summary file containing information for each taxon entry. An example of the contents is shown below:
+```
+Taxon	Accession	SeqLength	PassedTranslation	SeqsAvailable
+Agama lionotus	GQ242168.1	853	Y	1
+Amblyrhynchus cristatus	NC_028031.1	1038	Y	21
+Amphibolurus muricatus	HQ684202.1	1032	Y	66
+Amphibolurus norrisi	AY133001.1	1032	Y	18
+Anisolepis longicauda	AF528736.1	1033	Y	1
+Anolis acutus	AF055926.2	1029	Y	1
+Anolis aeneus	AF055950.1	1033	Y	2
+...
+```
+
++ `[fasta name]_accession_list_by_species.txt`: A tab-delimited file in which each line starts with a taxon name and is followed by all accession numbers of sequences passing the length filter from the fasta file. An example of the contents is shown below:
+```
+Agama lionotus	GQ242168.1	
+Amblyrhynchus cristatus	NC_028031.1	KT277937.1	KR350765.1	KR350766.1	KR350762.1	KR350754.1	KR350759.1	KR350763.1	KR350764.1	KR350758.1	KR350755.1	KR350761.1	KR350753.1	KR350757.1	KR350752.1	KR350760.1	KR350756.1	KR350743.1	KR350746.1	KR350744.1	KR350745.1	
+Amphibolurus muricatus	HQ684202.1	HQ684207.1	HQ684201.1	AF128468.1	HQ684203.1	HQ684199.1	HQ684206.1	HQ684204.1	HQ684205.1	KF871666.1	KF871689.1	KF871681.1	KF871658.1	KF871665.1	KF871679.1	KF871692.1	KF871706.1	KF871655.1	KF871688.1	KF871659.1	KF871656.1	KF871653.1	KF871670.1	KF871703.1	KF871699.1	KF871691.1	KF871685.1	KF871701.1	KF871669.1	KF871675.1	KF871705.1	KF871704.1	KF871696.1	KF871700.1	KF871671.1	KF871676.1	KF871702.1	KF871672.1	KF871660.1	KF871668.1	KF871697.1	KF871683.1	KF871667.1	KF871677.1	KF871687.1	KF871698.1	KF871686.1	KF871678.1	KF871664.1	KF871694.1	KF871651.1	KF871684.1	KF871662.1	HQ684200.1	KF871654.1	KF871661.1	KF871680.1	KF871693.1	KF871663.1	KF871673.1	KF871690.1	KF871652.1	KF871650.1	KF871657.1	KF871682.1	KF871695.1	
+Amphibolurus norrisi	AY133001.1	HQ684197.1	HQ684208.1	HQ684198.1	HQ684211.1	HQ684210.1	HQ684195.1	HQ684194.1	HQ684188.1	HQ684196.1	HQ684192.1	HQ684191.1	HQ684190.1	HQ684189.1	HQ684209.1	HQ684193.1	KF871674.1	HQ684187.1	
+Anisolepis longicauda	AF528736.1	
+Anolis acutus	AF055926.2	
+Anolis aeneus	AF055950.1	AF317066.1	
+...
+```
+
++ `[fasta name]_accession_list_for_Batch_Entrez.txt`: a Batch Entrez style file which contains all the accession numbers for sequences that passed the length filter. This list includes all taxa, and is a combination of all the accession numbers in the above `[fasta name]_accession_list_by_species.txt` file. An example of the contents is shown below:
+```
+GQ242168.1
+NC_028031.1
+KT277937.1
+KR350765.1
+KR350766.1
+KR350762.1
+KR350754.1
+KR350759.1
+KR350763.1
+KR350764.1
+KR350758.1
+...
+```
+
+These output files provide explicit information regarding sequence selection, and provide accession numbers that can be used to create the unfiltered and filtered fasta files. 
 
 ---------------
 
