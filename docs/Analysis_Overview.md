@@ -886,13 +886,13 @@ To construct a phylogenetic supermatrix representative sequences must be selecte
 
 The `--randomize` feature can be used to shuffle the starting list of sequences randomly, rather than sorting by length. If used in conjunction with the `-f length` method, the first sequence from the shuffled list is selected (a true random choice). If used in conjunction with the `-f translate` method, translation tests occur down the shuffled list until a suitable sequence is selected (not necessarily a random choice). 
 
-For all selection options, sequences must meet a minimum base pair threshold set by the user. If no sequences meet the minimum length requirement for a taxon, then the taxon will be excluded during the filtering process.
+For all selection options, sequences must meet a minimum base pair threshold set by the user. If no sequences meet the minimum length requirement for a taxon, then the taxon will be eliminated during the filtering process. To avoid eliminating short sequences, a small integer can be used.
 
 Similar to previous steps, a list of taxa must be provided. The taxon names list can contain a mix of species (binomial) and subspecies (trinomial) names. Detailed instructions for the format of this file is provided in the `Taxa_Assessment.py` section. The optional `--no_subspecies` flag can be used, and its effect in this step is identical to that described in the `Taxa_Assessment.py` section.
 
 The `Filter_Seqs_and_Species.py` module will create fasta files containing a single representative sequence per taxon for each locus, along with other important output files described below. The filtered fasta files can be used with the `Make_Acc_Table.py` module to generate a table of NCBI accession numbers for all taxa and loci.
  
-Although `Filter_Seqs_and_Species.py` was initially designed to filter and select one sequence per species, retaining intraspecific sequence sets may actually be desirable for other projects (e.g., phylogeography). `Filter_Seqs_and_Species.py` includes this option (`--allseqs`). When the `--allseqs` flag is used, rather than selecting the highest quality sequence available for a taxon, all sequences passing the filtration methods are retained. Additional details for this feature are provided below.
+Although `Filter_Seqs_and_Species.py` was initially designed to filter and select one sequence per species, retaining intraspecific sequence sets may actually be desirable for other projects (e.g., phylogeography). `Filter_Seqs_and_Species.py` includes the option to create these data sets using the `--allseqs` flag. When the `--allseqs` flag is used, rather than selecting the highest quality sequence available for a taxon, all sequences passing the filtration methods are retained. Additional details for this feature are provided below.
 
 
 #### Basic Usage:
