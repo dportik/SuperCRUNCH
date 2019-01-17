@@ -342,6 +342,8 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 
 > **Optional**: Ignore the subspecies component of taxon labels in the taxon names file and in the fasta file to search.
 
+#### Taxonomy Searches with and without subspecies:
+
 To understand how the `--no_subspecies` flag can impact analyses, it is important to demonstrate how the taxon list is being parsed. Regardless of the type of names present in this file (species or subspecies), two lists are constructed. One if filled with species (binomial) names, and the other with subspecies (trinomial) names.
 
 Example taxon list file:
