@@ -255,7 +255,7 @@ It will be converted to the following search line:
 
 `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
-Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. The line is then checked to see if any supplied locus label is contained within. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
+Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. The line is then checked to see if any supplied locus label is contained within. In this example, the `EXOPHILIN 5` and `EXOPHILIN` labels are both contained in the line and would produce a match, but `EXOPHILIN-5` and `EXOPHILIN PROTEIN 5` would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
 
 ---------------
 
