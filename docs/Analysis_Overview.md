@@ -503,7 +503,7 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 > **Optional**: The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). 
 
 
-In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name (that is in the original taxon list). Currently, *Rename_Merge.py* only supports species (binomial) names, so updating subspecies labels is not possible.
+In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name. Currently, *Rename_Merge.py* only supports species (binomial) name relabeling, so altering subspecies labels is not possible.
 
 Example contents of a replacement names file:
 
@@ -537,7 +537,7 @@ Unverified bradypodion
 Unverified callisaurus
 ```
 
-These records have been labeled improperly, or the identity of the organism is uncertain (sp., cf., aff.,). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in *Parse_Loci.py*.
+These records have been labeled improperly, or the identity of the organism is uncertain (*sp., cf., aff.*). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in *Parse_Loci.py*. Yuck!
 
 In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records worth saving through relabeling, and using *Rename_Merge.py* to do so will result in higher quality data. 
 
