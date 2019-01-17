@@ -601,7 +601,7 @@ Identifying loci in the sequence records through word matching is not expected t
 
 ![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.jpg)
 
-There are two main methods in **SuperCRUNCH** that can be used to filter out paralogous sequences in the locus-specific fasta files. Each relies on using BLAST searches to extract homologous sequence regions, but differ in whether they require user-supplied reference sequences. `Cluster_Blast_Extract.py` works by creating sequence clusters based on similarity using CD-HIT-EST. A BLAST database is constructed from the largest cluster, and all sequences from the fasta file are blasted to this database. In contrast, `Reference_Blast_Extract.py` relies on a previously assembled set of reference sequences to construct the BLAST database, and all sequences from the fasta file are blasted to this database. Both methods offer the ability to specify the BLAST algorithm to use (*blastn, megablast, dc-megablast*), and multiple options for extracting BLAST coordinates. Both topics are discussed in greater detail below. `Cluster_Blast_Extract.py` is recommended for 'simple' sequence record sets, in which each record contains sequence data for the same region of a single locus. `Reference_Blast_Extract.py` is recommended for more complex sequence records, in which each record contains multiple loci (long mtDNA fragment, whole organellar genome, etc.) or the records contain non-overlapping fragments of the same locus. The reference sequence set ensures that only the regions of interest are extracted from these records. 
+There are two main methods in **SuperCRUNCH** that can be used to filter out paralogous sequences in the locus-specific fasta files. Each relies on using BLAST searches to extract homologous sequence regions, but differ in whether they require user-supplied reference sequences. `Cluster_Blast_Extract.py` works by creating sequence clusters based on similarity using CD-HIT-EST. A BLAST database is constructed from the largest cluster, and all sequences from the fasta file are blasted to this database. In contrast, `Reference_Blast_Extract.py` relies on a previously assembled set of reference sequences to construct the BLAST database, and all sequences from the fasta file are blasted to this database. Both methods offer the ability to specify the BLAST algorithm to use (*blastn, megablast, dc-megablast*), and multiple options for extracting BLAST coordinates. These topics are discussed in greater detail below. `Cluster_Blast_Extract.py` is recommended for 'simple' sequence record sets, in which each record contains sequence data for the same region of a single locus. `Reference_Blast_Extract.py` is recommended for more complex sequence records, in which each record contains multiple loci (long mtDNA fragment, whole organellar genome, etc.) or the records contain non-overlapping fragments of the same locus. The reference sequence set ensures that only the regions of interest are extracted from these records. 
 
 An optional contamination filtering step is also available, called `Contamination_Filter.py`. This step requires a user-supplied set of sequences that represent the source of 'contamination'. For example, amphibian mtDNA sequences can be screened against human mtDNA sequences to make sure they are actually amphibian. Any reference sequences can be used, and the context depends on what the contamination source is expected to be. This step will remove all sequences scoring greater than 95% identity for a minimum of 100 continuous base pairs to the reference ‘contamination’ sequences. 
 
@@ -640,13 +640,13 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 
 Several output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
 
-+ `/01_Clustering_Results`
++ **01_Clustering_Results**
     + For each locus, this directory contains the output files from cd-hit-est (ex., `LOCUS1_Out_.clstr`), which delimit the sequence clusters.
-+ `/02_Parsed_Results`
++ **02_Parsed_Results**
     + For each locus, this directory contains a set of fasta files which represent the clusters found. These are labeled as `LOCUS1_Out_Cluster_0.fasta`, `LOCUS1_Out_Cluster_1.fasta`, etc.
-+ `/03_Blast_Results`
++ **03_Blast_Results**
     + For each locus, this directory contains the constructed blast database files (extensions .nhr, .nin, .nsq), the blast results for each fasta cluster (ex., `LOCUS1_Out_Cluster_0_blast_results.txt`), and the merged blast results for all clusters (ex., `LOCUS1_blast_results_merged.txt`). 
-+ `/04_Trimmed_Results`
++ **04_Trimmed_Results**
     + For each locus, this directory contains the filtered fasta file (`LOCUS1_extracted.fasta`) and a corresponding log file (`Log_File_LOCUS1.txt`) that indicates the original sequence length, BLAST coordinates found, and extracted sequence length for each record that passed this filter.
     
 #### BLAST Algorithm choice
