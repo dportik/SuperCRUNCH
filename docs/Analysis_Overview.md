@@ -179,7 +179,9 @@ EXPH5	EXPH5	exophilin;exophilin 5;exophilin-5;exophilin protein 5
 PTPN	PTPN;PTPN12	protein tyrosine phosphatase;tyrosine phosphatase non-receptor type 12
 ```
 
-In this file:
+These are the partial contents of a locus search terms file I used for squamates (reptiles). The full file (*Locus-Search-Terms_Squamate_Markers.txt*) is provided in the example data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data).
+
+In this example:
 + CMOS contains two abbreviations and one label search term. 
 + EXPH5 contains one abbreviation and four label search terms.
 + PTPN contains two abbreviations and two label search terms. 
@@ -295,7 +297,7 @@ CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 
 The locus abbreviation terms successfully retrieved the corresponding loci in the example above. 
 
-I've made the 5k UCE locus search terms file available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
+I've made the 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
 
 ---------------
 
