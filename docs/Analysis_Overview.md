@@ -539,7 +539,7 @@ Unverified callisaurus
 
 These records have been labeled improperly, or the identity of the organism is uncertain (*sp., cf., aff.*). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in *Parse_Loci.py*. Yuck!
 
-In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records worth saving through relabeling, and using *Rename_Merge.py* to do so will result in higher quality data. 
+In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records that are worth rescuing through relabeling, and using *Rename_Merge.py* to do so will result in higher quality data. 
 
 ---------------
 
