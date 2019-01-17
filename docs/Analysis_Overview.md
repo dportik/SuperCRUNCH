@@ -464,7 +464,7 @@ This effectively groups all the subspecies under the species name `Linnaea borea
 + If the taxon names list contains only species then searches for subspecies labels cannot occur, and therefore the presence or absence of the `--no_subspecies` flag has no effect.
 + If the taxon names list contains a mix of species and subspecies labels, then the `--no_subspecies` flag can substantially change the outcome. 
 + Using the `--no_subspecies` flag reduces all subspecies names to corresponding species names, and is expected to result in less taxa recovered.
-+ Omitting the `--no_subspecies` flag is expected to produce a greater number of taxa if valid subspecies are present in the starting sequences.
++ Omitting the `--no_subspecies` flag is expected to produce a greater number of taxa, but only if valid subspecies are present in the starting sequences.
 + There is no downside to having subspecies labels in the taxon list file, because they can effectively be ignored while capturing all relevant species labels.
 
 ---------------
