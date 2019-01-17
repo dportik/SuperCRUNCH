@@ -158,7 +158,7 @@ Linnaea borealis borealis
 Linnaea borealis longiflora
 ```
 
-**SuperCRUNCH** offers the option to exclude subspecies from searches, so a taxon list containing a mix of species and subspecies does not need to be pruned by hand if subspecies are not desired in the analysis. The effects of this option with different types of taxon lists is explained in usage of the *Taxa_Assessment.py* script.
+**SuperCRUNCH** offers the option to exclude subspecies from searches, so a taxon list containing a mix of species and subspecies does not need to be pruned by hand if subspecies are not desired in the analysis. The effects of this option with different types of taxon lists is explained in usage of the `Taxa_Assessment.py` script.
 
 ---------------
 
@@ -306,7 +306,7 @@ The 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) is free
 
 ![F1](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig1.jpg)
 
-This section deals with the first filtering steps, which include screening sequence records for taxon names and gene/marker/locus identity. To run these steps in **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms. Information on obtaining these files is provided in the section above. The *Taxa_Assessment.py* and *Rename_Merge.py* scripts are optional, but highly recommended. *Taxa_Assessment.py* identifies all valid and invalid taxon names contained within the starting fasta file. *Rename_Merge.py* is an optional data cleaning step that can be used to replace invalid taxon names with updated valid names for corresponding  sequence records. This relabeling step allows these records to pass the taxonomy filter in *Parse_Loci.py*, rather than be discarded. The original or updated fasta file is processed using *Parse_Loci.py*. For each locus included, a fasta file is produced. These fasta files contain records with valid taxon names that matched one or more of the search terms for the locus.
+This section deals with the first filtering steps, which include screening sequence records for taxon names and gene/marker/locus identity. To run these steps in **SuperCRUNCH**, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms. Information on obtaining these files is provided in the section above. The `Taxa_Assessment.py` and `Rename_Merge.py` scripts are optional, but highly recommended. `Taxa_Assessment.py` identifies all valid and invalid taxon names contained within the starting fasta file. `Rename_Merge.py` is an optional data cleaning step that can be used to replace invalid taxon names with updated valid names for corresponding  sequence records. This relabeling step allows these records to pass the taxonomy filter in `Parse_Loci.py`, rather than be discarded. The original or updated fasta file is processed using `Parse_Loci.py`. For each locus included, a fasta file is produced. These fasta files contain records with valid taxon names that matched one or more of the search terms for the locus.
 
 ---------------
 
@@ -314,7 +314,7 @@ This section deals with the first filtering steps, which include screening seque
 
 The goal of this script is to search through records in a fasta file of NCBI nucleotide sequences to determine whether or not they contain a taxon name present in the user-supplied taxon list. The taxon names list can contain a mix of species (binomial name) and subspecies (trinomial name) labels, and searches are not case-sensitive. 
 
-Two output fasta files are written to the specified output directory: one containing only records with valid taxon names (*Matched_Taxa.fasta*), and one containing records with invalid taxon names (*Unmatched_Taxa.fasta*). The accession numbers for each of these fasta files are also written to separate files (*Matched_Records_Accession_Numbers.log*, *Unmatched_Records_Accession_Numbers.log*). Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the **Rename_Merge.py** script. 
+Two output fasta files are written to the specified output directory: one containing only records with valid taxon names (*Matched_Taxa.fasta*), and one containing records with invalid taxon names (*Unmatched_Taxa.fasta*). The accession numbers for each of these fasta files are also written to separate files (*Matched_Records_Accession_Numbers.log*, *Unmatched_Records_Accession_Numbers.log*). Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the `Rename_Merge.py` script. 
 
 The decision to include or exclude subspecies labels is up to the user, and can be specified using the `--no_subspecies` flag. For a thorough explanation of how taxonomy searches are conducted and how this flag affects this step (and others), please see below.
 
@@ -474,9 +474,9 @@ This effectively groups all the subspecies under the species name `Linnaea borea
 
 ### Rename_Merge.py <a name="RM"></a>
 
-The goal of this script is to search through records in a fasta file and replace invalid taxon names with names compatible with the taxon list. The invalid taxon names file (*Unmatched_Taxon_Names.log*) from the *Taxa_Assessment.py* can be used to help create the replacement names file, as it contains all the taxon names that will fail the taxon filter in the *Parse_Loci.py* script. Similar to other input text files, make sure to open the replacement names file in a text editor and ensure the format includes Unix line breaks (line breaks marked by \n, rather than \r\n) and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
+The goal of this script is to search through records in a fasta file and replace invalid taxon names with names compatible with the taxon list. The invalid taxon names file (*Unmatched_Taxon_Names.log*) from the `Taxa_Assessment.py` can be used to help create the replacement names file, as it contains all the taxon names that will fail the taxon filter in the `Parse_Loci.py` script. Similar to other input text files, make sure to open the replacement names file in a text editor and ensure the format includes Unix line breaks (line breaks marked by \n, rather than \r\n) and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
 
-If the optional `-m` flag is used, records that are successfully relabeled are merged with another fasta file. Ideally, this fasta file should be the one containing all the records with valid taxon names (*Matched_Taxa.fasta*). The resulting merged fasta file (*Merged.fasta*) should then be used for the *Parse_Loci.py* script.
+If the optional `-m` flag is used, records that are successfully relabeled are merged with another fasta file. Ideally, this fasta file should be the one containing all the records with valid taxon names (*Matched_Taxa.fasta*). The resulting merged fasta file (*Merged.fasta*) should then be used for the `Parse_Loci.py` script.
 
 #### Basic Usage:
 
@@ -503,7 +503,7 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 > **Optional**: The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). 
 
 
-In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name. Currently, *Rename_Merge.py* only supports species (binomial) name relabeling, so altering subspecies labels is not possible.
+In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name. Currently, `Rename_Merge.py` only supports species (binomial) name relabeling, so altering subspecies labels is not possible.
 
 Example contents of a replacement names file:
 
@@ -537,16 +537,20 @@ Unverified bradypodion
 Unverified callisaurus
 ```
 
-These records have been labeled improperly, or the identity of the organism is uncertain (*sp., cf., aff.*). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in *Parse_Loci.py*. Yuck!
+These records have been labeled improperly, or the identity of the organism is uncertain (*sp., cf., aff.*). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in `Parse_Loci.py`. Yuck!
 
-In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records that are worth rescuing through relabeling, and using *Rename_Merge.py* to do so will result in higher quality data. 
+In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records that are worth rescuing through relabeling, and using `Rename_Merge.py` to do so will result in higher quality data. 
 
 ---------------
 
 ### Parse_Loci.py <a name="PL"></a>
 
-Something
+To run `Parse_Loci.py`, you will need to provide a fasta file of downloaded nucleotide sequence records, a file containing a list of taxa, and a file containing a list of loci and associated search terms. The goal of this script is to search through the starting sequences and identify records for each gene/marker/locus. Each record that matches a locus must also contain a valid taxon name. 
 
+The taxon names list can contain a mix of species (binomial) and subspecies (trinomial) names. Detailed instructions for the format of this file is provided in the `Taxa_Assessment.py` section. The optional `--no_subspecies` flag can be used, and its effect is also described in great detail in the `Taxa_Assessment.py` section.
+
+The locus file contains the search terms that are used to identify matching records. Detailed information about the format of this file can be found in the *Obtaining Loci and Search Terms* section. 
+ 
 #### Basic Usage:
 
 ```
@@ -575,9 +579,19 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
 
+Several output files are created in the directory specified. For each locus included, a fasta file will be written with sequences that pass the locus and taxon filters. If no sequences are found for a locus, a corresponding fasta file will not be produced. A log file summarizing the number of records written per locus is also written to the output directory, and is called *Loci_Record_Counts.log*. An example of the contents of this file is shown below:
 
+```
+Locus_Name	Records_Written
+BDNF	1246
+CMOS	1263
+CXCR4	164
+EXPH5	650
+KIAA1549	0
+```
+In the example above, the files `BDNF.fasta`, `CMOS.fasta`, `CXCR4.fasta`, and `EXPH5.fasta` will be written to the output directory, but not `KIAA1549.fasta` because no sequences were found. 
 
-
+Identifying loci in the sequence records through word matching is not expected to be perfect, and there may be non-target sequences in the resulting fasta files. For this reason, the fasta files should be subjected to orthology filtering before attempting to create sequence alignments or performing analyses.
 
 ---------------
 
@@ -585,14 +599,17 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 
 ![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.jpg)
 
-Something
+There are two main methods in **SuperCRUNCH** that can be used to filter out paralogous sequences in the locus-specific fasta files. Each relies on using BLAST searches to extract homologous sequence regions, but differ in whether they require user-supplied reference sequences. `Cluster_Blast_Extract.py` works by creating sequence clusters based on similarity using CD-HIT-EST. A BLAST database is constructed from the largest cluster, and all sequences from the fasta file are blasted to this database. In contrast, `Reference_Blast_Extract.py` relies on a previously assembled set of reference sequences to construct the BLAST database, and all sequences from the fasta file are blasted to this database. Both methods offer the ability to specify the BLAST algorithm to use (*blastn, megablast, dc-megablast*), and multiple options for extracting BLAST coordinates. Both topics are discussed in greater detail below. `Cluster_Blast_Extract.py` is recommended for 'simple' sequence record sets, in which each record contains sequence data for the same region of a single locus. `Reference_Blast_Extract.py` is recommended for more complex sequence records, in which each record contains multiple loci (long mtDNA fragment, whole organellar genome, etc.) or the records contain non-overlapping fragments of the same locus. The reference sequence set ensures that only the regions of interest are extracted from these records. 
 
+An optional contamination filtering step is also available, called `Contamination_Filter.py`. This step requires a user-supplied set of sequences that represent the source of 'contamination'. For example, amphibian mtDNA sequences can be screened against human mtDNA sequences to make sure they are actually amphibian. Any reference sequences can be used, and the context depends on what the contamination source is expected to be. This step will remove all sequences scoring greater than 95% identity for a minimum of 100 continuous base pairs to the reference ‘contamination’ sequences. 
+
+The resulting filtered fasta files from this step can then be used for the quality filtering and sequence selection stage. 
 
 ---------------
 
 ### Cluster_Blast_Extract.py <a name="CBE"></a>
 
-Something
+`Cluster_Blast_Extract.py` is one of two methods for detecting and removing paralogous sequences from locus-specific fasta files. This method is recommended for 'simple' sequence record sets, in which each record contains sequence data for the same region of a single locus. `Cluster_Blast_Extract.py` works by creating sequence clusters based on similarity using CD-HIT-EST. A BLAST database is constructed from the largest cluster, and all sequences from the fasta file are blasted to this database using the specified BLAST algorithm (*blastn, megablast, dc-megablast*). For each sequence with a significant match, the coordinates of all BLAST hits (excluding self-hits) are merged. This action often results in a single interval, but non-overlapping coordinates can also be produced. Multiple options are provided for handling these cases, with details on this topic provided below. All query sequences with significant hits are extracted based on the resulting BLAST coordinates, and written to a new filtered fasta file. 
 
 #### Basic Usage:
 
@@ -616,14 +633,64 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 
 ##### `--max_hits <integer>`
 
-> **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets.
+> **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. If omitted, no limit is set.
 
+
+Several output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
+
++ `/01_Clustering_Results`
+    + For each locus, this directory contains the output files from cd-hit-est (ex., `LOCUS1_Out_.clstr`), which delimit the sequence clusters.
++ `/02_Parsed_Results`
+    + For each locus, this directory contains a set of fasta files which represent the clusters found. These are labeled as `LOCUS1_Out_Cluster_0.fasta`, `LOCUS1_Out_Cluster_1.fasta`, etc.
++ `/03_Blast_Results`
+    + For each locus, this directory contains the constructed blast database files (extensions .nhr, .nin, .nsq), the blast results for each fasta cluster (ex., `LOCUS1_Out_Cluster_0_blast_results.txt`), and the merged blast results for all clusters (ex., `LOCUS1_blast_results_merged.txt`). 
++ `/04_Trimmed_Results`
+    + For each locus, this directory contains the filtered fasta file (`LOCUS1_extracted.fasta`) and a corresponding log file (`Log_File_LOCUS1.txt`) that indicates the original sequence length, BLAST coordinates found, and extracted sequence length for each record that passed this filter.
+    
+#### BLAST Algorithm choice
+
+The required `-b ` flag specifies the BLAST algorithm to use, which can greatly affect the filtering results. The *blastn* algorithm searches with a word size of 11, whereas *megablast* searches include a word size of 28, making blastn more appropriate for interspecies searches and megablast more appropriate for closely related or intraspecific searches. However, discontiguous megablast (*dc-megablast*) is better at producing non-fragmented hits for divergent sequences using similar word sizes as *blastn*, and as such it works well for interspecific and intraspecific searches. If the goal is to produce species level phylogenetic data sets then *dc-megablast* should be used, but if the focus is on population level phylogenetic data sets then *megablast* may be preferable. You can easily compare the effects of the different BLAST algorithms, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
+
+#### BLAST coordinates strategy
+
+The optional `-m ` flag specifies the strategy to use for handling BLAST coordinates. To explain these options, a little background is necessary. When a sequence is blasted, the sections of the query sequence that match the subject sequence (reference) are reported as start and stop coordinates. In general, many hits are produced for the query sequence and the result is many sets of coordinates. Often, these coordinates overlap and can be combined. Take for example the following set of coordinates:
+
+```
+[2, 435]
+[27, 380]
+[30, 500]
+```
+These can be combined to one set of coordinates: `[2, 500]`
+After BLAST, the coordinates for each input sequence are combined. Often this produces one set of merged coordinates, like the above example. Sometimes multiple sets of non-overlapping coordinates are produced, like `[2, 70], [100, 500]`. 
+
+How can this happen?
+
+One common reason is the sequence contains a stretch of `N` characters. These will never be matched. Take the following sequence:
+
+```
+TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG
+```
+
+This sequence will at best produce the following coordinates: `[1, 10], [20, 35]`. The N's are always ignored. 
+
+Another more problematic reason is that duplicate sequences are found, and the coordinates of both duplicates are returned. This can happen in mitochondrial genomes, which sometimes have undergone gene duplications. In cases like this, the genes tend to be separated by quite a long distance. Given a mitochondrial genome, the duplicate genes may return a set of coordinates that look like this: `[300, 860], [4800, 5300]`. The huge gap between these coordinates is a strong signal that duplicate genes are present. 
+
+Given these different scenarios, there are three options meant to handle non-overlapping coordinates, including `span`, `nospan`, and `all`. 
+
++ When `-m span` is used, if the non-overlapping coordinate sets are less than or equal to 100 base pairs apart, they are merged. In the above 'N' example, this would produce the final coordinates of `[1, 35]`, and the resulting sequence will contain the original stretch of N characters. If the non-overlapping coordinate sets are more than 100 base pairs apart, the coordinates set containing the greatest number of base pairs is selected. In the 'duplication' scenario above, this would produce `[300, 860]`. The `span` option can safely hand the gene duplication scenario, and also allow longer lower-quality sequences to be extracted - as long as they contain a reasonably small stretch of N's. It is the default option used if the `-m ` flag is omitted.
+
++ When `-m nospan` is used, no attempt is made to merge the non-overlapping coordinates and the coordinate set containing the greatest number of base pairs is selected. In the above 'N' example, this would produce the final coordinates of `[20, 35]`. In the 'duplication' scenario, this would also produce `[300, 860]`. The `nospan` option guarantees long stretches of N's will not be present in the extracted sequences, and can penalize these lower-quality sequences by reducing their length. It will also correctly handle the gene duplication scenario. This option should be viewed as a more conservative implementation of `span`.
+
++ When `-m all` is used, the non-overlapping coordinate sets are used as is. In the 'N' scenario above, this would produce `[1, 10], [20, 35]`, which would simply remove the stretch of N's from the sequence. That is, `TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG` becomes 
+`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is likely to be double the length of normal sequences. This is a very poor outcome and will interfere with any subsequence filtering and alignment steps, but it could be used to detect duplications in mitogenomes. For example, when I ran this option for a bunch of Squamate mitogenomes, I was able to find all the gene duplications present in mitogenomes for the genus Heteronotia. 
+
+You can easily compare the effects of the options for the `-m ` flag, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
 ---------------
 
 ### Reference_Blast_Extract.py <a name="RBE"></a>
 
-Something
+`Reference_Blast_Extract.py` is one of two methods for detecting and removing paralogous sequences from locus-specific fasta files. This method is recommended for more complex sequence records, in which each record contains multiple loci (long mtDNA fragment, whole organellar genome, etc.) or the records contain non-overlapping fragments of the same locus. `Reference_Blast_Extract.py` works by creating a BLAST database from the reference sequences, and all sequences from the fasta file are blasted to this database using the specified BLAST algorithm (*blastn, megablast, dc-megablast*). The reference sequence set ensures that only the target region is extracted from the sequence records. For each sequence with a significant match, the coordinates of all BLAST hits (excluding self-hits) are merged. This action often results in a single interval, but non-overlapping coordinates can also be produced. Multiple options are provided for handling these cases, with details on this topic provided below. All query sequences with significant hits are extracted based on the resulting BLAST coordinates, and written to a new filtered fasta file. 
 
 #### Basic Usage:
 
@@ -657,12 +724,59 @@ python Reference_Blast_Extract.py -i <input directory> -d <reference fasta name>
 
 > **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets.
 
+Several outputs are created in the specified input directory, including:
+
++ BLAST database files for the reference sequences (extensions .nhr, .nin, .nsq).
++ A BLAST results file, labeled as `LOCUS_blast_output.txt`.
++ The filtered fasta file, labeled as `LOCUS1_extracted.fasta`
++ A corresponding log file (`Log_File_LOCUS1.txt`) that indicates the original sequence length, BLAST coordinates found, and extracted sequence length for each record with significant BLAST hits to the reference sequences.
+
+Similar to `Cluster_Blast_Extract.py`, the same options exist for choosing a BLAST algorithm (`-b `) and the BLAST coordinates strategy (`-m `). For convenience, this information is also posted here. 
+
+#### BLAST Algorithm choice
+
+The required `-b ` flag specifies the BLAST algorithm to use, which can greatly affect the filtering results. The *blastn* algorithm searches with a word size of 11, whereas *megablast* searches include a word size of 28, making blastn more appropriate for interspecies searches and megablast more appropriate for closely related or intraspecific searches. However, discontiguous megablast (*dc-megablast*) is better at producing non-fragmented hits for divergent sequences using similar word sizes as *blastn*, and as such it works well for interspecific and intraspecific searches. If the goal is to produce species level phylogenetic data sets then *dc-megablast* should be used, but if the focus is on population level phylogenetic data sets then *megablast* may be preferable. You can easily compare the effects of the different BLAST algorithms, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
+
+#### BLAST coordinates strategy
+
+The optional `-m ` flag specifies the strategy to use for handling BLAST coordinates. To explain these options, a little background is necessary. When a sequence is blasted, the sections of the query sequence that match the subject sequence (reference) are reported as start and stop coordinates. In general, many hits are produced for the query sequence and the result is many sets of coordinates. Often, these coordinates overlap and can be combined. Take for example the following set of coordinates:
+
+```
+[2, 435]
+[27, 380]
+[30, 500]
+```
+These can be combined to one set of coordinates: `[2, 500]`
+After BLAST, the coordinates for each input sequence are combined. Often this produces one set of merged coordinates, like the above example. Sometimes multiple sets of non-overlapping coordinates are produced, like `[2, 70], [100, 500]`. 
+
+How can this happen?
+
+One common reason is the sequence contains a stretch of `N` characters. These will never be matched. Take the following sequence:
+
+```
+TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG
+```
+
+This sequence will at best produce the following coordinates: `[1, 10], [20, 35]`. The N's are always ignored. 
+
+Another more problematic reason is that duplicate sequences are found, and the coordinates of both duplicates are returned. This can happen in mitochondrial genomes, which sometimes have undergone gene duplications. In cases like this, the genes tend to be separated by quite a long distance. Given a mitochondrial genome, the duplicate genes may return a set of coordinates that look like this: `[300, 860], [4800, 5300]`. The huge gap between these coordinates is a strong signal that duplicate genes are present. 
+
+Given these different scenarios, there are three options meant to handle non-overlapping coordinates, including `span`, `nospan`, and `all`. 
+
++ When `-m span` is used, if the non-overlapping coordinate sets are less than or equal to 100 base pairs apart, they are merged. In the above 'N' example, this would produce the final coordinates of `[1, 35]`, and the resulting sequence will contain the original stretch of N characters. If the non-overlapping coordinate sets are more than 100 base pairs apart, the coordinates set containing the greatest number of base pairs is selected. In the 'duplication' scenario above, this would produce `[300, 860]`. The `span` option can safely hand the gene duplication scenario, and also allow longer lower-quality sequences to be extracted - as long as they contain a reasonably small stretch of N's. It is the default option used if the `-m ` flag is omitted.
+
++ When `-m nospan` is used, no attempt is made to merge the non-overlapping coordinates and the coordinate set containing the greatest number of base pairs is selected. In the above 'N' example, this would produce the final coordinates of `[20, 35]`. In the 'duplication' scenario, this would also produce `[300, 860]`. The `nospan` option guarantees long stretches of N's will not be present in the extracted sequences, and can penalize these lower-quality sequences by reducing their length. It will also correctly handle the gene duplication scenario. This option should be viewed as a more conservative implementation of `span`.
+
++ When `-m all` is used, the non-overlapping coordinate sets are used as is. In the 'N' scenario above, this would produce `[1, 10], [20, 35]`, which would simply remove the stretch of N's from the sequence. That is, `TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG` becomes 
+`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is likely to be double the length of normal sequences. This is a very poor outcome and will interfere with any subsequence filtering and alignment steps, but it could be used to detect duplications in mitogenomes. For example, when I ran this option for a bunch of Squamate mitogenomes, I was able to find all the gene duplications present in mitogenomes for the genus Heteronotia. 
+
+You can easily compare the effects of the options for the `-m ` flag, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
 ---------------
 
 ### Contamination_Filter.py <a name="CF"></a>
 
-Something
+`Contamination_Filter.py` is an optional step for additional filtering, which can help identify and remove 'contaminated' sequences. This step requires a user-supplied set of sequences that represent the source of 'contamination'. For example, amphibian mtDNA sequences can be screened against human mtDNA sequences to make sure they are actually amphibian. Any reference sequences can be used, and the context depends on what the contamination source is expected to be. This step will remove all sequences scoring greater than 95% identity for a minimum of 100 continuous base pairs to the reference ‘contamination’ sequences. 
 
 #### Basic Usage:
 
@@ -693,7 +807,17 @@ python Contamination_Filter.py -i <input directory> -d <contamination fasta name
 > **Optional**: The maximum number of blast matches allowed per input sequence.
 
 
+Several outputs are created in the specified input directory, including:
 
++ BLAST database files for the 'contamination' reference sequences (extensions .nhr, .nin, .nsq).
++ A BLAST results file, labeled as `LOCUS_blast_output.txt`.
++ A filtered fasta file, labeled as `LOCUS1_extracted.fasta`, which contain all sequences that passed the filter.
++ A fasta file of 'contaminated' sequences, labeled as `LOCUS1_extracted_contaminated.fasta`, which contains sequences that failed the filter.
++ A corresponding log file (`Log_File_LOCUS1.txt`), which contains information on the original sequence length, BLAST coordinates found, and extracted sequence length for each record with significant BLAST hits to the reference sequences.
+
+#### BLAST Algorithm choice
+
+The required `-b ` flag specifies the BLAST algorithm to use. For the contamination filter, the goal is to identify and remove sequences with a very high similarity to the references. For this type of search it is best to use *megablast*, which is most appropriate for conducting within-species searches.
 
 ---------------
 
@@ -765,11 +889,11 @@ python Make_Acc_Table.py -i <input directory>
 
 #### Argument Explanations:
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory containing the fasta files (single sequence per taxon).
 
-##### -s <path-to-file>
+##### `-s <path-to-file>`
 
 > **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
 
@@ -800,11 +924,11 @@ python Adjust_Direction.py -i <input directory>
 
 #### Argument Explanations:
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory which contains the unaligned fasta files.
 
-##### --acc
+##### `--acc`
 
 > **Optional**: Use the --adjustdirectionaccurately implementation in MAFFT, rather than --adjustdirection. It is slower but more accurate, especially for divergent sequences.
 
@@ -821,15 +945,15 @@ Something
 python Coding_Translation_Tests.py -i <input directory> --table <translation table>
 ```
 
-##### -i <path-to-directory> 
+##### `-i <path-to-directory> `
 
 > **Required**: The full path to a directory which contains the locus-specific fasta files to filter.
 
-##### --table <choice>
+##### `--table <choice>`
 
 > **Required**: Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*.
 
-##### --rc
+##### `--rc`
 
 > **Optional**: In addition to forward frames, use reverse complement for translation tests. Not recommended if direction of sequences has already been adjusted.
 
@@ -846,31 +970,31 @@ Something
 python Align.py -i <input directory> -a <aligner> 
 ```
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory which contains the unaligned fasta files.
 
-##### -a <choice>
+##### `-a <choice>`
 
 > **Required**: Specify whether alignment is by mafft, macse, muscle, or clustalo. If macse, MUST provide flags --mpath and --table. Choices = *mafft, macse, muscle, clustalo, all*.
 
-##### --mpath <path-to-executable>
+##### `--mpath <path-to-executable>`
 
 > **Required** for `-a macse`: Full path to a macse jar file.
 
-##### --table <choice>
+##### `--table <choice>`
 
 > **Required** for `-a macse`: Specifies translation table. Choices = *standard, vmtdna*.
 
-##### --mem <integer>
+##### `--mem <integer>`
 
 > **Optional** for `-a macse`: An integer for how much memory to assign to macse (in GB). Default = 1.
 
-##### --pass_fail
+##### `--pass_fail`
 
 > **Optional** for `-a macse`: Specifies macse to perform dual alignment. Files in -i directory must follow labeling format: NAME_Passed.fasta, NAME_Failed.fasta.
 
-##### --accurate
+##### `--accurate`
 
 > **Optional**: Specifies more thorough search settings in mafft, clustalo, or macse (see below).
 
@@ -887,19 +1011,19 @@ Something
 python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal method>
 ```
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory which contains the input alignment files. File formats can include fasta, nexus, or phylip (see below).
 
-##### -f <choice>
+##### `-f <choice>`
 
 > **Required**: Specifies the output file format for trimmed alignments. Choices = *fasta, nexus, phylip*.
 
-##### -a <choice>
+##### `-a <choice>`
 
 > **Required**: Specifies the trimal method for trimming alignments. Choices = *gt, noallgaps, both*.
 
-##### --gt <value>
+##### `--gt <value>`
 
 > **Optional**: Specifies the gap threshold (gt) value for trimal, the minimum fraction of sequences without a gap. Must be between 0 and 1. Default = 0.05.
 
@@ -929,15 +1053,15 @@ Something
 python Relabel_Fasta.py -i <input directory> -r <relabel option>
 ```
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory containing the unaligned or aligned fasta files.
 
-##### -r <choice>
+##### `-r <choice>`
 
 > **Required**: The strategy for relabeling sequence records. Choices = *species, accession, species_acc*.
 
-##### -s <path-to-file>
+##### `-s <path-to-file>`
 
 > **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
 
@@ -954,7 +1078,7 @@ Something
 python Fasta_Convert.py -i <input directory>
 ```
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory which contains the aligned fasta files.
 
@@ -971,19 +1095,19 @@ Something
 python Concatenation.py -i <input directory> -r <input format> -s <missing data symbol> -o <output format>
 ```
 
-##### -i <path-to-directory>
+##### `-i <path-to-directory>`
 
 > **Required**: The full path to a directory containing the aligned files.
 
-##### -f <choice>
+##### `-f <choice>`
 
 > **Required**: The input file format of the alignments. Choices = *fasta, phylip*.
 
-##### -s <choice>
+##### `-s <choice>`
 
 > **Required**: A base pair symbol used to represent missing data sequences. Choices = *dash, N, ?*.
 
-##### -o <choice>
+##### `-o <choice>`
 
 > **Required**: The output file format for the final concatenated alignment. Choices = *fasta, phylip*.
 
