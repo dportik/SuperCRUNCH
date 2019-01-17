@@ -263,7 +263,7 @@ Notice punctuation and parentheses are left intact and the line is simply conver
 
 The strategy for obtaining sets of UCE sequences is a little different from the smaller locus sets. First, you'll want to do a specific GenBank search for the taxonomic term of interest *and* `ultra conserved element` and/or `uce`. This will produce a much more manageable set of sequences to work with, as searching for several thousand loci in a large sequence set will inevitably take a very long time. 
 
-To generate a locus search terms file, I retrieved the uce names from the ***uce-5k-probes.fasta*** file located [here](https://github.com/faircloth-lab/uce-probe-sets/tree/master/uce-5k-probe-set). Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank, but the if curated properly then the description lines should contain the uce name somewhere (uce-10, uce-453, uce-5810, etc). 
+To generate a locus search terms file, I retrieved the uce names from the ***uce-5k-probes.fasta*** file located [here](https://github.com/faircloth-lab/uce-probe-sets/tree/master/uce-5k-probe-set). Unfortunately, there does not appear to be a standard naming convention for the UCE loci on GenBank. If the sequences have been properly curated, then the description lines *should* contain the uce name somewhere (uce-10, uce-453, uce-5810, etc). If so, they will be compatible with the the 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) I've made available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data).
 
 Here are partial contents from the UCE locus search term file:
 
@@ -298,7 +298,7 @@ CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 
 The locus abbreviation terms successfully retrieved the corresponding loci in the example above. 
 
-I've made the 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
+The 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) is freely available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
 
 ---------------
 
