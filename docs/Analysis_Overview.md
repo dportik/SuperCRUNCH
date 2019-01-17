@@ -342,13 +342,13 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 
 > **Optional**: Ignore the subspecies component of taxon labels in the taxon names file and in the fasta file to search.
 
-#### Examples:
+#### Example Use:
 
 ```
-python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output
+python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output/
 ```
 ```
-python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output --no_subspecies
+python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output/ --no_subspecies
 ```
 
 
@@ -514,6 +514,15 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 
 > **Optional**: The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). 
 
+#### Example Use:
+
+```
+python Rename_Merge.py -i bin/Rename/Unmatched_Taxa.fasta -r bin/Rename/taxon_relabeling.txt -o bin/Rename/Output/
+```
+```
+python Rename_Merge.py -i bin/Rename/Unmatched_Taxa.fasta -r bin/Rename/taxon_relabeling.txt -o bin/Rename/Output/ -m bin/Rename/Matched_Taxa.fasta
+```
+
 
 In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name. Currently, `Rename_Merge.py` only supports species (binomial) name relabeling, so altering subspecies labels is not possible.
 
@@ -591,6 +600,16 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
 
+#### Example Use:
+
+```
+python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.fasta -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/
+```
+```
+python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.fasta -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/ --no_subspecies
+```
+
+
 Several output files are created in the directory specified. For each locus included, a fasta file will be written with sequences that pass the locus and taxon filters. If no sequences are found for a locus, a corresponding fasta file will not be produced. A log file summarizing the number of records written per locus is also written to the output directory, and is called *Loci_Record_Counts.log*. An example of the contents of this file is shown below:
 
 ```
@@ -646,6 +665,12 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 ##### `--max_hits <integer>`
 
 > **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets. If omitted, no limit is set.
+
+#### Example Use:
+
+```
+python Cluster_Blast_Extract.py -i bin/cluster-blast/ -b dc-megablast -m span --max_hits 300
+```
 
 
 Several output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
@@ -735,6 +760,12 @@ python Reference_Blast_Extract.py -i <input directory> -d <reference fasta name>
 
 > **Optional**: The maximum number of blast matches allowed per input sequence. May want to set < 300 for large sequence sets.
 
+#### Example Use:
+
+```
+python Reference_Blast_Extract.py -i bin/Ref-Blast/ -d ND2_references.fasta -e ND2.fasta -b dc-megablast -m span --max_hits 300
+```
+
 Several outputs are created in the specified input directory, including:
 
 + BLAST database files for the reference sequences (extensions .nhr, .nin, .nsq).
@@ -817,6 +848,11 @@ python Contamination_Filter.py -i <input directory> -d <contamination fasta name
 
 > **Optional**: The maximum number of blast matches allowed per input sequence.
 
+#### Example Use:
+
+```
+python Contamination_Filter.py -i bin/contamfilter/ND2/ -d Human_ND2.fasta -e ND2.fasta -b megablast
+```
 
 Several outputs are created in the specified input directory, including:
 
@@ -836,14 +872,24 @@ The required `-b ` flag specifies the BLAST algorithm to use. For the contaminat
 
 ![F3](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig3.jpg)
 
-Something
+The goal of this step is to apply additional sequence filters and select representative sequences using `Filter_Seqs_and_Species.py`. There are multiple options for filtering and selecting sequences, including an option to include or exclude subspecies. Once sequence filtering and selection is completed, the `Make_Acc_Table.py` module can be used to rapidly generate a table of NCBI accession numbers for all taxa and loci.
 
+Although the original goal of `Filter_Seqs_and_Species.py` was to select the best available sequence for a taxon for each locus, it can also be used to retain all sequences passing the filters. That is, it can be used to filter and create population-level data sets. 
 
 ---------------
 
 ### Filter_Seqs_and_Species.py <a name="FSS"></a>
 
-Something
+To construct a phylogenetic supermatrix representative sequences must be selected per taxon per locus, and if multiple sequences exist for a taxon for a locus then an objective strategy must be used for sequence selection. `Filter_Seqs_and_Species.py` includes several strategies for choosing among multiple sequences. The simplest solution is to sort sequences by length and select the longest sequence available (*length* method). `Filter_Seqs_and_Species.py` includes another approach for coding loci in which sequences are first sorted by length, and then undergo translation tests to identify a correct reading frame (*translate* method). Here, the longest sequence is translated in all forward and reverse frames in an attempt to identify a correct reading frame. If a correct reading frame is found, the sequence is selected. If a correct reading frame is not found, the next longest sequence is examined. The process continues until a suitable sequence is found. If no sequences in the set pass translation, the first (longest) sequence is selected (rather than excluding the taxon). The *randomize* feature can be used to shuffle the starting list of sequences randomly, rather than sorting by length. If used in conjunction with the *length* method, the first sequence from the shuffled list is selected (a true random choice). If used in conjunction with the *translate* method, translation tests occur down the shuffled list until a suitable sequence is selected (not necessarily a random choice). 
+
+For all selection options, sequences must meet a minimum base pair threshold set by the user. If no sequences meet the minimum length requirement for a taxon, then the taxon will be excluded during the filtering process.
+
+Similar to previous steps, a list of taxa must be provided. The taxon names list can contain a mix of species (binomial) and subspecies (trinomial) names. Detailed instructions for the format of this file is provided in the `Taxa_Assessment.py` section. The optional `--no_subspecies` flag can be used, and its effect in this step is identical to that described in the `Taxa_Assessment.py` section.
+
+The `Filter_Seqs_and_Species.py` module will create fasta files containing a single representative sequence per taxon for each locus, along with other important output files described below. The filtered fasta files can be used with the `Make_Acc_Table.py` module to generate a table of NCBI accession numbers for all taxa and loci.
+ 
+Although `Filter_Seqs_and_Species.py` was initially designed to filter and select one sequence per species, retaining intraspecific sequence sets may actually be desirable for other projects (e.g., phylogeography). `Filter_Seqs_and_Species.py` includes this option (`--allseqs`). When the `--allseqs` flag is used, rather than selecting the highest quality sequence available for a taxon, all sequences passing the filtration methods are retained. Additional details for this feature are provided below.
+
 
 #### Basic Usage:
 
@@ -855,7 +901,7 @@ python Filter_Seqs_and_Species.py -i <input directory> -f <filter strategy> -l <
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the locus-specific fasta files to filter.
+> **Required**: The full path to a directory which contains the locus-specific fasta files to filter. The filtering options set are applied to every fasta file in this directory.
 
 ##### `-f <choice>`
 
@@ -884,6 +930,33 @@ python Filter_Seqs_and_Species.py -i <input directory> -f <filter strategy> -l <
 ##### `--no_subspecies`
 
 > **Optional**: Ignore subspecies labels in both the taxon names file and the fasta file.
+
+#### Example Uses:
+
+```
+python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --no_subspecies
+```
+> Above command will select one sequence per taxon per locus based on the longest available sequence. The minimum base pair length is 150. The no_subspecies option is used.
+
+```
+python Filter_Seqs_and_Species.py -i /bin/Filter/ -f translate --table standard -l 150 -t bin/Loci/Taxa_List.txt
+```
+> Above command will select one sequence per taxon per locus based on the longest translatable sequence. The standard code is used for translation for all input fasta files. The minimum base pair length is 150. Subspecies are included.
+
+```
+python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --no_subspecies --randomize 
+```
+> Above command will select one sequence per taxon per locus randomly. The minimum base pair length is 150. The no_subspecies option is used.
+
+```
+python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --allseqs
+```
+> Above command will select all sequences per taxon per locus that pass the minimum base pair length of 150. Subspecies are included.
+
+```
+python Filter_Seqs_and_Species.py -i /bin/Filter/ -f translate --table vertmtdna -l 150 -t bin/Loci/Taxa_List.txt --allseqs
+```
+> Above command will select all sequences per taxon per locus that pass translation (using vertebrate mitochondrial code) and the minimum base pair length of 150. Subspecies are included.
 
 
 ---------------
