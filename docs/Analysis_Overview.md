@@ -165,7 +165,7 @@ Linnaea borealis longiflora
 
 ### Obtaining Loci and Search Terms <a name="OLST"></a>
 
-**SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and longer label in the sequence record. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help to identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). 
+**SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and longer label in the sequence record. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help to identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). For detailed instructions on searching for UCEs, see the next section.
 
 The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It should not contain any spaces or special characters. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces. This second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contain(s) the long label of the gene or marker. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels). Although the locus text file can be created using Excel or other applications, it must be in tab-delimited text format. Similar to the taxon names file, make sure to open the file in a text editor and ensure the format includes Unix line breaks and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
 
@@ -257,6 +257,8 @@ It will be converted to the following search line:
 `>JX999516.1 LIOLAEMUS PICTUS VOUCHER LP111; EXOPHILIN 5 (EXPH5) GENE, PARTIAL CDS`
 
 Notice punctuation and parentheses are left intact and the line is simply converted to uppercase. The line is then checked to see if any supplied locus label is contained within. In this example, the 'EXOPHILIN 5' and 'EXOPHILIN' labels are both contained in the line and would produce a match, but 'EXOPHILIN-5' and 'EXOPHILIN PROTEIN 5' would not. The more specific or complex a label search term is, the less likely it is to produce an exact match. My recommendation is to find the simplest common denominator among records and include that label, along with more complex search labels.
+
+---------------
 
 ### Searching for UCE loci <a name="SFUL"></a> 
 
