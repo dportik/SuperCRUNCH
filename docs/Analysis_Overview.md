@@ -968,7 +968,7 @@ Several outputs are created in the specified input directory (one for every inpu
 
 + `[fasta name]_all_seqs.fasta`: An output fasta file which contains all available sequences per taxon that passed the relevant filters. Produced if the `--allseqs` flag is used.
 
-+ `[fasta name]_species_log.txt`: A summary file containing information for each taxon entry. An example of the contents is shown below:
++ `[fasta name]_species_log.txt`: A summary file containing information for each taxon entry. An example of the contents is shown below. In addition to reporting the sequence accession number and length, the number of alternative sequences available is shown. If the `-f translate` method was used, the results of whether the translation test was passed is provided (Y or N). If the `-f length` method was used, this column will contain NA instead.
 ```
 Taxon	Accession	SeqLength	PassedTranslation	SeqsAvailable
 Agama lionotus	GQ242168.1	853	Y	1
@@ -981,7 +981,7 @@ Anolis aeneus	AF055950.1	1033	Y	2
 ...
 ```
 
-+ `[fasta name]_accession_list_by_species.txt`: A tab-delimited file in which each line starts with a taxon name and is followed by all accession numbers of sequences passing the length filter from the fasta file. An example of the contents is shown below:
++ `[fasta name]_accession_list_by_species.txt`: A tab-delimited file in which each line starts with a taxon name and is followed by all accession numbers of sequences passing the length filter from the fasta file. These are the accession numbers for the selected sequence and all alternative sequences indicated in the file above. An example of the contents is shown below:
 ```
 Agama lionotus	GQ242168.1	
 Amblyrhynchus cristatus	NC_028031.1	KT277937.1	KR350765.1	KR350766.1	KR350762.1	KR350754.1	KR350759.1	KR350763.1	KR350764.1	KR350758.1	KR350755.1	KR350761.1	KR350753.1	KR350757.1	KR350752.1	KR350760.1	KR350756.1	KR350743.1	KR350746.1	KR350744.1	KR350745.1	
@@ -993,7 +993,7 @@ Anolis aeneus	AF055950.1	AF317066.1
 ...
 ```
 
-+ `[fasta name]_accession_list_for_Batch_Entrez.txt`: a Batch Entrez style file which contains all the accession numbers for sequences that passed the length filter. This list includes all taxa, and is a combination of all the accession numbers in the above `[fasta name]_accession_list_by_species.txt` file. An example of the contents is shown below:
++ `[fasta name]_accession_list_for_Batch_Entrez.txt`: a Batch Entrez style file which contains all the accession numbers for sequences that passed the length filter. This list is a combination of all the accession numbers in the above file. An example of the contents is shown below:
 ```
 GQ242168.1
 NC_028031.1
