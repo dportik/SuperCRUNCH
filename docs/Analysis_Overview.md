@@ -662,8 +662,7 @@ The optional `-m ` flag specifies the strategy to use for handling BLAST coordin
 [27, 380]
 [30, 500]
 ```
-These can be combined to one set of coordinates: `[2, 500]`
-After BLAST, the coordinates for each input sequence are combined. Often this produces one set of merged coordinates, like the above example. Sometimes multiple sets of non-overlapping coordinates are produced, like `[2, 70], [100, 500]`. 
+These can be combined to one set of coordinates: `[2, 500]`. After BLAST searches are finished, the coordinates for each input sequence are merged. Often this produces one set of merged coordinates, like the example above, but sometimes multiple sets of non-overlapping coordinates are produced, like `[2, 70], [100, 500]`. 
 
 How can this happen?
 
