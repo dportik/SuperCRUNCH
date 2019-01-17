@@ -314,7 +314,7 @@ This section deals with the first filtering steps, which include screening seque
 
 The goal of this script is to search through records in a fasta file of NCBI nucleotide sequences to determine whether or not they contain a taxon name present in the user-supplied taxon list. The taxon names list can contain a mix of species (binomial name) and subspecies (trinomial name) labels, and searches are not case-sensitive. 
 
-Two output fasta files are written to the specified output directory: one containing only records with valid taxon names, and one containing records with invalid taxon names. Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the **Rename_Merge.py** script. 
+Two output fasta files are written to the specified output directory: one containing only records with valid taxon names (*Matched_Taxa.fasta*), and one containing records with invalid taxon names (*Unmatched_Taxa.fasta*). The accession numbers for each of these fasta files are also written to separate files (*Matched_Records_Accession_Numbers.log*, *Unmatched_Records_Accession_Numbers.log*). Two log files are written which contain lists of the valid (*Matched_Taxon_Names.log*) and invalid taxon names (*Unmatched_Taxon_Names.log*) found across all records. The *Unmatched_Taxon_Names.log* file can be used to create the file needed to relabel taxa in the **Rename_Merge.py** script. 
 
 The decision to include or exclude subspecies labels is up to the user, and can be specified using the `--no_subspecies` flag. For a thorough explanation of how taxonomy searches are conducted and how this flag affects this step (and others), please see below.
 
@@ -474,7 +474,9 @@ This effectively groups all the subspecies under the species name `Linnaea borea
 
 ### Rename_Merge.py <a name="RM"></a>
 
-Something
+The goal of this script is to search through records in a fasta file and replace invalid taxon names with names compatible with the taxon list. The invalid taxon names file (*Unmatched_Taxon_Names.log*) from the *Taxa_Assessment.py* can be used to help create the replacement names file, as it contains all the taxon names that will fail the taxon filter in the *Parse_Loci.py* script. Similar to other input text files, make sure to open the replacement names file in a text editor and ensure the format includes Unix line breaks (line breaks marked by \n, rather than \r\n) and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
+
+If the optional `-m` flag is used, records that are successfully relabeled are merged with another fasta file. Ideally, this fasta file should be the one containing all the records with valid taxon names (*Matched_Taxa.fasta*). The resulting merged fasta file (*Merged.fasta*) should then be used for the *Parse_Loci.py* script.
 
 #### Basic Usage:
 
@@ -500,6 +502,44 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 
 > **Optional**: The full path to a fasta file containing valid taxon names (*Matched_Taxa.fasta*). 
 
+
+In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name (that is in the original taxon list). Currently, *Rename_Merge.py* only supports species (binomial) names, so updating subspecies labels is not possible.
+
+Example contents of a replacement names file:
+
+```
+Chamaeleo harennae	Trioceros harennae
+Chamaeleo hoehneli	Trioceros hoehnelii
+Chamaeleo hoehnelii	Trioceros hoehnelii
+Chamaeleo jacksonii	Trioceros jacksonii
+Chamaeleo johnstoni	Trioceros johnstoni
+Chamaeleo melleri	Trioceros melleri
+Chamaeleo montium	Trioceros montium
+Chamaeleo narraioca	Trioceros narraioca
+```
+
+Note that components of a species name are separated with a space, and the columns are separated with a tab character. 
+
+Although the replacement step should help rescue many records, there are some labels in the *Unmatched_Taxon_Names.log* that simply can't be corrected. These include things like:
+
+```
+A.alutaceus mitochondrial
+A.barbouri mitochondrial
+Agama sp.
+C.subcristatus tcs1
+C.versicolor sox-4
+Calotes sp.
+Calumma aff.
+Calumma cf.
+Liolaemus kriegi/ceii
+Tsa anolis
+Unverified bradypodion
+Unverified callisaurus
+```
+
+These records have been labeled improperly, or the identity of the organism is uncertain (sp., cf., aff.,). These are not useful for the analysis, and should rightfully be discarded using the taxonomy filter in *Parse_Loci.py*.
+
+In other cases, taxon names may have been updated and now represent synonymies, or may have been accidentally misspelled. Using a organism-specific taxonomy browser can help clarify these situations. These are examples of records worth saving through relabeling, and using *Rename_Merge.py* to do so will result in higher quality data. 
 
 ---------------
 
