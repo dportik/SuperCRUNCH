@@ -36,17 +36,15 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Adjust_Direction](#AD)
 + [Coding_Translation_Tests](#CTT)
 + [Align](#A)
+
+### [Post-Alignment Tasks](#FFT)
+
 + [Relabel_Fasta](#RF)
 + [Trim_Alignments](#TAS)
-
-### [File Formatting Tasks](#FFT)
-
 + [Fasta_Convert](#FC)
 + [Concatenation](#C)
 
 The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to achieve various analysis goals.   
-
-
 
 
 ---------------
@@ -1203,6 +1201,8 @@ python Adjust_Direction.py -i /bin/Adjust/
 ```
 > Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
 
+
+
 ---------------
 
 ### Align.py <a name="A"></a>
@@ -1246,6 +1246,15 @@ python Align.py -i <input directory> -a <aligner>
 
 ---------------
 
+## **Post-Alignment Tasks** <a name="FFT"></a>
+
+
+![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
+
+Something
+
+---------------
+
 ### Relabel_Fasta.py <a name="RF"></a>
 
 The goal of `Relabel_Fasta.py` is to relabel the sequence records for all fasta files in a directory. The fasta files can be aligned or unaligned.
@@ -1275,7 +1284,6 @@ python Relabel_Fasta.py -i <input directory> -r <relabel option>
 ##### `-s <path-to-file>`
 
 > **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
-
 
 
 #### Example Uses:
@@ -1398,15 +1406,6 @@ python Trim_Alignments.py -i /bin/Trim/ -f phylip -a noallgaps
 python Trim_Alignments.py -i /bin/Trim/ -f nexus -a both --gt 0.08
 ```
 > Above command will trim alignments using the gap threshold method with a value of 0.1, and output files in fasta format.
-
----------------
-
-## **File Formatting Tasks** <a name="FFT"></a>
-
-
-![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
-
-Something
 
 
 ---------------
