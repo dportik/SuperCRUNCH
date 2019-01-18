@@ -36,11 +36,11 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Adjust_Direction](#AD)
 + [Coding_Translation_Tests](#CTT)
 + [Align](#A)
++ [Relabel_Fasta](#RF)
 + [Trim_Alignments](#TAS)
 
 ### [File Formatting Tasks](#FFT)
 
-+ [Relabel_Fasta](#RF)
 + [Fasta_Convert](#FC)
 + [Concatenation](#C)
 
@@ -1098,6 +1098,7 @@ Acanthosaura capra	-	-	-	AY572880.1	-
 Acanthosaura crucigera	AB031963.1	MG935713.1	MG935416.1	AY572889.1	-
 Acanthosaura lepidogaster	KR092427.1	KR092427.1	KR092427.1	KR092427.1	KR092427.1
 Agama aculeata	-	JX668143.1	-	AF355563.1	-
+...
 ```
 
 This file can be opened and manipulated using other applications such as Excel.
@@ -1116,7 +1117,11 @@ Something
 
 ### Adjust_Direction.py <a name="AD"></a>
 
-Something
+The purpose of `Adjust_Direction.py` is to check sequences to ensure their proper direction before performing alignments or additional filtering (such as `Coding_Translation_Tests.py`). `Adjust_Direction.py` is designed to work for a directory of fasta files, and it will adjust sequences in all unaligned fasta files and output unaligned fasta files with all sequences in the 'correct' direction. `Adjust_Direction.py` uses **MAFFT** to perform adjustments, and the default setting uses the *--adjustdirection* implementation of mafft. If the optional `--accurate` flag is included, it will use the *--adjustdirectionaccurately* option, which is slower but more effective with divergent sequences. 
+
+The standard output file from **MAFFT** is an interleaved fasta with sequences written in lowercase. In this file, sequences that have been reversed are flagged by writing an *_R_* at the beginning of the record ID. `Adjust_Direction.py` takes this output file and converts it to a cleaner format. Sequences are re-written in uppercase, the alignment is stripped, and the *_R_* is removed. Sequences that were reversed are recorded in a locus-specific log file, and the total counts of reversed sequences across all loci is written to a general log file.
+
+The resulting unaligned fasta files can be used for `Coding_Translation_Tests.py` or for `Align.py`.
 
 #### Basic Usage:
 
@@ -1133,6 +1138,36 @@ python Adjust_Direction.py -i <input directory>
 ##### `--acc`
 
 > **Optional**: Use the --adjustdirectionaccurately implementation in MAFFT, rather than --adjustdirection. It is slower but more accurate, especially for divergent sequences.
+
+#### Example Uses:
+
+```
+python Adjust_Direction.py -i /bin/Adjust/
+```
+> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
+
+```
+python Adjust_Direction.py -i /bin/Adjust/ --acc
+```
+> Above command will adjust all unaligned fasta files using --adjustdirectionaccurately in MAFFT.
+
+Two outputs are created in the specified input directory for each fasta file, including:
+
++ `[fasta name]_Adjusted_Name_Log.txt`: Contains the full names of the sequences that were reversed in this particular fasta file, if any were adjusted.
++ `[fasta name]_Adjusted.fasta`: The unaligned fasta file which contains correctly oriented sequences.
+
+An additional output file is created:
+
++ `Log_Sequences_Adjusted.txt`: Contains the names of all fasta files and the number of sequences that were in the correct orientation or had to be reversed. Example contents:
+```
+Locus	Seqs_Correct_Direction	Seqs_Direction_Adjusted
+12S	529	1
+16S	565	13
+CO1	484	0
+CYTB	513	0
+ND1	202	0
+```
+
 
 
 ---------------
@@ -1159,6 +1194,15 @@ python Coding_Translation_Tests.py -i <input directory> --table <translation tab
 
 > **Optional**: In addition to forward frames, use reverse complement for translation tests. Not recommended if direction of sequences has already been adjusted.
 
+
+
+
+#### Example Uses:
+
+```
+python Adjust_Direction.py -i /bin/Adjust/
+```
+> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
 
 ---------------
 
@@ -1203,9 +1247,48 @@ python Align.py -i <input directory> -a <aligner>
 
 ---------------
 
-### Trim_Alignments.py <a name="TAS"></a>
+### Relabel_Fasta.py <a name="RF"></a>
 
 Something
+
+#### Basic Usage:
+
+```
+python Relabel_Fasta.py -i <input directory> -r <relabel option>
+```
+
+##### `-i <path-to-directory>`
+
+> **Required**: The full path to a directory containing the unaligned or aligned fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
+
+##### `-r <choice>`
+
+> **Required**: The strategy for relabeling sequence records. Choices = *species, accession, species_acc*.
+
+##### `-s <path-to-file>`
+
+> **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
+
+
+
+
+#### Example Uses:
+
+```
+python Adjust_Direction.py -i /bin/Adjust/
+```
+> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
+
+
+---------------
+
+### Trim_Alignments.py <a name="TAS"></a>
+
+The alignments may require some amount of trimming to remove overhanging ends, poorly aligned regions, etc. `Trim_Alignments.py` simplifies this process by automating trimming for a directory of input files. `Trim_Alignments.py` relies on **trimAl**, and three options are available for trimming. Specifying `-a gt` will use the gap threshold method, and although the default value is 0.05 this can be changed using the `--gt ` flag and a value between 0 and 1. The gt value sets the minimum fraction of sequences without a gap. Specifying `-a noallgaps` uses the noallgaps method, which simply removes any column containing purely gaps. Finally, specifying `-a both` runs the gap threshold method followed by the noallgaps method.
+
+The input files can be in fasta, nexus, or phylip format, and the format is automatically detected by **trimAl**. The output format must be specified by the `-f ` flag, and includes fasta, nexus, or phylip format.
+
+**Note:** If the input files have not been relabeled at this point (ie they are aligned fasta format with original description lines), the names appearing in the output files will be the accession numbers. 
 
 #### Basic Usage:
 
@@ -1230,8 +1313,22 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 > **Optional**: Specifies the gap threshold (gt) value for trimal, the minimum fraction of sequences without a gap. Must be between 0 and 1. Default = 0.05.
 
 
+#### Example Uses:
 
+```
+python Trim_Alignments.py -i /bin/Trim/ -f fasta -a gt --gt 0.1
+```
+> Above command will trim alignments using the gap threshold method with a value of 0.1, and output files in fasta format.
 
+```
+python Trim_Alignments.py -i /bin/Trim/ -f phylip -a noallgaps
+```
+> Above command will trim alignments using the noallgaps method and output files in phylip format.
+
+```
+python Trim_Alignments.py -i /bin/Trim/ -f nexus -a both --gt 0.08
+```
+> Above command will trim alignments using the gap threshold method with a value of 0.1, and output files in fasta format.
 
 ---------------
 
@@ -1241,31 +1338,6 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 ![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
 
 Something
-
-
----------------
-
-### Relabel_Fasta.py <a name="RF"></a>
-
-Something
-
-#### Basic Usage:
-
-```
-python Relabel_Fasta.py -i <input directory> -r <relabel option>
-```
-
-##### `-i <path-to-directory>`
-
-> **Required**: The full path to a directory containing the unaligned or aligned fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
-
-##### `-r <choice>`
-
-> **Required**: The strategy for relabeling sequence records. Choices = *species, accession, species_acc*.
-
-##### `-s <path-to-file>`
-
-> **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
 
 
 ---------------
