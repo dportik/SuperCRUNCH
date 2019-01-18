@@ -1248,7 +1248,15 @@ python Align.py -i <input directory> -a <aligner>
 
 ### Relabel_Fasta.py <a name="RF"></a>
 
-Something
+The goal of `Relabel_Fasta.py` is to relabel the sequence records for all fasta files in a directory. The fasta files can be aligned or unaligned.
+
+There are three strategies available, specified using the `-r` flag: `-r species`, `-r accession`, and `-r species_acc`. With `-r species`, a binomial name is constructed from the description line. This generally corresponds to the genus and species if records are labeled properly. With `-r accession`, the accession number will be used to label the sequence record. With `-r species_acc`, the record is labeled by taxon and accession number. In all strategies, spaces are replaced by underscores. If the optional `-s` flag is included with a text file containing subspecies (trinomial) names, then the taxon component of each of the above options will include the trinomial if present.
+
+**Relabeling with `-r species` is essential for concatenating alignments to create a phylogenetic supermatrix.**
+
+**Relabeling with `-r species_acc` is the best option for population-level data sets, where each species is represented by multiple sequences.**
+
+Examples of how each relabeling option works is shown in greater detail below.
 
 #### Basic Usage:
 
@@ -1270,14 +1278,76 @@ python Relabel_Fasta.py -i <input directory> -r <relabel option>
 
 
 
-
 #### Example Uses:
 
 ```
-python Adjust_Direction.py -i /bin/Adjust/
+python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r species -s bin/subspecies_list.txt
 ```
-> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
+> Above command will relabel description lines using the taxon name, and will use the appropriate subspecies labels if they are present.
 
+```
+python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r acc 
+```
+> Above command will relabel description lines using the accession number.
+
+```
+python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r species_acc -s bin/subspecies_list.txt
+```
+> Above command will relabel description lines using the taxon name plus accession number, and will use the appropriate subspecies labels if they are present.
+
+
+Depending on the relabeling strategy selected, one of the directories will be created with the following contents:
+
++ **Relabeled_Fasta_Files_Species**
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species`.
++ **Relabeled_Fasta_Files_Accession**
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r accession`.
++ **Relabeled_Fasta_Files_SpeciesAccession**
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species_acc`.
+
+#### Relabeling Details:
+
+Here I show how the relabeling works, in greater detail.
+
+Given this set of description lines from a fasta file:
+```
+>JN881132.1 Daboia russelii activity-dependent neuroprotector (ADNP) gene, partial cds
+>KU765220.1 Sceloporus undulatus voucher ADL182 activity-dependent neuroprotector (adnp) gene, partial cds
+>DQ001790.1 Callisaurus draconoides carmenensis isolate RWM 1480 cytochrome b (cytb) gene
+```
+Notice that the third entry has a subspecies label.
+
+Using `-r species` would produce:
+```
+>Daboia_russelii
+>Sceloporus_undulatus
+>Callisaurus_draconoides
+```
+Using `-r accession` would produce:
+```
+>JN881132.1
+>KU765220.1
+>DQ001790.1
+```
+Using `-r species_acc` would produce:
+```
+>Daboia_russelii_JN881132.1
+>Sceloporus_undulatus_KU765220.1
+>Callisaurus_draconoides_DQ001790.1
+```
+
+If I supplied a subspecies text file using the `-s` flag that contained `Callisaurus draconoides carmenensis`, then the following would be produced with `-r species`:
+```
+>Daboia_russelii
+>Sceloporus_undulatus
+>Callisaurus_draconoides_carmenensis
+```
+And this would be produced using `-r species_acc`:
+```
+>Daboia_russelii_JN881132.1
+>Sceloporus_undulatus_KU765220.1
+>Callisaurus_draconoides_carmenensis_DQ001790.1
+```
 
 ---------------
 
@@ -1373,9 +1443,9 @@ python Fasta_Convert.py -i /bin/relabeled_alignments/
 Two output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
 
 + **Output_Phylip_Files**
-    + For each locus, this directory contains the a corresponding phylip file, labeled `[fasta name].phy`.
+    + For each locus, this directory contains a corresponding phylip file, labeled `[fasta name].phy`.
 + **Output_Nexus_Files**
-    + For each locus, this directory contains the a corresponding nexus file, labeled `[fasta name].nex`.
+    + For each locus, this directory contains a corresponding nexus file, labeled `[fasta name].nex`.
 
 
 ---------------
@@ -1414,10 +1484,14 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 #### Example Uses:
 
 ```
-python Concatenation.py -i <input directory> -r <input format> -s <missing data symbol> -o <output format>
+python Concatenation.py -i /bin/Final_Alignments -r fasta -s dash -o phylip
 ```
-> Above command will convert all fasta alignments in the directory into nexus and phylip format.
+> Above command will concatenate all the fasta alignments in the directory and produce a phylip file. Missing data are represented with the - symbol.
 
+```
+python Concatenation.py -i /bin/Final_Alignments -r phylip -s ? -o fasta
+```
+> Above command will concatenate all the phylip alignments in the directory and produce a fasta file. Missing data are represented with the ? symbol.
 
 Three output files are created in the specified input directory, including:
 
