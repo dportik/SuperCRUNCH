@@ -1169,7 +1169,6 @@ ND1	202	0
 ```
 
 
-
 ---------------
 
 ### Coding_Translation_Tests.py <a name="CTT"></a>
@@ -1344,7 +1343,15 @@ Something
 
 ### Fasta_Convert.py <a name="FC"></a>
 
-Something
+The goal of `Fasta_Convert.py` is to convert a directory of aligned fasta files into both phylip and nexus formats. Note this should only be used after records have been renamed with species or accession names, as the original NCBI description lines will cause issues with writing other file formats.
+    
+
+    Output_Phylip_Files:
+           [NAME].phy - The phylip format alignment.
+                                           
+    Output_Nexus_Files:
+           [NAME].nex - The nexus format alignment
+
 
 #### Basic Usage:
 
@@ -1356,12 +1363,31 @@ python Fasta_Convert.py -i <input directory>
 
 > **Required**: The full path to a directory which contains the ALIGNED fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
+#### Example Uses:
+
+```
+python Fasta_Convert.py -i /bin/relabeled_alignments/
+```
+> Above command will convert all fasta alignments in the directory into nexus and phylip format.
+
+Two output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
+
++ **Output_Phylip_Files**
+    + For each locus, this directory contains the a corresponding phylip file, labeled `[fasta name].phy`.
++ **Output_Nexus_Files**
+    + For each locus, this directory contains the a corresponding nexus file, labeled `[fasta name].nex`.
+
 
 ---------------
 
 ### Concatenation.py <a name="C"></a>
 
-Something
+The goal of using `Concatenation.py` is to combine multiple alignments into a single concatenated alignment. 
+
+To work properly, sequence names should have been relabeled across all files and should take the format of `genus_species` or `genus_species_subspecies`. There cannot be any duplicate taxon labels within any of the alignment files, or an error will be thrown: `ValueError: Duplicate key [taxon label]`. The complete set of taxa is inferred from all the alignments, and assigned sequences from each locus. If a taxon is absent from an alignment, a missing sequence is generated using the symbol selected with the `-s ` flag (options: N, dash, or ? symbol). The input files can be in fasta or phylip format, and this option is specified using the `-f ` flag. The output format must be specified as fasta or phylip using the `-o` flag. Besides producing the concatenated alignment, two additional outputs are produced and described below.
+ 
+This script takes advantage of python dictionary structures to read alignments and store concatenated sequences. As a result, it works extremely fast and is more than capable of running with a directory containing thousands of large alignment files. 
+
 
 #### Basic Usage:
 
@@ -1385,9 +1411,24 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 
 > **Required**: The output file format for the final concatenated alignment. Choices = *fasta, phylip*.
 
+#### Example Uses:
+
+```
+python Concatenation.py -i <input directory> -r <input format> -s <missing data symbol> -o <output format>
+```
+> Above command will convert all fasta alignments in the directory into nexus and phylip format.
+
+
+Three output files are created in the specified input directory, including:
+
++ `Concatenated_Alignment.fasta` or `Concatenated_Alignment.phylip`: The final concatenated alignment in the output format specified. Taxa are written in alphabetical order.
++ `Data_Partitions.txt`: Text file displaying the order in which loci were concatenated and their corresponding base pairs within the alignment. By default loci are sorted and written in alphabetical order.
++ `Taxa_Loci_Count.log`: A count of the number of sequences that were available for each taxon, in other words the number of alignments the taxon was found in. 
+
+
 ---------------
 
-The end.
+
 
 ------
 *Last updated: January 2019*
