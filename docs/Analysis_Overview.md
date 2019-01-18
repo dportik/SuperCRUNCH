@@ -697,7 +697,7 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory containing the parsed locus-specific fasta files.
+> **Required**: The full path to a directory containing the parsed locus-specific fasta files. Fasta files in the directory must have extension '.fasta' to be read.
 
 ##### `-b <choice>`
 
@@ -950,7 +950,7 @@ python Filter_Seqs_and_Species.py -i <input directory> -f <filter strategy> -l <
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the locus-specific fasta files to filter. The filtering options set are applied to every fasta file in this directory.
+> **Required**: The full path to a directory which contains the locus-specific fasta files to filter. The filtering options set are applied to every fasta file in this directory. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `-f <choice>`
 
@@ -1060,7 +1060,13 @@ These output files provide explicit information regarding sequence selection, an
 
 ### Make_Acc_Table.py <a name="MAT"></a>
 
-Something
+The goal of this script is to create a table of accession numbers for each taxon and locus from a directory of fasta files, where each fasta file represents a different locus. 
+
+A complete set of taxa is inferred from all the fasta files. By default the names constructed are binomial (genus and species). If subspecies names are also desired, the optional `-s ` flag must be used and a text file of subspecies names must be supplied. The same taxon list from previous steps can be used here, but only the subspecies names are extracted from this list. If a record matches an included subspecies label it will be used, otherwise the binomial name will be used. 
+
+The accession numbers are obtained across loci for each taxon. If the taxon is not present in a fasta file, it will appear in the table as a dash. The names of the columns will match the fasta names, and the rows are composed of taxon names in alphabetical order.
+
+Note this script can process unaligned or aligned fasta files, but they must have the original description lines (not relabeled). 
 
 #### Basic Usage:
 
@@ -1072,14 +1078,29 @@ python Make_Acc_Table.py -i <input directory>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory containing the fasta files (single sequence per taxon).
+> **Required**: The full path to a directory containing the fasta files (single sequence per taxon). Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `-s <path-to-file>`
 
-> **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file.
+> **Optional**: The full path to a text file containing all subspecies names to cross-reference in the fasta file. This can be a taxon names file used in previous steps, or a smaller version only containing subspecies names.
 
+The accession table will be written as a tab-delimited text file to the input directory as `GenBank_Accession_Table.txt`. Here is an example of the contents from a truncated file:
 
+```
+Taxon	12S	16S	CO1	CYTB	ND1
+Acanthocercus adramitanus	-	KU097508.1	-	-	-
+Acanthocercus annectens	-	MG700133.1	MG699914.1	-	-
+Acanthocercus atricollis	-	JX668132.1	-	-	-
+Acanthocercus cyanogaster	-	JX668138.1	-	-	-
+Acanthocercus yemensis	-	JX668140.1	-	-	-
+Acanthosaura armata	NC_014175.1	NC_014175.1	NC_014175.1	NC_014175.1	NC_014175.1
+Acanthosaura capra	-	-	-	AY572880.1	-
+Acanthosaura crucigera	AB031963.1	MG935713.1	MG935416.1	AY572889.1	-
+Acanthosaura lepidogaster	KR092427.1	KR092427.1	KR092427.1	KR092427.1	KR092427.1
+Agama aculeata	-	JX668143.1	-	AF355563.1	-
+```
 
+This file can be opened and manipulated using other applications such as Excel.
 
 
 ---------------
@@ -1107,7 +1128,7 @@ python Adjust_Direction.py -i <input directory>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the unaligned fasta files.
+> **Required**: The full path to a directory which contains the unaligned fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `--acc`
 
@@ -1128,7 +1149,7 @@ python Coding_Translation_Tests.py -i <input directory> --table <translation tab
 
 ##### `-i <path-to-directory> `
 
-> **Required**: The full path to a directory which contains the locus-specific fasta files to filter.
+> **Required**: The full path to a directory which contains the locus-specific fasta files to filter. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `--table <choice>`
 
@@ -1153,7 +1174,7 @@ python Align.py -i <input directory> -a <aligner>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the unaligned fasta files.
+> **Required**: The full path to a directory which contains the unaligned fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `-a <choice>`
 
@@ -1194,7 +1215,7 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the input alignment files. File formats can include fasta, nexus, or phylip (see below).
+> **Required**: The full path to a directory which contains the input alignment files. File formats can include fasta, nexus, or phylip, with one of the corresponding file extensions: '.fasta', '.fa', '.nexus', '.nex', '.phylip', or '.phy'. 
 
 ##### `-f <choice>`
 
@@ -1236,7 +1257,7 @@ python Relabel_Fasta.py -i <input directory> -r <relabel option>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory containing the unaligned or aligned fasta files.
+> **Required**: The full path to a directory containing the unaligned or aligned fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 ##### `-r <choice>`
 
@@ -1261,7 +1282,7 @@ python Fasta_Convert.py -i <input directory>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory which contains the aligned fasta files.
+> **Required**: The full path to a directory which contains the ALIGNED fasta files. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
 
 
 ---------------
@@ -1278,11 +1299,11 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory containing the aligned files.
+> **Required**: The full path to a directory containing the aligned files. 
 
 ##### `-f <choice>`
 
-> **Required**: The input file format of the alignments. Choices = *fasta, phylip*.
+> **Required**: The input file format of the alignments. Choices = *fasta, phylip*. The files must have one of the corresponding extensions to be read: '.fasta', '.fa', '.phylip', or '.phy'.
 
 ##### `-s <choice>`
 
