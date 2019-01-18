@@ -8,8 +8,9 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ### [Starting Materials](#GSM):
 + [Obtaining Sequence Data](#OSD)
-+ Optional tool: [Remove_Duplicate_Accessions](#RDA)
+    + [Remove_Duplicate_Accessions](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
+    + [Getting Taxa for Population-Level Data Sets](#GTPLDS)
 + [Obtaining Loci and Search Terms](#OLST)
     + [Searching for UCE loci](#SFUL)
 
@@ -159,6 +160,11 @@ Linnaea borealis longiflora
 ```
 
 **SuperCRUNCH** offers the option to exclude subspecies from searches, so a taxon list containing a mix of species and subspecies does not need to be pruned by hand if subspecies are not desired in the analysis. The effects of this option with different types of taxon lists is explained in usage of the `Taxa_Assessment.py` script.
+
+---------------
+
+### Getting Taxa for Population-Level Data Sets <a name="GTPLDS"></a>
+
 
 ---------------
 
