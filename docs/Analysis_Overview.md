@@ -170,11 +170,11 @@ In some cases it may be desirable to obtain a list of taxon names directly from 
 ### Fasta_Get_Taxa.py
 
 The goal of this script is to search through all fasta files in a directory to construct 'species' and 'subspecies' label sets directly from the description lines. Two output files are written, which are lists of all unique 'species' and 'subspecies' labels found. 
-The names are created by combining the second and third elements on the description line (for binomial names) and by combining the second, third and fourth elements on the description line (for trinomial names). There are several filters in place to try to prevent 'junk' names from being produced, which should work relatively well for constructing binomial names. The trinomial names are a much more difficult problem, and the subspecies list is more likely to contain spurious names. 
+The names are created by combining the second and third elements on the description line (for binomial names) and by combining the second, third and fourth elements on the description line (for trinomial names). There are several filters in place to try to prevent junk names from being produced, but this is inherently imperfect. Although the filters should work relatively well for constructing binomial names, the trinomial names are a much more difficult problem, and the subspecies list will likely contain some spurious names. The script makes no attempt to address synonomy, and if multiple names are used for the same taxon then they will all be recovered and written to the list.
 
-The resulting list files should be carefully inspected before using them for any other purpose. The edited lists can be combined to create a taxon list of species and subspecies names. 
+**The resulting taxon list files should be carefully inspected before using them for any other purpose.** After editing, the lists can be combined to create a taxon list of species and subspecies names. 
 
-For smaller data sets, `Fasta_Get_Taxa.py` can help to generate a taxon list quickly and easily. `Fasta_Get_Taxa.py` was intended to be used for population level data sets, which are unlikely to have a large number of taxa.
+For smaller data sets, `Fasta_Get_Taxa.py` can help to generate a taxon list quickly and easily. `Fasta_Get_Taxa.py` was intended to be used for population level data sets, which are unlikely to have a large number of taxa. Smaller size data sets allow for careful inspection for spurious names and synonomies, whereas these task would become arduous at larger taxonomic scales. 
 
 
 #### Basic Usage:
