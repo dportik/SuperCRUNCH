@@ -10,7 +10,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Obtaining Sequence Data](#OSD)
     + [Remove_Duplicate_Accessions](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
-    + [Getting Taxa for Population-Level Data Sets](#GTPLDS)
+    + [Getting Taxa From Fasta Files](#GTFFF)
 + [Obtaining Loci and Search Terms](#OLST)
     + [Searching for UCE loci](#SFUL)
 
@@ -163,7 +163,46 @@ Linnaea borealis longiflora
 
 ---------------
 
-### Getting Taxa for Population-Level Data Sets <a name="GTPLDS"></a>
+### Getting Taxa From Fasta Files <a name="GTFFF"></a>
+
+In some cases it may be desirable to obtain a list of taxon names directly from a fasta file of sequence records. This option is available using the `Fasta_Get_Taxa.py` module, which is described below.
+
+### Fasta_Get_Taxa.py
+
+The goal of this script is to search through all fasta files in a directory to construct 'species' and 'subspecies' label sets directly from the description lines. Two output files are written, which are lists of all unique 'species' and 'subspecies' labels found. 
+The names are created by combining the second and third elements on the description line (for binomial names) and by combining the second, third and fourth elements on the description line (for trinomial names). There are several filters in place to try to prevent 'junk' names from being produced, which should work relatively well for constructing binomial names. The trinomial names are a much more difficult problem, and the subspecies list is more likely to contain spurious names. 
+
+The resulting list files should be carefully inspected before using them for any other purpose. The edited lists can be combined to create a taxon list of species and subspecies names. 
+
+For smaller data sets, `Fasta_Get_Taxa.py` can help to generate a taxon list quickly and easily. `Fasta_Get_Taxa.py` was intended to be used for population level data sets, which are unlikely to have a large number of taxa.
+
+
+#### Basic Usage:
+
+```
+python Fasta_Get_Taxa.py -i <fasta file> -t <taxon file> -o <output directory>
+```
+
+#### Argument Explanations:
+
+##### `-i <path-to-directory>`
+
+> **Required**: The full path to a directory with fasta file(s) of GenBank sequence data. Fasta files in the directory must have extensions '.fasta' or '.fa' to be read.
+
+##### `-o <path-to-directory>`
+
+> **Required**: The full path to an existing directory to write output files.
+
+#### Example Use:
+
+```
+python Taxa_Assessment.py -i bin/FastaSet/ -o bin/FastaSet/Output/
+```
+
+Two output files are created in the specified output directory, including:
+
++ `Species_Names.txt`: List of unique binomial names constructed from record descriptions. If records are labeled correctly this should correspond to the genus and species. This file should be inspected.
++ `Species_Names.txt`: List of unique trinomial names constructed from record descriptions. If records actually contain subspecies labels they will be captured in this list, however if the records only contain a binomial name then spurious names may be produced. This file should be VERY carefully inspected.
 
 
 ---------------
