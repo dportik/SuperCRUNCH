@@ -1152,7 +1152,7 @@ python Adjust_Direction.py -i /bin/Adjust/ --acc
 Two outputs are created in the specified input directory for each fasta file, including:
 
 + `[fasta name]_Adjusted_Name_Log.txt`: Contains the full names of the sequences that were reversed in this particular fasta file, if any were adjusted.
-+ `[fasta name]_Adjusted.fasta`: The unaligned fasta file which contains correctly oriented sequences.
++ `[fasta name]_Adjusted.fasta`: An unaligned fasta file which contains the correctly oriented sequences.
 
 An additional output file is created:
 
