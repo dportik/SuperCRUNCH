@@ -1251,7 +1251,7 @@ python Align.py -i <input directory> -a <aligner>
 
 ![F5](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig5.jpg)
 
-Something
+After multiple sequence alignment is complete, the alignment files are ready for relabeling, trimming, format conversion, and concatenation. There are different options for relabeling, depending on whether population-level data are gathered or species-level data are gathered. The relabeling step is required for trimming, and trimming is strongly recommended. The relabeled and trimmed fasta files can be converted into nexus and phylip format, and if the data set is species-level (one representative sequence per taxon) then the alignments can be concatenated into a phylogenetic supermatrix.
 
 ---------------
 
