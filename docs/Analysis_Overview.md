@@ -733,13 +733,13 @@ python Cluster_Blast_Extract.py -i bin/cluster-blast/ -b dc-megablast -m span --
 
 Several output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
 
-+ **01_Clustering_Results**
++ **01_Clustering_Results/**
     + For each locus, this directory contains the output files from cd-hit-est (ex., `LOCUS1_Out_.clstr`), which delimit the sequence clusters.
-+ **02_Parsed_Results**
++ **02_Parsed_Results/**
     + For each locus, this directory contains a set of fasta files which represent the clusters found. These are labeled as `LOCUS1_Out_Cluster_0.fasta`, `LOCUS1_Out_Cluster_1.fasta`, etc.
-+ **03_Blast_Results**
++ **03_Blast_Results/**
     + For each locus, this directory contains the constructed blast database files (extensions .nhr, .nin, .nsq), the blast results for each fasta cluster (ex., `LOCUS1_Out_Cluster_0_blast_results.txt`), and the merged blast results for all clusters (ex., `LOCUS1_blast_results_merged.txt`). 
-+ **04_Trimmed_Results**
++ **04_Trimmed_Results/**
     + For each locus, this directory contains the filtered fasta file (`LOCUS1_extracted.fasta`) and a corresponding log file (`Log_File_LOCUS1.txt`) that indicates the original sequence length, BLAST coordinates found, and extracted sequence length for each record that passed this filter.
     
 #### BLAST Algorithm choice
@@ -1349,11 +1349,11 @@ python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r species_acc -s bin/subspeci
 
 Depending on the relabeling strategy selected, one of the directories will be created with the following contents:
 
-+ **Relabeled_Fasta_Files_Species**
++ **Relabeled_Fasta_Files_Species/**
     + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species`.
-+ **Relabeled_Fasta_Files_Accession**
++ **Relabeled_Fasta_Files_Accession/**
     + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r accession`.
-+ **Relabeled_Fasta_Files_SpeciesAccession**
++ **Relabeled_Fasta_Files_SpeciesAccession/**
     + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species_acc`.
 
 #### Relabeling Details:
@@ -1484,9 +1484,9 @@ python Fasta_Convert.py -i /bin/relabeled_alignments/
 
 Two output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
 
-+ **Output_Phylip_Files**
++ **Output_Phylip_Files/**
     + For each locus, this directory contains a corresponding phylip file, labeled `[fasta name].phy`.
-+ **Output_Nexus_Files**
++ **Output_Nexus_Files/**
     + For each locus, this directory contains a corresponding nexus file, labeled `[fasta name].nex`.
 
 
