@@ -8,7 +8,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ### Starting Materials:
 
-+ [Overview](#GSM)
++ [Starting Materials Overview](#GSM)
 + [Obtaining Sequence Data](#OSD)
     + [Remove_Duplicate_Accessions.py](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
@@ -18,34 +18,34 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ### Taxon Filtering and Locus Extraction:
 
-+ [Overview](#TFLE)
++ [Taxon Filtering and Locus Extraction Overview](#TFLE)
 + [Taxa_Assessment.py](#TA)
 + [Rename_Merge.py](#RM)
 + [Parse_Loci.py](#PL)
 
 ### Orthology Filtering
 
-+ [Overview](#OF)
++ [Orthology Filtering Overview](#OF)
 + [Cluster_Blast_Extract.py](#CBE)
 + [Reference_Blast_Extract.py](#RBE)
 + [Contamination_Filter.py](#CF)
 
 ### Sequence Quality Filtering and Selection
 
-+ [Overview](#SQFS)
++ [Sequence Quality Filtering and Selection Overview](#SQFS)
 + [Filter_Seqs_and_Species.py](#FSS)
 + [Make_Acc_Table.py](#MAT)
 
 ### Sequence Alignment
 
-+ [Overview](#SA)
++ [Sequence Alignment Overview](#SA)
 + [Adjust_Direction.py](#AD)
 + [Coding_Translation_Tests.py](#CTT)
 + [Align.py](#A)
 
 ### Post-Alignment Tasks
 
-+ [Overview](#FFT)
++ [Post-Alignment Tasks Overview](#FFT)
 + [Relabel_Fasta.py](#RF)
 + [Trim_Alignments.py](#TAS)
 + [Fasta_Convert.py](#FC)
