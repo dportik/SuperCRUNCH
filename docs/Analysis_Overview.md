@@ -1176,14 +1176,14 @@ ND1	202	0
     + If no stop codons are found for a forward frame, this frame is selected and the sequence passes translation.
     + If one stop codon is found and it is present in the final two codon positions of the sequence, this frame is selected and the sequence passes translation.
     + Sequences that have more than one stop codon in all frames fail the translation test. 
+    + 
 + If a correct frame is identified, the sequence is adjusted so that the first base represents the first codon position. If no correct frame is found, the sequence is not adjusted.
 + For all sequences (pass and fail), the sequence length is adjusted with N's to ensure the final codon is complete. In other words, the total sequence length will be divisible by three.
 + Sequences are written as described above to corresponding output files. There are three output files written per input fasta file, described below.
 
-If the `--rc` flag is included the translation will also be performed for the reverse complement, however if your sequences are all correctly oriented this is not recommended.  
-The translation table should be specified with the `--table` flag. All NCBI translation table options are available, and can be selected using integers or the shortcut terms provided. If the `--table` flag is omitted, the default will be to use the *Standard* translation table. 
+If the `--rc` flag is included the translation will also be performed for the reverse complement, however if your sequences are all correctly oriented this is not recommended. The translation table should be specified with the `--table` flag. All NCBI translation table options are available, and can be selected using integers (*1-31*) or the shortcut terms provided (*standard, vertmtdna, invertmtdna, yeastmtdna, plastid*). If the `--table` flag is omitted, the default will be to use the *standard* translation table. 
 
-The `Coding_Translation_Tests.py` module can be used to determine if sequences are translatable, adjust sequences to the first codon position, and adjust sequence lengths to be divisible by three. The outputs are intended to be used for multiple sequence alignment with **MACSE**, but the tests and outputs of `Coding_Translation_Tests.py` are likely to be useful for other purposes as well.
+The `Coding_Translation_Tests.py` module can be used to determine if sequences are translatable, adjust sequences to the first codon position, and adjust sequence lengths to be divisible by three. The outputs are intended to be used for multiple sequence alignment with **MACSE**, but the tests and outputs of `Coding_Translation_Tests.py` are likely to be useful for other purposes as well. 
 
 #### Basic Usage:
 
@@ -1211,11 +1211,11 @@ python Adjust_Direction.py -i /bin/Translate/ --table vertmtdna
 > Above command will perform translation tests for each unaligned fasta files in directory `Translate/` using the vertebrate mitochondrial code.
 
 
-An output directory called `Output_Translation_Fasta_Files` is created in the input directory. For each fasta file included, the following output files are created:
+An output directory called `Output_Translation_Fasta_Files/` is created in the input directory. For each fasta file included, the following output files are created:
 
-+ `[Fasta name]_All.fasta`: Contains all sequences, pass and fail.
-+ `[Fasta name]_Passed.fasta`: Contains all sequences that passed translation.
-+ `[Fasta name]_Failed.fasta`: Contains all sequences that failed translation.
++ `[Fasta name]_All.fasta`: Contains all length and/or position adjusted sequences, pass and fail.
++ `[Fasta name]_Passed.fasta`: Contains all length and position adjusted sequences that passed translation.
++ `[Fasta name]_Failed.fasta`: Contains all length adjusted sequences that failed translation.
 
 An additional output file is created:
 
