@@ -209,7 +209,7 @@ Two output files are created in the specified output directory, including:
 
 **SuperCRUNCH** requires a list of loci and associated search terms to initially identify the content of sequence records. For each locus included in the list, **SuperCRUNCH** will search for an associated abbreviated name and longer label in the sequence record. The choice of loci to include will inherently be group-specific, and surveys of phylogenetic and phylogeographic papers may help to identify an appropriate marker set. There is no limit to the number of loci, and **SuperCRUNCH** can also be used to search for large genomic data sets, such as those obtained through sequence capture experiments (UCEs, anchored enrichment, etc.). For detailed instructions on searching for UCEs, see the next section.
 
-The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It must not contain any spaces or special characters (including underscores and hyphens), and should be kept short and simple. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces, but can contain special characters. The second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contains a longer label of the gene or marker, such as its full name or description. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels). Although the locus text file can be created using Excel or other applications, it must be a tab-delimited text file. Similar to the taxon names file, make sure to open the file in a text editor and ensure the format includes Unix line breaks (line breaks marked by \n, rather than \r\n) and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
+The format of the locus text file involves three tab-delimited columns. The first column contains the locus name that will be used to label output files. It must not contain any spaces or special characters (including underscores and hyphens), and should be kept short and simple. The second column contains the known abbreviation(s) for the gene or marker. Abbreviations should not include any spaces, but can contain numbers and other characters like dashes. The second column can contain multiple abbreviations, which should be separated by a semi-colon (with no extra spaces between names). The third column contains a longer label of the gene or marker, such as its full name or description. This third column can also contain multiple search entries, which should be separated by a semi-colon (with no extra spaces between entries). The abbreviations and labels are not case-specific, and they are all converted to uppercase during actual searches (along with the sequence record labels). Although the locus text file can be created using Excel or other applications, it must be a tab-delimited text file. Similar to the taxon names file, make sure to open the file in a text editor and ensure the format includes Unix line breaks (line breaks marked by \n, rather than \r\n) and UTF-8 encoding, otherwise extra characters may interfere with parsing the file correctly with **SuperCRUNCH**.
 
 The success of finding loci depends on defining appropriate locus abbreviations and labels. Examples of how searches work can be found below, which should guide how to select good search terms. For any locus, it is a good idea to examine several records using GenBank to identify commonly used labels.
 
@@ -761,7 +761,7 @@ Given these different scenarios, there are three options meant to handle non-ove
 + When `-m nospan` is used, no attempt is made to merge the non-overlapping coordinates and the coordinate set containing the greatest number of base pairs is selected. In the above 'N' example, this would produce the final coordinates of `[20, 35]` (different from `span`). In the 'duplication' scenario, this would produce `[300, 860]` (same as `span`). The `nospan` option guarantees long stretches of N's will not be present in the extracted sequences, and can penalize these lower-quality sequences by reducing their length. It will also correctly handle the gene duplication scenario. This option should be viewed as a more conservative implementation of `span`.
 
 + When `-m all` is used, the non-overlapping coordinate sets are used as is. In the 'N' scenario above, this would produce `[1, 10], [20, 35]`, which would simply remove the stretch of N's from the sequence. That is, `TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG` becomes 
-`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is double the length of normal sequences. For duplications, this is a very poor outcome because it will interfere with sequence alignment. This option can be used to detect duplications in mitogenomes, or paralogous sequences. For example, when I ran this option using many reptile mitogenomes, I was able to find all the gene duplications in mitogenomes for the genus Heteronotia (a parthenogenic gecko). Beyond this use, I would caution against using this option unless you inspect the results very carefully. 
+`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is double the length of normal sequences. For duplications, this is a very poor outcome because it will interfere with sequence alignment. This option can be used to detect duplications in mitogenomes, or paralogous sequences. For example, when I ran this option using many reptile mitogenomes, I was able to find all the gene duplications in mitogenomes for the genus *Heteronotia* (a parthenogenic gecko). Beyond this use, I would caution against using this option unless you inspect the results very carefully. 
 
 You can easily compare the effects of the options for the `-m ` flag, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
@@ -853,7 +853,7 @@ Given these different scenarios, there are three options meant to handle non-ove
 + When `-m nospan` is used, no attempt is made to merge the non-overlapping coordinates and the coordinate set containing the greatest number of base pairs is selected. In the above 'N' example, this would produce the final coordinates of `[20, 35]` (different from `span`). In the 'duplication' scenario, this would produce `[300, 860]` (same as `span`). The `nospan` option guarantees long stretches of N's will not be present in the extracted sequences, and can penalize these lower-quality sequences by reducing their length. It will also correctly handle the gene duplication scenario. This option should be viewed as a more conservative implementation of `span`.
 
 + When `-m all` is used, the non-overlapping coordinate sets are used as is. In the 'N' scenario above, this would produce `[1, 10], [20, 35]`, which would simply remove the stretch of N's from the sequence. That is, `TCATGTTCCANNNNNNNNNNCGAAAAATGATGCTG` becomes 
-`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is double the length of normal sequences. For duplications, this is a very poor outcome because it will interfere with sequence alignment. This option can be used to detect duplications in mitogenomes, or paralogous sequences. For example, when I ran this option using many reptile mitogenomes, I was able to find all the gene duplications in mitogenomes for the genus Heteronotia (a parthenogenic gecko). Beyond this use, I would caution against using this option unless you inspect the results very carefully. 
+`TCATGTTCCACGAAAAATGATGCTG`. For the duplication scenario, this would produce `[300, 860], [4800, 5300]`. In other words, two duplicate genes would be extracted, producing a single sequence that is double the length of normal sequences. For duplications, this is a very poor outcome because it will interfere with sequence alignment. This option can be used to detect duplications in mitogenomes, or paralogous sequences. For example, when I ran this option using many reptile mitogenomes, I was able to find all the gene duplications in mitogenomes for the genus *Heteronotia* (a parthenogenic gecko). Beyond this use, I would caution against using this option unless you inspect the results very carefully. 
 
 You can easily compare the effects of the options for the `-m ` flag, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
@@ -1108,7 +1108,7 @@ This file can be opened and manipulated using other applications such as Excel.
 
 ![F4](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig4.jpg)
 
-Something
+**SuperCRUNCH** includes two pre-alignment steps and several options for multiple sequence alignment. One pre-alignment step (`Adjust_Direction.py`) adjusts the direction of sequences and produces unaligned fasta files with all sequences written in the correct orientation. This step is necessary to avoid major pitfalls with aligners. Sequences can be aligned using `Align.py` with **MAFFT**, **MUSCLE**, **Clustal-O**, or all aligners sequentially. For coding loci, the **MACSE** translation aligner is also available, which is capable of aligning coding sequences with respect to their translation while allowing for multiple frameshifts or stop codons. To use this aligner the `Coding_Translation_Tests.py` module should be used to identify the correct reading frame of sequences, adjust them to the first codon position, and ensure completion of the final codon. Although MACSE can be run on a single set of reliable sequences (e.g., only those that passed translation), it has an additional feature allowing the simultaneous alignment of a set of reliable sequences and a set of unreliable sequences (e.g., those that failed translation) using different parameters. The `Coding_Translation_Tests.py` module can be used to generate all the necessary input files to perform this type of simultaneous alignment using **MACSE**.
 
 
 ---------------
@@ -1171,7 +1171,18 @@ ND1	202	0
 
 ### Coding_Translation_Tests.py <a name="CTT"></a>
 
-Something
+`Coding_Translation_Tests.py` can be used to identify translatable sequences from unaligned fasta files. This module performs the following tasks:
++ Sequences are translated in all forward frames to check for the presence of stop codons. 
+    + If one stop codon is found and it is present in the final two codon positions of the sequence, this will also be considered a translatable sequence. 
++ If a correct frame is identified, the sequence is adjusted so that the first base represents the first codon position.
++ Sequences that have more than one stop codon in all frames fail the translation test. 
++ The sequence length is adjusted with N's to ensure the final codon is complete. In other words, the total sequence length will be divisible by three. This is true for all sequences, pass or fail.
++ Sequences that pass or fail translation are written as described above to corresponding output files, including a file containing all the adjusted sequences. 
+
+If the `--rc` flag is included the translation will also be performed for the reverse complement, however if your sequences are all correctly oriented this is not recommended.  
+The translation table should be specified with the `--table` flag. All NCBI translation table options are available, and can be selected using integers or the shortcut terms provided. If the `--table` flag is omitted, the default will be to use the *Standard* translation table. 
+
+The `Coding_Translation_Tests.py` module can be used to determine if sequences are translatable, adjust sequences to the first codon position, and adjust sequence lengths to be divisible by three. The outputs are intended to be used for multiple sequence alignment with **MACSE**, but the tests and outputs of `Coding_Translation_Tests.py` are likely to be useful for other purposes as well.
 
 #### Basic Usage:
 
@@ -1185,23 +1196,37 @@ python Coding_Translation_Tests.py -i <input directory> --table <translation tab
 
 ##### `--table <choice>`
 
-> **Required**: Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*.
+> **Required**: Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid*, or any integer *1-31*. Table will be used for all files found in the input directory.
 
 ##### `--rc`
 
 > **Optional**: In addition to forward frames, use reverse complement for translation tests. Not recommended if direction of sequences has already been adjusted.
 
-
-
-
 #### Example Uses:
 
 ```
-python Adjust_Direction.py -i /bin/Adjust/
+python Adjust_Direction.py -i /bin/Translate/ --table vertmtdna
 ```
-> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
+> Above command will perform translation tests for each unaligned fasta files in directory `Translate/` using the vertebrate mitochondrial code.
 
 
+An output directory called `Output_Translation_Fasta_Files` is created in the input directory. For each fasta file included, the following output files are created:
+
++ `[Fasta name]_All.fasta`: Contains all sequences, pass and fail.
++ `[Fasta name]_Passed.fasta`: Contains all sequences that passed translation.
++ `[Fasta name]_Failed.fasta`: Contains all sequences that failed translation.
+
+An additional output file is created:
+
++ `Log_Sequences_Filtered.txt`:  A summary log file which indicates how many sequences passed translation and failed translation for each fasta file processed. Example contents:
+```
+Locus	Seqs_Passed	Seqs_Failed
+CO1	479	5
+CYTB	507	6
+ND1	192	10
+ND2	1005	0
+ND4	548	3
+```
 
 ---------------
 
