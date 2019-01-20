@@ -1173,11 +1173,12 @@ ND1	202	0
 
 `Coding_Translation_Tests.py` can be used to identify translatable sequences from unaligned fasta files. This module performs the following tasks:
 + Sequences are translated in all forward frames to check for the presence of stop codons. 
-    + If one stop codon is found and it is present in the final two codon positions of the sequence, this will also be considered a translatable sequence. 
-+ If a correct frame is identified, the sequence is adjusted so that the first base represents the first codon position.
-+ Sequences that have more than one stop codon in all frames fail the translation test. 
-+ The sequence length is adjusted with N's to ensure the final codon is complete. In other words, the total sequence length will be divisible by three. This is true for all sequences, pass or fail.
-+ Sequences that pass or fail translation are written as described above to corresponding output files, including a file containing all the adjusted sequences. 
+    + If no stop codons are found for a forward frame, this frame is selected and the sequence passes translation.
+    + If one stop codon is found and it is present in the final two codon positions of the sequence, this frame is selected and the sequence passes translation.
+    + Sequences that have more than one stop codon in all frames fail the translation test. 
++ If a correct frame is identified, the sequence is adjusted so that the first base represents the first codon position. If no correct frame is found, the sequence is not adjusted.
++ For all sequences (pass and fail), the sequence length is adjusted with N's to ensure the final codon is complete. In other words, the total sequence length will be divisible by three.
++ Sequences are written as described above to corresponding output files. There are three output files written per input fasta file, described below.
 
 If the `--rc` flag is included the translation will also be performed for the reverse complement, however if your sequences are all correctly oriented this is not recommended.  
 The translation table should be specified with the `--table` flag. All NCBI translation table options are available, and can be selected using integers or the shortcut terms provided. If the `--table` flag is omitted, the default will be to use the *Standard* translation table. 
