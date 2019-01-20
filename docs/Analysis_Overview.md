@@ -8,7 +8,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ### Starting Materials:
 
-+ [Starting Materials Overview](#GSM)
++ [Overview](#GSM)
 + [Obtaining Sequence Data](#OSD)
     + [Remove_Duplicate_Accessions.py](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
@@ -18,34 +18,34 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 ### Taxon Filtering and Locus Extraction:
 
-+ [Taxon Filtering and Locus Extraction Overview](#TFLE)
++ [Overview](#TFLE)
 + [Taxa_Assessment.py](#TA)
 + [Rename_Merge.py](#RM)
 + [Parse_Loci.py](#PL)
 
 ### Orthology Filtering
 
-+ [Orthology Filtering Overview](#OF)
++ [Overview](#OF)
 + [Cluster_Blast_Extract.py](#CBE)
 + [Reference_Blast_Extract.py](#RBE)
 + [Contamination_Filter.py](#CF)
 
 ### Sequence Quality Filtering and Selection
 
-+ [Sequence Quality Filtering and Selection Overview](#SQFS)
++ [Overview](#SQFS)
 + [Filter_Seqs_and_Species.py](#FSS)
 + [Make_Acc_Table.py](#MAT)
 
 ### Sequence Alignment
 
-+ [Sequence Alignment Overview](#SA)
++ [Overview](#SA)
 + [Adjust_Direction.py](#AD)
 + [Coding_Translation_Tests.py](#CTT)
 + [Align.py](#A)
 
 ### Post-Alignment Tasks
 
-+ [Post-Alignment Tasks Overview](#FFT)
++ [Overview](#FFT)
 + [Relabel_Fasta.py](#RF)
 + [Trim_Alignments.py](#TAS)
 + [Fasta_Convert.py](#FC)
@@ -397,9 +397,12 @@ python Taxa_Assessment.py -i <fasta file> -t <taxon file> -o <output directory>
 ```
 python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output/
 ```
+> Above command will search sequence records in `Start_Seqs.fasta` to find taxon names present in `Taxa_List.txt`, the output is written to the specified directory.
+
 ```
 python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_List.txt -o bin/Analysis/Output/ --no_subspecies
 ```
+> Above command will search sequence records in `Start_Seqs.fasta` to find taxon names present in `Taxa_List.txt`, the output is written to the specified directory. This search will exclude the subspecies component of taxon labels in the taxon names file and fasta file.
 
 
 #### Taxonomy Searches with and without subspecies:
@@ -569,9 +572,11 @@ python Rename_Merge.py -i <fasta file> -r <taxon renaming file> -o <output direc
 ```
 python Rename_Merge.py -i bin/Rename/Unmatched_Taxa.fasta -r bin/Rename/taxon_relabeling.txt -o bin/Rename/Output/
 ```
+> Above command will attempt to rename sequence records in `Unmatched_Taxa.fasta` following the file `taxon_relabeling.txt`, and the output is written to the specified directory.
 ```
 python Rename_Merge.py -i bin/Rename/Unmatched_Taxa.fasta -r bin/Rename/taxon_relabeling.txt -o bin/Rename/Output/ -m bin/Rename/Matched_Taxa.fasta
 ```
+> Above command will attempt to rename sequence records in `Unmatched_Taxa.fasta` following the file `taxon_relabeling.txt`, and merge these relabeled records with those in `Matched_Taxa.fasta`. The output is written to the specified directory.
 
 
 In the replacement names file, the first column should contain the name that needs to be replaced (the invalid name), and the second column should contain the replacement name. Currently, `Rename_Merge.py` only supports species (binomial) name relabeling, so altering subspecies labels is not possible.
@@ -653,11 +658,13 @@ python Parse_Loci.py -i <fasta file> -l <locus term file> -t <taxon file> -o <ou
 #### Example Use:
 
 ```
-python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.fasta -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/
+python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.txt -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/
 ```
+> Above command will use the locus search terms file `locus_search_terms.txt` and the taxon names file `Taxa_List.txt` to parse records in `Merged.fasta`, writing outputs to the specified directory.
 ```
-python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.fasta -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/ --no_subspecies
+python Parse_Loci.py -i bin/Loci/Merged.fasta -l bin/Loci/locus_search_terms.txt -t bin/Loci/Taxa_List.txt -o bin/Loci/Output/ --no_subspecies
 ```
+> Above command will use the locus search terms file `locus_search_terms.txt` and the taxon names file `Taxa_List.txt` to parse records in `Merged.fasta`, ignoring the subspecies component of taxon names. Outputs are written to the specified directory.
 
 
 Several output files are created in the directory specified. For each locus included, a fasta file will be written with sequences that pass the locus and taxon filters. If no sequences are found for a locus, a corresponding fasta file will not be produced. A log file summarizing the number of records written per locus is also written to the output directory, and is called *Loci_Record_Counts.log*. An example of the contents of this file is shown below:
@@ -721,6 +728,7 @@ python Cluster_Blast_Extract.py -i <fasta file directory> -b <blast algorithm> -
 ```
 python Cluster_Blast_Extract.py -i bin/cluster-blast/ -b dc-megablast -m span --max_hits 300
 ```
+> Above command will perform automated clustering, BLASTing using *dc-megablast* (with hit limit imposed), and the *span* strategy for BLAST coordinates for each unaligned fasta file present in the `cluster-blast/` input directory.
 
 
 Several output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
@@ -815,6 +823,7 @@ python Reference_Blast_Extract.py -i <input directory> -d <reference fasta name>
 ```
 python Reference_Blast_Extract.py -i bin/Ref-Blast/ -d ND2_references.fasta -e ND2.fasta -b dc-megablast -m span --max_hits 300
 ```
+> Above command will form a BLAST database from `ND2_references.fasta` and BLAST sequences from `ND2.fasta` to the database using the *dc-megablast* algorithm, *span* strategy for BLAST coordinate merging, and a hit limit of 300. Both files are in the `bin/Ref-Blast/` directory, where outputs are also written.
 
 Several outputs are created in the specified input directory, including:
 
@@ -903,6 +912,7 @@ python Contamination_Filter.py -i <input directory> -d <contamination fasta name
 ```
 python Contamination_Filter.py -i bin/contamfilter/ND2/ -d Human_ND2.fasta -e ND2.fasta -b megablast
 ```
+> Above command will form a BLAST database from `Human_ND2.fasta` and BLAST sequences from `ND2.fasta` to the database using the *megablast* algorithm. Both files are in the `bin/Ref-Blast/` directory, where output files are also written.
 
 Several outputs are created in the specified input directory, including:
 
@@ -990,27 +1000,27 @@ python Filter_Seqs_and_Species.py -i <input directory> -f <filter strategy> -l <
 ```
 python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --no_subspecies
 ```
-> Above command will select one sequence per taxon per locus based on the longest available sequence. The minimum base pair length is 150. The no_subspecies option is used.
+> Above command will select one sequence per taxon per locus based on the longest available sequence. The minimum base pair length is 150. The no_subspecies option is used. Action is performed for all fasta files located in the `Filter/` directory.
 
 ```
 python Filter_Seqs_and_Species.py -i /bin/Filter/ -f translate --table standard -l 150 -t bin/Loci/Taxa_List.txt
 ```
-> Above command will select one sequence per taxon per locus based on the longest translatable sequence. The standard code is used for translation for all input fasta files. The minimum base pair length is 150. Subspecies are included.
+> Above command will select one sequence per taxon per locus based on the longest translatable sequence. The standard code is used for translation for all input fasta files. The minimum base pair length is 150. Subspecies are included. Action is performed for all fasta files located in the `Filter/` directory.
 
 ```
 python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --no_subspecies --randomize 
 ```
-> Above command will select one sequence per taxon per locus randomly. The minimum base pair length is 150. The no_subspecies option is used.
+> Above command will select one sequence per taxon per locus randomly. The minimum base pair length is 150. The no_subspecies option is used. Action is performed for all fasta files located in the `Filter/` directory.
 
 ```
 python Filter_Seqs_and_Species.py -i /bin/Filter/ -f length -l 150 -t bin/Loci/Taxa_List.txt --allseqs
 ```
-> Above command will select all sequences per taxon per locus that pass the minimum base pair length of 150. Subspecies are included.
+> Above command will select all sequences per taxon per locus that pass the minimum base pair length of 150. Subspecies are included. Action is performed for all fasta files located in the `Filter/` directory.
 
 ```
 python Filter_Seqs_and_Species.py -i /bin/Filter/ -f translate --table vertmtdna -l 150 -t bin/Loci/Taxa_List.txt --allseqs
 ```
-> Above command will select all sequences per taxon per locus that pass translation (using vertebrate mitochondrial code) and the minimum base pair length of 150. Subspecies are included.
+> Above command will select all sequences per taxon per locus that pass translation (using vertebrate mitochondrial code) and the minimum base pair length of 150. Subspecies are included. Action is performed for all fasta files located in the `Filter/` directory.
 
 Several outputs are created in the specified input directory (one for every input fasta file):
 
@@ -1122,9 +1132,9 @@ This file can be opened and manipulated using other applications such as Excel.
 
 ### Adjust_Direction.py <a name="AD"></a>
 
-The purpose of `Adjust_Direction.py` is to check sequences to ensure their proper direction before performing alignments or additional filtering (such as `Coding_Translation_Tests.py`). `Adjust_Direction.py` is designed to work for a directory of fasta files, and it will adjust sequences in all unaligned fasta files and output unaligned fasta files with all sequences in the 'correct' direction. `Adjust_Direction.py` uses **MAFFT** to perform adjustments, and the default setting uses the *--adjustdirection* implementation of mafft. If the optional `--accurate` flag is included, it will use the *--adjustdirectionaccurately* option, which is slower but more effective with divergent sequences. 
+The purpose of `Adjust_Direction.py` is to check sequences to ensure their proper direction before performing alignments with `Align.py` or additional filtering using `Coding_Translation_Tests.py`. `Adjust_Direction.py` is designed to work for a directory of fasta files, and it will adjust sequences in all unaligned fasta files and output unaligned fasta files with all sequences in the 'correct' direction. `Adjust_Direction.py` uses **MAFFT** to perform adjustments, and the default setting uses the *--adjustdirection* implementation of mafft. If the optional `--accurate` flag is included, it will use the *--adjustdirectionaccurately* option, which is slower but more effective with divergent sequences. 
 
-The standard output file from **MAFFT** is an interleaved fasta with sequences written in lowercase. In this file, sequences that have been reversed are flagged by writing an `_R_` at the beginning of the record ID. `Adjust_Direction.py` takes this output file and converts it to a cleaner format. Sequences are re-written in uppercase, the alignment is stripped, and the `_R_` is removed. Sequences that were reversed are recorded in a locus-specific log file, and the total counts of reversed sequences across all loci is written to a general log file.
+The standard output file from **MAFFT** is an interleaved fasta file containing aligned sequences written in lowercase. In this file, sequences that have been reversed are flagged by writing an `_R_` at the beginning of the record ID. `Adjust_Direction.py` takes this output file and converts it to a cleaner format. The alignment is stripped, sequences are re-written in uppercase, and the `_R_` is removed. Sequences that were reversed are recorded in a locus-specific log file, and the total counts of reversed sequences across all loci is written to a general log file.
 
 The resulting unaligned fasta files can be used for `Coding_Translation_Tests.py` or for `Align.py`.
 
@@ -1149,12 +1159,12 @@ python Adjust_Direction.py -i <input directory>
 ```
 python Adjust_Direction.py -i /bin/Adjust/
 ```
-> Above command will adjust all unaligned fasta files using --adjustdirection in MAFFT.
+> Above command will adjust all unaligned fasta files in directory `Adjust/` using --adjustdirection in MAFFT.
 
 ```
 python Adjust_Direction.py -i /bin/Adjust/ --acc
 ```
-> Above command will adjust all unaligned fasta files using --adjustdirectionaccurately in MAFFT.
+> Above command will adjust all unaligned fasta files in directory `Adjust/` using --adjustdirectionaccurately in MAFFT.
 
 Two outputs are created in the specified input directory for each fasta file, including:
 
@@ -1215,7 +1225,7 @@ python Coding_Translation_Tests.py -i <input directory> --table <translation tab
 ```
 python Adjust_Direction.py -i /bin/Translate/ --table vertmtdna
 ```
-> Above command will perform translation tests for each unaligned fasta files in directory `Translate/` using the vertebrate mitochondrial code.
+> Above command will perform translation tests for each unaligned fasta file in the directory `Translate/` using the vertebrate mitochondrial code.
 
 
 An output directory called `Output_Translation_Fasta_Files/` is created in the input directory. For each fasta file included, the following output files are created:
@@ -1324,17 +1334,17 @@ python Relabel_Fasta.py -i <input directory> -r <relabel option>
 ```
 python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r species -s bin/subspecies_list.txt
 ```
-> Above command will relabel description lines using the taxon name, and will use the appropriate subspecies labels if they are present.
+> Above command will relabel description lines using the taxon name, and will use the appropriate subspecies labels from `subspecies_list.txt` if they are present in the records. Action is performed for all fasta files located in the `aligns_to_relabel/` directory.
 
 ```
 python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r acc 
 ```
-> Above command will relabel description lines using the accession number.
+> Above command will relabel description lines using the accession number. Action is performed for all fasta files located in the `aligns_to_relabel/` directory.
 
 ```
 python Relabel_Fasta.py -i bin/aligns_to_relabel/ -r species_acc -s bin/subspecies_list.txt
 ```
-> Above command will relabel description lines using the taxon name plus accession number, and will use the appropriate subspecies labels if they are present.
+> Above command will relabel description lines using the taxon name plus accession number, and will use the appropriate subspecies labels from `subspecies_list.txt` if they are present in the records. Action is performed for all fasta files located in the `aligns_to_relabel/` directory.
 
 
 Depending on the relabeling strategy selected, one of the directories will be created with the following contents:
@@ -1428,17 +1438,17 @@ python Trim_Alignments.py -i <input directory> -f <output format> -a <trimal met
 ```
 python Trim_Alignments.py -i /bin/Trim/ -f fasta -a gt --gt 0.1
 ```
-> Above command will trim alignments using the gap threshold method with a value of 0.1, and output files in fasta format.
+> Above command will trim all alignments present in the directory `Trim/` using the gap threshold method with a value of 0.1, and output files in fasta format.
 
 ```
 python Trim_Alignments.py -i /bin/Trim/ -f phylip -a noallgaps
 ```
-> Above command will trim alignments using the noallgaps method and output files in phylip format.
+> Above command will trim alignments present in the directory `Trim/` using the noallgaps method and output files in phylip format.
 
 ```
 python Trim_Alignments.py -i /bin/Trim/ -f nexus -a both --gt 0.08
 ```
-> Above command will trim alignments using the gap threshold method with a value of 0.1, and output files in fasta format.
+> Above command will trim alignments present in the directory `Trim/` using the gap threshold method with a value of 0.1, and output files in fasta format.
 
 
 ---------------
@@ -1470,7 +1480,7 @@ python Fasta_Convert.py -i <input directory>
 ```
 python Fasta_Convert.py -i /bin/relabeled_alignments/
 ```
-> Above command will convert all fasta alignments in the directory into nexus and phylip format.
+> Above command will convert all fasta alignments in the directory `relabeled_alignments/` into nexus and phylip format.
 
 Two output folders are created in the directory containing the input fasta files. The directory labels and their contents are described below:
 
@@ -1516,14 +1526,14 @@ python Concatenation.py -i <input directory> -r <input format> -s <missing data 
 #### Example Uses:
 
 ```
-python Concatenation.py -i /bin/Final_Alignments -r fasta -s dash -o phylip
+python Concatenation.py -i /bin/Final_Alignments/ -r fasta -s dash -o phylip
 ```
-> Above command will concatenate all the fasta alignments in the directory and produce a phylip file. Missing data are represented with the - symbol.
+> Above command will concatenate all the fasta alignments in the directory `Final_Alignments/` and produce a phylip file. Missing data are represented with the - symbol.
 
 ```
-python Concatenation.py -i /bin/Final_Alignments -r phylip -s ? -o fasta
+python Concatenation.py -i /bin/Final_Alignments/ -r phylip -s ? -o fasta
 ```
-> Above command will concatenate all the phylip alignments in the directory and produce a fasta file. Missing data are represented with the ? symbol.
+> Above command will concatenate all the phylip alignments in the directory `Final_Alignments/` and produce a fasta file. Missing data are represented with the ? symbol.
 
 Three output files are created in the specified input directory, including:
 
