@@ -6,43 +6,50 @@
 
 Complete instructions for performing each step of **SuperCRUNCH** are provided here. The scripts are listed in the approximate order in which they should be used, and split among larger topics of interest. Helpful information can also be displayed for all scripts on the command line by running them using the -h flag. 
 
-### [Starting Materials](#GSM):
+### Starting Materials:
+
++ [Overview](#GSM)
 + [Obtaining Sequence Data](#OSD)
-    + [Remove_Duplicate_Accessions](#RDA)
+    + [Remove_Duplicate_Accessions.py](#RDA)
 + [Obtaining Taxon Names Lists](#OTNL)
     + [Getting Taxa From Fasta Files](#GTFFF)
 + [Obtaining Loci and Search Terms](#OLST)
     + [Searching for UCE loci](#SFUL)
 
-### [Taxon Filtering and Locus Extraction](#TFLE):
+### Taxon Filtering and Locus Extraction:
 
-+ [Taxa_Assessment](#TA)
-+ [Rename_Merge](#RM)
-+ [Parse_Loci](#PL)
++ [Overview](#TFLE)
++ [Taxa_Assessment.py](#TA)
++ [Rename_Merge.py](#RM)
++ [Parse_Loci.py](#PL)
 
-### [Orthology Filtering](#OF)
+### Orthology Filtering
 
-+ [Cluster_Blast_Extract](#CBE)
-+ [Reference_Blast_Extract](#RBE)
-+ [Contamination_Filter](#CF)
++ [Overview](#OF)
++ [Cluster_Blast_Extract.py](#CBE)
++ [Reference_Blast_Extract.py](#RBE)
++ [Contamination_Filter.py](#CF)
 
-### [Sequence Quality Filtering and Selection](#SQFS)
+### Sequence Quality Filtering and Selection
 
-+ [Filter_Seqs_and_Species](#FSS)
-+ [Make_Acc_Table](#MAT)
++ [Overview](#SQFS)
++ [Filter_Seqs_and_Species.py](#FSS)
++ [Make_Acc_Table.py](#MAT)
 
-### [Sequence Alignment](#SA)
+### Sequence Alignment
 
-+ [Adjust_Direction](#AD)
-+ [Coding_Translation_Tests](#CTT)
-+ [Align](#A)
++ [Overview](#SA)
++ [Adjust_Direction.py](#AD)
++ [Coding_Translation_Tests.py](#CTT)
++ [Align.py](#A)
 
-### [Post-Alignment Tasks](#FFT)
+### Post-Alignment Tasks
 
-+ [Relabel_Fasta](#RF)
-+ [Trim_Alignments](#TAS)
-+ [Fasta_Convert](#FC)
-+ [Concatenation](#C)
++ [Overview](#FFT)
++ [Relabel_Fasta.py](#RF)
++ [Trim_Alignments.py](#TAS)
++ [Fasta_Convert.py](#FC)
++ [Concatenation.py](#C)
 
 The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to achieve various analysis goals.   
 
