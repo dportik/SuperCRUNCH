@@ -1313,7 +1313,7 @@ python Align.py -i <input directory> -a <aligner>
 
 ##### `--accurate`
 
-> **Optional**: Specifies more thorough search settings in mafft, clustalo, or macse (see below).
+> **Optional**: Specifies more thorough search settings (for mafft, clustalo, or macse).
 
 #### Example Uses:
 
@@ -1352,6 +1352,8 @@ Depending on the alignment option selected, one or more of the directories will 
     + For each unaligned input fasta file, this directory contains a corresponding output alignment file labeled `[fasta name]_MUSCLE_Aligned.fasta`. Results from `-a muscle` or `-a all`.
 + **Output_MACSE_Alignments/**
     + For each unaligned input fasta file, this directory contains corresponding output files labeled `[fasta name]_AA.fasta`, `[fasta name]_NT.fasta`, and `[fasta name]_NT_Cleaned.fasta`. Results from `-a macse` only.
+
+I *strongly* recommend using multiple aligners and comparing the results. This is arguably the most important step in creating phylogenetic data sets, and obtaining quality alignments is critical before performing any subsequent analyses.
 
 ---------------
 
