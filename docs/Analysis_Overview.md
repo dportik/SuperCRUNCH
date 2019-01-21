@@ -1301,7 +1301,7 @@ python Align.py -i <input directory> -a <aligner>
 
 ##### `--table <choice>`
 
-> **Required** for `-a macse`: Specifies translation table. Choices = *standard, vmtdna*.
+> **Required** for `-a macse`: Specifies translation table. Choices = *standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23*.
 
 ##### `--mem <integer>`
 
