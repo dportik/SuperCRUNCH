@@ -1259,6 +1259,8 @@ The aligner is specified using the `-a` flag:
 + `-a all`: Align using ***MAFFT***, ***MUSCLE***, and ***Clustal-O*** (sequentially).
 + `-a macse`: Translation align using ***MACSE***. Details are provided below.
 
+**NOTE:** The aligners can be run simultaneously on the same directory of unaligned fasta files without interfering with one another. This can speed up the alignment process if multiple aligners are being used, and is an alternative to the `-a all` option.
+
 ***MAFFT***, ***MUSCLE***, and ***Clustal-O*** can be used for all loci (coding and non-coding). The usage of each aligner invokes default settings or auto selection of the alignment strategy. For example: `mafft --auto` and `clustalo --auto`. These settings should be useful for a majority of alignments. The `--accurate` flag can be used to change the settings for ***MAFFT*** and ***Clustal-O*** to the following:
 +  For ***Clustal-O***, this de-selects the --auto option and enables full distance matrix for guide-tree calculation, full distance matrix for guide-tree calculation during iteration, and --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather than only one: `clustalo --full --full-iter --iter=8`.
 + For ***MAFFT***, this option changes the default from auto select to use the FFT-NS-i strategy: `mafft --retree 2 --maxiterate 1000`.
@@ -1274,9 +1276,9 @@ An additional feature of ***MACSE*** is to include a set of reliable sequences (
 
 The prefix portion of the name should ideally be the abbreviation of the gene/locus. If one file is missing, the `--pass_fail` will not work.
 
-Because ***MACSE*** can deal with frameshifts and sequence errors, it will insert an ! at corrected bp locations in the output alignment, so a cleaned fasta file (in which ! is replaced  by N) is created after the alignment is completed.
+Because ***MACSE*** can deal with frameshifts and sequence errors, it will insert an `!` character at corrected bp locations in the output alignment. A cleaned fasta file is created after the alignment is completed, in which all instances of `!` are replaced by `N`.
 
-Output files vary between aligners but will be moved to output directories created in the main input directory, with details below. **NOTE:** The aligners can be run simultaneously on the same directory of unaligned fasta files without interfering with one another. This can speed up the alignment process if multiple aligners are being used.
+Output files vary between aligners but will be moved to output directories created in the main input directory, with details below. 
 
 
 #### Basic Usage:
