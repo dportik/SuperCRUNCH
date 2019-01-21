@@ -1250,7 +1250,41 @@ ND4	548	3
 
 ### Align.py <a name="A"></a>
 
-Something
+`Align.py` can be used to perform multiple sequence alignment for a directory of unaligned fasta files using **MAFFT**, **MUSCLE**, **Clustal-O**, and/or **MACSE**. 
+
+The aligner(s) to use is specified using the `-a` flag:
++ `-a mafft`: Align using **MAFFT**.
++ `-a muscle`: Align using **MUSCLE**.
++ `-a clustalo`: Align using **Clustal-O**.
++ `-a all`: Align using **MAFFT**, **MUSCLE**, and **Clustal-O** (sequentially).
++ `-a macse`: Translation align using **MACSE**. Details are provided below.
+
+**MAFFT**, **MUSCLE**, and **Clustal-O** can be used for all loci (coding and non-coding). The usage of each aligner invokes default settings or auto selection of the alignment strategy. For example: `mafft --auto` and `clustalo --auto`. These settings should be useful for a majority of alignments. The `--accurate` flag can be used to change the settings for **MAFFT** and **Clustal-O** to the following:
++  For **Clustal-O**, this de-selects the --auto option and enables full distance matrix for guide-tree calculation, full distance matrix for guide-tree calculation during iteration, and --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather than only one: `clustalo --full --full-iter --iter=8`.
++ For **MAFFT**, this option changes the default from auto select to use the FFT-NS-i strategy: `mafft --retree 2 --maxiterate 1000`.
+The improved accuracy comes at the cost of longer run times for each aligner.
+
+
+
+Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse option is selected, user must provide the --mpath flag with the full path to a macse.jar file. Optional for macse are assigning a value for memory in GB (--mem, default 1GB) and to specify a different translation table (--table, default = standard code). The current option include Standard Code (standard) or Vertebrate Mitochondrial Code (vmtdna). The macse alignments can take a long time to complete so the elapsed time is shown after an alignment is produced for a given fasta file. Because macse will insert an ! at corrected bp locations, a cleaned fasta file (in which ! is replaced  by N) is also output.
+
+
+Empirical fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where NAME represents the gene/locus. The NAME portion should not contain any periods or spaces, but can contain underscores. Output files are labeled using a prefix identical to NAME. See below for special case with macse.
+
+
+An additional feature of macse is to include a fasta file of reliable sequences (for example those that passed translation) and a fasta file of less reliable sequences that are suspected to contain errors, and align both simultaneously with different penalty parameters. To use this feature the --pass_fail flag can be used. However, to work the fasta files must follow this naming format:
+
+'prefix_Passed.fasta' - Reliable sequences fasta file
+'prefix_Failed.fasta' - Unreliable sequences fasta file
+
+The prefix portion of the name cannot contain any underscores, and should ideally just be the name of the gene/locus. 
+
+For other analyses, mafft, muscle, and clustalo must be installed in path (with identical executable names as just written) for this script to work properly. These analyses will run under the default settings (muscle) or the auto select settings (mafft, clustalo), but see below for an additional mafft, clustalo, and macse setting.
+
+The optional flag --accurate can be used for mafft, clustalo, and macse v2.0+ to change the analysis  settings for increased accuracy. For mafft, this option changes the default from auto select to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may help  with large (>2,000 seqs) and difficult alignments. For clustalo, this de-selects the --auto option and enables --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather than only one.  For macse, this adds the commands -local_realign_init 0.9 -local_realign_dec 0.9 (both defaults = 0.5), which will slow down optimizations but increase alignment accuracy (sometimes considerably). If using macse v2.0+, these search settings will more closely resemble macse v1 (both defaults = 1.0).
+
+Output files vary between aligners but will be moved to  output directories created in the main fasta directory.
+
 
 #### Basic Usage:
 
@@ -1268,7 +1302,7 @@ python Align.py -i <input directory> -a <aligner>
 
 ##### `--mpath <path-to-executable>`
 
-> **Required** for `-a macse`: Full path to a macse jar file.
+> **Required** for `-a macse`: Full path to a macse jar file (ideally MACSE v2.x).
 
 ##### `--table <choice>`
 

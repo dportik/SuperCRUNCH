@@ -477,7 +477,7 @@ def clustalo_align(fasta_file,acc):
     else:
         #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full-iter --iter=2 -v --threads=3 --output-order=tree-order".format(fasta_file, names[0])
         #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=3 -v --threads=3 --cluster-size=300 --output-order=tree-order".format(fasta_file, names[0])
-        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=8 -v --threads=6 --cluster-size=500 --output-order=tree-order".format(fasta_file, names[0])
+        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads=1 --cluster-size=500 --output-order=tree-order".format(fasta_file, names[0])
         #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --iter=5 -v --threads=1 --cluster-size=400 --output-order=tree-order".format(fasta_file, names[0])
         #call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --iter=3 -v --threads=1 --output-order=tree-order".format(fasta_file, names[0])
     print call_string
