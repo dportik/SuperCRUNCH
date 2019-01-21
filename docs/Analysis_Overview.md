@@ -349,7 +349,7 @@ CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 
 The locus abbreviation terms successfully retrieved the corresponding loci in the example above. 
 
-The 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) is freely available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
+The 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) is freely available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data (from the UCE 5k set) as long as records have the UCE locus name in the description lines.
 
 ---------------
 
@@ -408,7 +408,7 @@ python Taxa_Assessment.py -i bin/Analysis/Start_Seqs.fasta -t bin/Analysis/Taxa_
 > Above command will search sequence records in `Start_Seqs.fasta` to find taxon names present in `Taxa_List.txt`, the output is written to the specified directory. This search will exclude the subspecies component of taxon labels in the taxon names file and fasta file.
 
 
-#### Taxonomy Searches with and without subspecies:
+#### Taxonomy searches with and without subspecies:
 
 To understand how the `--no_subspecies` flag can impact analyses, it is important to demonstrate how the taxon list is being parsed. Regardless of the type of names present in this file (species or subspecies), two lists are constructed. One if filled with species (binomial) names, and the other with subspecies (trinomial) names.
 
@@ -747,7 +747,7 @@ Several output folders are created in the directory containing the input fasta f
 + **04_Trimmed_Results/**
     + For each locus, this directory contains the filtered fasta file (`LOCUS1_extracted.fasta`) and a corresponding log file (`Log_File_LOCUS1.txt`) that indicates the original sequence length, BLAST coordinates found, and extracted sequence length for each record that passed this filter.
     
-#### BLAST Algorithm choice
+#### BLAST algorithm choice
 
 The required `-b ` flag specifies the BLAST algorithm to use, which can greatly affect the filtering results. The *blastn* algorithm searches with a word size of 11, whereas *megablast* searches include a word size of 28, making blastn more appropriate for interspecies searches and megablast more appropriate for closely related or intraspecific searches. However, discontiguous megablast (*dc-megablast*) is better at producing non-fragmented hits for divergent sequences using similar word sizes as *blastn*, and as such it works well for interspecific and intraspecific searches. If the goal is to produce species level phylogenetic data sets then *dc-megablast* should be used, but if the focus is on population level phylogenetic data sets then *megablast* may be preferable. You can easily compare the effects of the different BLAST algorithms, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
@@ -839,7 +839,7 @@ Several outputs are created in the specified input directory, including:
 
 Similar to `Cluster_Blast_Extract.py`, the same options exist for choosing a BLAST algorithm (`-b `) and the BLAST coordinates strategy (`-m `). For convenience, this information is also posted here. 
 
-#### BLAST Algorithm choice
+#### BLAST algorithm choice
 
 The required `-b ` flag specifies the BLAST algorithm to use, which can greatly affect the filtering results. The *blastn* algorithm searches with a word size of 11, whereas *megablast* searches include a word size of 28, making blastn more appropriate for interspecies searches and megablast more appropriate for closely related or intraspecific searches. However, discontiguous megablast (*dc-megablast*) is better at producing non-fragmented hits for divergent sequences using similar word sizes as *blastn*, and as such it works well for interspecific and intraspecific searches. If the goal is to produce species level phylogenetic data sets then *dc-megablast* should be used, but if the focus is on population level phylogenetic data sets then *megablast* may be preferable. You can easily compare the effects of the different BLAST algorithms, as the coordinates used to extract sequences are readily available in the log files produced in the final `/04_Trimmed_Results` directory.
 
@@ -927,7 +927,7 @@ Several outputs are created in the specified input directory, including:
 + A fasta file of 'contaminated' sequences, labeled as `LOCUS1_extracted_contaminated.fasta`, which contains sequences that failed the filter.
 + A corresponding log file (`Log_File_LOCUS1.txt`), which contains information on the original sequence length, BLAST coordinates found, and extracted sequence length for each record with significant BLAST hits to the reference sequences.
 
-#### BLAST Algorithm choice
+#### BLAST algorithm choice
 
 The required `-b ` flag specifies the BLAST algorithm to use. For the contamination filter, the goal is to identify and remove sequences with a very high similarity to the references. For this type of search it is best to use *megablast*, which is most appropriate for conducting within-species searches.
 
@@ -1433,7 +1433,7 @@ Depending on the relabeling strategy selected, one of the directories will be cr
 + **Relabeled_Fasta_Files_SpeciesAccession/**
     + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species_acc`.
 
-#### Relabeling Details:
+#### Relabeling details:
 
 Here I show how the relabeling works, in greater detail.
 
