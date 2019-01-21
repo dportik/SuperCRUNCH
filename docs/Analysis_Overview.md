@@ -53,6 +53,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 
 The steps involved in a typical run include executing a majority of these steps. However, there is a lot of flexibility and the workflow can be tailored to achieve various analysis goals.   
 
+---------------
 
 ---------------
 
@@ -349,6 +350,8 @@ CCATTTTATGCACTCTATTTTAAAATGCAGACAGTGGTAGAACAGATGTGTTTTTTTTAACCCCATA...
 The locus abbreviation terms successfully retrieved the corresponding loci in the example above. 
 
 The 5k UCE locus search terms file (*Locus-Search-Terms_UCE_5k_set.txt*) is freely available in the data folder [here](https://github.com/dportik/SuperCRUNCH/tree/master/data), and it can be used to retrieve UCE data as long as records have the UCE locus name in the description lines.
+
+---------------
 
 ---------------
 
@@ -683,6 +686,8 @@ Identifying loci in the sequence records through word matching is not expected t
 
 ---------------
 
+---------------
+
 ## **Orthology Filtering** <a name="OF"></a>
 
 ![F2](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig2.jpg)
@@ -928,6 +933,8 @@ The required `-b ` flag specifies the BLAST algorithm to use. For the contaminat
 
 ---------------
 
+---------------
+
 ## **Sequence Quality Filtering and Selection** <a name="SQFS"></a>
 
 ![F3](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Fig3.jpg)
@@ -1118,6 +1125,7 @@ Agama aculeata	-	JX668143.1	-	AF355563.1	-
 
 This file can be opened and manipulated using other applications such as Excel.
 
+---------------
 
 ---------------
 
@@ -1182,7 +1190,6 @@ CO1	484	0
 CYTB	513	0
 ND1	202	0
 ```
-
 
 ---------------
 
@@ -1354,6 +1361,8 @@ Depending on the alignment option selected, one or more of the directories will 
     + For each unaligned input fasta file, this directory contains corresponding output files labeled `[fasta name]_AA.fasta`, `[fasta name]_NT.fasta`, and `[fasta name]_NT_Cleaned.fasta`. Results from `-a macse` only.
 
 I *strongly* recommend using multiple aligners and comparing the results. This is arguably the most important step in creating phylogenetic data sets, and obtaining quality alignments is critical before performing any subsequent analyses.
+
+---------------
 
 ---------------
 
@@ -1612,9 +1621,8 @@ Three output files are created in the specified input directory, including:
 
 ---------------
 
+---------------
 
-
-------
 
 *Written by Daniel Portik*
 
