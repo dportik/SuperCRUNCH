@@ -116,8 +116,8 @@ def get_args():
     Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse option is selected, user must
     provide the --mpath flag with the full path to a macse.jar file. Optional for macse are assigning
     a value for memory in GB (--mem, default 1GB) and to specify a different translation table
-    (--table, default = standard code). The current option include Standard Code (standard) or
-    Vertebrate Mitochondrial Code (vmtdna). The macse alignments can take a long time to complete
+    (--table, default = standard code). The current options include: standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23. 
+    The macse alignments can take a long time to complete
     so the elapsed time is shown after an alignment is produced for a given fasta file. Because
     macse will insert an ! at corrected bp locations, a cleaned fasta file (in which ! is replaced 
     by N) is also output.
@@ -158,13 +158,13 @@ def get_args():
     parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input fasta files. Follow labeling format: NAME.fasta")
     parser.add_argument("-a", "--aln", required=True, choices=["mafft","macse","muscle", "clustalo","all"], help="REQUIRED: Specify whether alignment is by mafft, macse, muscle, or clustalo. If macse must provide flags --mpath with full path to macse jar file and --table with translation table option. Selecting 'all' will run mafft, muscle, and clustalo sequentially.")
     parser.add_argument("--mpath", default=None, help="MACSE REQUIRED: Full path to a macse.jar file.")
-    parser.add_argument("--table", default="standard", choices=["standard","vmtdna"], help="MACSE REQUIRED: Specifies translation table for macse.")
+    parser.add_argument("--table", default="standard", choices=["standard","vertmtdna","invertmtdna","yeastmtdna","plastid","1","2","3","4","5","6","9","10","11","12","13","14","15","16","21","22","23"], help="MACSE REQUIRED: Specifies translation table for macse.")
     parser.add_argument("--mem", default=None, help="MACSE OPTIONAL: An integer for how much memory to assign to macse (in GB), default=1.")
     parser.add_argument("--pass_fail", action='store_true', help="MACSE OPTIONAL: Specifies macse to use two fasta files (one with seqs passing translation, and one with those that failed) for dual file alignment. Follow labeling format: NAME_Passed.fasta, NAME_Failed.fasta")
     parser.add_argument("--accurate", action='store_true', help="MACSE/MAFFT OPTIONAL: Specifies mafft or macse to use more thorough search settings.")
     return parser.parse_args()
     
-def directory_macse_aln(in_dir, mpath, mem, tcode, acc):
+def directory_macse_aln(in_dir, mpath, mem, incode, acc):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the macse_align function
@@ -174,6 +174,9 @@ def directory_macse_aln(in_dir, mpath, mem, tcode, acc):
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tBeginning MACSE alignments"
     print "--------------------------------------------------------------------------------------"
+    
+    tcode = table_dict(incode)
+    
     os.chdir(in_dir)
     out_dir = "Output_MACSE_Alignments"
     if not os.path.exists(out_dir):
@@ -235,6 +238,15 @@ def macse_align(fasta_file, mpath, mem, tcode, acc):
     t_finish = datetime.now()
     elapsed = t_finish - t_begin
     print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
+
+def table_dict(symbol):
+    '''
+    Get MACSE specific translation table value from table choice.
+    '''
+    table_dict = {"standard":"01_The_Standard_Code", "vertmtdna":"02_The_Vertebrate_Mitochondrial_Code", "invertmtdna":"05_The_Invertebrate_Mitochondrial_Code", "yeastmtdna":"03_The_Yeast_Mitochondrial_Code", "plastid":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "1":"01_The_Standard_Code", "2":"02_The_Vertebrate_Mitochondrial_Code", "3":"03_The_Yeast_Mitochondrial_Code", "4":"04_The_Mold_Protozoan_and_Coelenterate_Mitochondrial_Code_and_the_Mycoplasma_Spiroplasma_Code", "5":"05_The_Invertebrate_Mitochondrial_Code", "6":"06_The_Ciliate_Dasycladacean_and_Hexamita_Nuclear_Code", "9":"09_The_Echinoderm_and_Flatworm_Mitochondrial_Code", "10":"10_The_Euplotid_Nuclear_Code", "11":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "12":"12_The_Alternative_Yeast_Nuclear_Code", "13":"13_The_Ascidian_Mitochondrial_Code", "14":"14_The_Alternative_Flatworm_Mitochondrial_Code", "15":"15_Blepharisma_Nuclear_Code", "16":"16_Chlorophycean_Mitochondrial_Code", "21":"21_Trematode_Mitochondrial_Code", "22":"22_Scenedesmus_obliquus_mitochondrial_Code", "23":"23_Thraustochytrium_Mitochondrial_Code"}
+    table_val = table_dict[symbol]
+    return table_val
+
 
 def split_name(string, index, delimiter):
     index = int(index)
