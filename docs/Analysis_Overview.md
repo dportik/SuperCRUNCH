@@ -1625,5 +1625,4 @@ Three output files are created in the specified input directory, including:
 
 
 *Written by Daniel Portik*
-
 *Last updated: January 2019*
