@@ -1250,31 +1250,31 @@ ND4	548	3
 
 ### Align.py <a name="A"></a>
 
-`Align.py` can be used to perform multiple sequence alignment for a directory of unaligned fasta files using **MAFFT**, **MUSCLE**, **Clustal-O**, and/or **MACSE**. 
+`Align.py` can be used to perform multiple sequence alignment for a directory of unaligned fasta files using ***MAFFT***, ***MUSCLE***, ***Clustal-O***, and/or ***MACSE***. 
 
-The aligner to use is specified using the `-a` flag:
-+ `-a mafft`: Align using **MAFFT**.
-+ `-a muscle`: Align using **MUSCLE**.
-+ `-a clustalo`: Align using **Clustal-O**.
-+ `-a all`: Align using **MAFFT**, **MUSCLE**, and **Clustal-O** (sequentially).
-+ `-a macse`: Translation align using **MACSE**. Details are provided below.
+The aligner is specified using the `-a` flag:
++ `-a mafft`: Align using ***MAFFT***.
++ `-a muscle`: Align using ***MUSCLE***.
++ `-a clustalo`: Align using ***Clustal-O***.
++ `-a all`: Align using ***MAFFT***, ***MUSCLE***, and ***Clustal-O*** (sequentially).
++ `-a macse`: Translation align using ***MACSE***. Details are provided below.
 
-**MAFFT**, **MUSCLE**, and **Clustal-O** can be used for all loci (coding and non-coding). The usage of each aligner invokes default settings or auto selection of the alignment strategy. For example: `mafft --auto` and `clustalo --auto`. These settings should be useful for a majority of alignments. The `--accurate` flag can be used to change the settings for **MAFFT** and **Clustal-O** to the following:
-+  For **Clustal-O**, this de-selects the --auto option and enables full distance matrix for guide-tree calculation, full distance matrix for guide-tree calculation during iteration, and --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather than only one: `clustalo --full --full-iter --iter=8`.
-+ For **MAFFT**, this option changes the default from auto select to use the FFT-NS-i strategy: `mafft --retree 2 --maxiterate 1000`.
+***MAFFT***, ***MUSCLE***, and ***Clustal-O*** can be used for all loci (coding and non-coding). The usage of each aligner invokes default settings or auto selection of the alignment strategy. For example: `mafft --auto` and `clustalo --auto`. These settings should be useful for a majority of alignments. The `--accurate` flag can be used to change the settings for ***MAFFT*** and ***Clustal-O*** to the following:
++  For ***Clustal-O***, this de-selects the --auto option and enables full distance matrix for guide-tree calculation, full distance matrix for guide-tree calculation during iteration, and --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather than only one: `clustalo --full --full-iter --iter=8`.
++ For ***MAFFT***, this option changes the default from auto select to use the FFT-NS-i strategy: `mafft --retree 2 --maxiterate 1000`.
 
 The improved accuracy using these settings comes at the cost of longer run times for each aligner. However, this may be desirable for divergent sequences or difficult alignments.
 
-**MACSE** should only be used for coding loci, as it is a translation aligner. The use of `-a macse` requires using additional arguments and other optional arguments are available. The `--mpath` flag must be used to supply the full path to the **MACSE** JAR file (ideally V2.x). The `--table` flag can be used to specify the translation table, which can be selected using a shortcut term or an integer (*standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23*). Note that not all tables are available in **MACSE**. Unless specified, the default table used is *standard*. The optional `--mem` flag can be used to assign an amount of memory (in GB). The `--accurate` can also be used for **MACSE**v2.x, which invokes `-local_realign_init 0.9 -local_realign_dec 0.9`. The default for these arguments is 0.5. Changing this will slow down optimizations but increase alignment accuracy (sometimes considerably), and these search settings will more closely resemble **MACSE**v1.x (had default values of 1.0 for both).
+***MACSE*** should only be used for coding loci, as it is a translation aligner. The use of `-a macse` requires using additional arguments and other optional arguments are available. The `--mpath` flag must be used to supply the full path to the ***MACSE*** JAR file (ideally V2.x). The `--table` flag can be used to specify the translation table, which can be selected using a shortcut term or an integer (*standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23*). Note that not all tables are available in ***MACSE***. Unless specified, the default table used is *standard*. The optional `--mem` flag can be used to assign an amount of memory (in GB). The `--accurate` can also be used for ***MACSE*** v2.x, which invokes `-local_realign_init 0.9 -local_realign_dec 0.9`. The default for these arguments is 0.5. Changing this will slow down optimizations but increase alignment accuracy (sometimes considerably), and these search settings will more closely resemble ***MACSE*** v1.x (had default values of 1.0 for both).
 
-An additional feature of **MACSE** is to include a set of reliable sequences (for example those that passed translation) and a set of less reliable sequences that are suspected to contain errors, and align both simultaneously with different penalty parameters. To use this feature in **MACSE** the `--pass_fail` flag can be used. However, to work the sequence sets must be contained in two fasta files that follow this naming format:
+An additional feature of ***MACSE*** is to include a set of reliable sequences (for example those that passed translation) and a set of less reliable sequences that are suspected to contain errors, and align both simultaneously with different penalty parameters. To use this feature in ***MACSE*** the `--pass_fail` flag can be used. However, to work the sequence sets must be contained in two fasta files that follow this naming format:
 
 + `[prefix]_Passed.fasta`: Fasta file of reliable sequences.
 + `[prefix]_Failed.fasta`: Fasta file of unreliable sequences.
 
 The prefix portion of the name should ideally be the abbreviation of the gene/locus. If one file is missing, the `--pass_fail` will not work.
 
-Because **MACSE** can deal with frameshifts and sequence errors, it will insert an ! at corrected bp locations in the output alignment, so a cleaned fasta file (in which ! is replaced  by N) is created after the alignment is completed.
+Because ***MACSE*** can deal with frameshifts and sequence errors, it will insert an ! at corrected bp locations in the output alignment, so a cleaned fasta file (in which ! is replaced  by N) is created after the alignment is completed.
 
 Output files vary between aligners but will be moved to output directories created in the main input directory, with details below. **NOTE:** The aligners can be run simultaneously on the same directory of unaligned fasta files without interfering with one another. This can speed up the alignment process if multiple aligners are being used.
 
@@ -1611,4 +1611,7 @@ Three output files are created in the specified input directory, including:
 
 
 ------
+
+*Written by Daniel Portik*
+
 *Last updated: January 2019*
