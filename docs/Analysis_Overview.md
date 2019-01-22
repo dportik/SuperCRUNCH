@@ -35,6 +35,7 @@ Complete instructions for performing each step of **SuperCRUNCH** are provided h
 + [Overview](#SQFS)
 + [Filter_Seqs_and_Species.py](#FSS)
 + [Make_Acc_Table.py](#MAT)
++ [Infer_Supermatrix_Combinations.py](#ISC)
 
 ### Sequence Alignment
 
