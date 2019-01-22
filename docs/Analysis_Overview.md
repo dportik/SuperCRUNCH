@@ -1202,7 +1202,7 @@ Number of possible supermatrix combinations (scientific notation) = 2.36E+391, o
 
 ```
 
-That's a lot of possible supermatrices! Good thing there is an objective, repeatable method for selecting sequences.
+That's a lot of possible supermatrices! Good thing **SuperCRUNCH** has an objective, repeatable method for selecting sequences.
 
 ---------------
 
