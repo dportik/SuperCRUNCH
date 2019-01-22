@@ -194,7 +194,7 @@ def relabel_species(f,out_dir,subspecies):
     print "\tDone."
     return label_key
     
-def relabel_accession(f,out_dir):
+def relabel_accession(f,out_dir,subspecies):
     label_key = []
     print "\nRelabeling sequence records with accession number in {}.".format(f)
     out_f = "{}_relabeled.fasta".format(f.split('.')[0])
@@ -288,7 +288,7 @@ def main():
             label_key = relabel_species(f,out_dir,subspecies)
             write_label_key(label_key,f,out_dir)
         elif args.relabel == "accession":
-            label_key = relabel_accession(f,out_dir)
+            label_key = relabel_accession(f,out_dir,subspecies)
             write_label_key(label_key,f,out_dir)
         elif args.relabel == "species_acc":
             label_key = relabel_species_acc(f,out_dir,subspecies)
