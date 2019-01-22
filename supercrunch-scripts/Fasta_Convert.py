@@ -37,6 +37,7 @@ GNU General Public Lincense
 import argparse
 import os
 import shutil
+from datetime import datetime
 from Bio import SeqIO
 
 def get_args():
@@ -106,17 +107,21 @@ MATRIX
 #-----------------------------------------------------------------------------------------
 
 def main():
-    args = get_args()
-    os.chdir(args.in_dir)
-    fasta_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    phy_dir = make_nested_dir(args.in_dir, 'Output_Phylip_Files')
-    nex_dir = make_nested_dir(args.in_dir, 'Output_Nexus_Files')
-    print "\n\nFound {} fasta files to convert.\n\n".format(len(fasta_list))
-    for f in fasta_list:
-        contents, aln_info = read_fasta(f)
-        prefix = split_name(f, 0, '.')
-        convert_to_phy(contents, aln_info, prefix, phy_dir)
-        convert_to_nex(contents, aln_info, prefix, nex_dir)
+	tb = datetime.now()
+	args = get_args()
+	os.chdir(args.in_dir)
+	fasta_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
+	phy_dir = make_nested_dir(args.in_dir, 'Output_Phylip_Files')
+	nex_dir = make_nested_dir(args.in_dir, 'Output_Nexus_Files')
+	print "\n\nFound {} fasta files to convert.\n\n".format(len(fasta_list))
+	for f in fasta_list:
+		contents, aln_info = read_fasta(f)
+		prefix = split_name(f, 0, '.')
+		convert_to_phy(contents, aln_info, prefix, phy_dir)
+		convert_to_nex(contents, aln_info, prefix, nex_dir)
+	tf = datetime.now()
+	te = tf - tb
+	print "\n\nFinished. Total elapsed time: {0} (H:M:S)\n\n".format(te)
     
 if __name__ == '__main__':
     main()

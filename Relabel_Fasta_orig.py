@@ -113,7 +113,6 @@ GNU General Public Lincense
 '''
 import os
 import shutil
-import operator
 import argparse
 from datetime import datetime
 
@@ -164,7 +163,6 @@ def get_taxon(line):
     return taxon_sp, taxon_ssp
 
 def relabel_species(f,out_dir,subspecies):
-    label_key = []
     print "\nRelabeling sequence records with taxon name in {}.".format(f)
     out_f = "{}_relabeled.fasta".format(f.split('.')[0])
     with open(out_f, 'a') as fh_out:
@@ -174,28 +172,21 @@ def relabel_species(f,out_dir,subspecies):
                 if line.startswith(">"):
                     if '|' in line:
                         line.replace("|"," ")
-                    acc = [l.strip('>') for l in line.split()][0]
-                    descrip = " ".join([l.strip() for l in line.split()][1:])
                     taxon_sp, taxon_ssp = get_taxon(line)
                     if subspecies is not None:
                         if taxon_ssp in subspecies:
                             newline = ">{}\n".format(taxon_ssp.capitalize())
-                            label_key.append([acc, taxon_ssp.capitalize().replace('_',' '), descrip])
                         else:
                             newline = ">{}\n".format(taxon_sp.capitalize())
-                            label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
                     else:
                         newline = ">{}\n".format(taxon_sp.capitalize())
-                        label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
                     fh_out.write(newline)
                 else:
                     fh_out.write(line+'\n')
     shutil.move(out_f, out_dir)
     print "\tDone."
-    return label_key
     
 def relabel_accession(f,out_dir):
-    label_key = []
     print "\nRelabeling sequence records with accession number in {}.".format(f)
     out_f = "{}_relabeled.fasta".format(f.split('.')[0])
     with open(out_f, 'a') as fh_out:
@@ -206,25 +197,14 @@ def relabel_accession(f,out_dir):
                     if '|' in line:
                         line.replace("|"," ")
                     acc = [l.strip('>') for l in line.split()][0]
-                    descrip = " ".join([l.strip() for l in line.split()][1:])
                     newline = ">{}\n".format(acc)
                     fh_out.write(newline)
-                    taxon_sp, taxon_ssp = get_taxon(line)
-                    if subspecies is not None:
-                        if taxon_ssp in subspecies:
-                            label_key.append([acc, taxon_ssp.capitalize().replace('_',' '), descrip])
-                        else:
-                            label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
-                    else:
-                        label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
                 else:
                     fh_out.write(line+'\n')
     shutil.move(out_f, out_dir)
     print "\tDone."
-    return label_key
 
 def relabel_species_acc(f,out_dir,subspecies):
-    label_key = []
     print "\nRelabeling sequence records with taxon name and accession number in {}.".format(f)
     out_f = "{}_relabeled.fasta".format(f.split('.')[0])
     with open(out_f, 'a') as fh_out:
@@ -235,35 +215,20 @@ def relabel_species_acc(f,out_dir,subspecies):
                     if '|' in line:
                         line.replace("|"," ")
                     acc = [l.strip('>') for l in line.split()][0]
-                    descrip = " ".join([l.strip() for l in line.split()][1:])
                     taxon_sp, taxon_ssp = get_taxon(line)
                     if subspecies is not None:
                         if taxon_ssp in subspecies:
                             newline = ">{0}_{1}\n".format(taxon_ssp.capitalize(),acc)
-                            label_key.append([acc, taxon_ssp.capitalize().replace('_',' '), descrip])
                         else:
                             newline = ">{0}_{1}\n".format(taxon_sp.capitalize(),acc)
-                            label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
                     else:
                         newline = ">{0}_{1}\n".format(taxon_sp.capitalize(),acc)
-                        label_key.append([acc, taxon_sp.capitalize().replace('_',' '), descrip])
                     fh_out.write(newline)
                 else:
                     fh_out.write(line+'\n')
     shutil.move(out_f, out_dir)
     print "\tDone."
-    return label_key
-
-def write_label_key(label_key,f,out_dir):
-    out_f = "{}_label_key.txt".format(f.split('.')[0])
-    with open(out_f, 'a') as fh_out:
-        fh_out.write("{}\t{}\t{}\n".format("Taxon", "Accession", "Description"))
-    label_key.sort(key=operator.itemgetter(1))
-    with open(out_f, 'a') as fh_out:
-        for l in label_key:
-            fh_out.write("{}\t{}\t{}\n".format(l[0], l[1], l[2]))
-    shutil.move(out_f, out_dir)
-
+    
 def main():
     tb = datetime.now()
     args = get_args()
@@ -285,14 +250,11 @@ def main():
     
     for f in f_list:
         if args.relabel == "species":
-            label_key = relabel_species(f,out_dir,subspecies)
-            write_label_key(label_key,f,out_dir)
+            relabel_species(f,out_dir,subspecies)
         elif args.relabel == "accession":
-            label_key = relabel_accession(f,out_dir)
-            write_label_key(label_key,f,out_dir)
+            relabel_accession(f,out_dir)
         elif args.relabel == "species_acc":
-            label_key = relabel_species_acc(f,out_dir,subspecies)
-            write_label_key(label_key,f,out_dir)
+            relabel_species_acc(f,out_dir,subspecies)
             
     tf = datetime.now()
     te = tf - tb

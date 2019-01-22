@@ -955,6 +955,8 @@ The goal of this step is to apply additional sequence filters and select represe
 
 Although the original goal of `Filter_Seqs_and_Species.py` was to select the best available sequence per taxon per locus, it can also be used to retain all sequences passing the filters. That is, it can be used to filter and create population-level data sets, in which all available sequences for each taxon are retained.
 
+If sequences have been filtered for species-level data sets (one sequence per taxon), the total number of possible supermatrix combinations can be calculated using `Infer_Supermatrix_Combinations.py`. This is a fun exercise.
+
 ---------------
 
 ### Filter_Seqs_and_Species.py <a name="FSS"></a>
@@ -1147,6 +1149,56 @@ Agama aculeata	-	JX668143.1	-	AF355563.1	-
 ```
 
 This file can be opened and manipulated using other applications such as Excel. By default, the columns are sorted in alphabetical order according to the fasta names.
+
+
+---------------
+
+### Infer_Supermatrix_Combinations.py <a name="ISC"></a>
+
+The goal of `Infer_Supermatrix_Combinations.py` is to calculating how many supermatrix combinations are available, given the number of filtered sequences available for each taxon for each locus. If all taxa have only one sequence available, the answer is one, but if taxa have multiple sequences available, this number will be extremely large. This module relies on the `[locus]_species_log.txt` files produced from the `Filter_Seqs_and_Species.py` module to calculate the number of sequences available per taxon. The log files for all loci should be present in the input directory for the calculation to be accurate.
+
+No output files are created, rather the information is logged to the screen.
+
+#### Basic Usage:
+
+```
+python Infer_Supermatrix_Combinations.py -i <input directory>
+```
+
+#### Argument Explanations:
+
+##### `-i <path-to-directory>`
+
+> **Required**: The full path to a directory containing the fThe full path to a directory which contains all the `[locus]_species_log.txt` files.
+
+#### Example Uses:
+
+```
+python Infer_Supermatrix_Combinations.py -i /bin/filtered_files/
+```
+> Above command will calculate the total number of supermatrix combinations based on the  `[locus]_species_log.txt` files present in the `filtered_files/` directory.
+
+Example output on screen:
+
+```
+Found 4 loci to examine.
+
+
+	Parsing information in ITS_extracted_species_log.txt
+	Parsing information in MATK_extracted_species_log.txt
+	Parsing information in RBCL_extracted_species_log.txt
+	Parsing information in TRNL-TRNF_extracted_species_log.txt
+
+
+Number of possible supermatrix combinations (crazy integer) = 23,585,393,330,101,509,977,748,274,541,526,924,398,183,623,226,243,709,268,339,387,872,606,971,131,321,031,032,654,793,314,825,517,791,632,690,451,488,529,178,270,403,709,016,922,288,924,652,228,738,591,235,421,706,300,132,306,309,071,552,868,337,445,042,676,361,861,581,482,286,906,518,734,986,582,600,423,724,641,187,945,561,979,141,257,183,422,301,145,122,812,952,763,816,817,181,582,943,498,141,376,096,275,064,842,431,024,332,800,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000.
+
+
+Number of possible supermatrix combinations (scientific notation) = 2.36E+391, or 2.36*10^391.
+
+
+```
+
+That is a big number!
 
 ---------------
 
@@ -1410,6 +1462,8 @@ In all strategies, any spaces are replaced by underscores. If the optional `-s` 
 
 The most appropriate relabeling strategy will depend on the final goals. Relabeling with `-r species` is essential for concatenating alignments to create a phylogenetic supermatrix. Relabeling with `-r species_acc` is the best option for population-level data sets, in which each species is represented by multiple sequences. This way, taxon names are present and the trailing accession numbers distinguish sequences belonging to the same taxon.
 
+For each file relabeled, a corresponding labeling key is produced. This tab-delimited file contains the accession number, taxon label, and description line for each record. This serves as a reference key, such that the relevant information can be tracked for all relabeled samples.
+
 Examples of how each relabeling option works is shown in greater detail below.
 
 #### Basic Usage:
@@ -1501,12 +1555,23 @@ The subspecies label in the third entry is now included.
 Depending on the relabeling strategy selected, one of the directories will be created with the following contents:
 
 + **Relabeled_Fasta_Files_Species/**
-    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species`.
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta` and `[fasta name]_label_key.txt`. Results from `-r species`.
 + **Relabeled_Fasta_Files_Accession/**
-    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r accession`.
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta` and `[fasta name]_label_key.txt`. Results from `-r accession`.
 + **Relabeled_Fasta_Files_SpeciesAccession/**
-    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta`. Results from `-r species_acc`.
+    + For each locus, this directory contains a corresponding fasta file labeled `[fasta name]_relabeled.fasta` and `[fasta name]_label_key.txt`. Results from `-r species_acc`.
 
+Example contents from a `[fasta name]_label_key.txt` file:
+```
+Taxon	Accession	Description
+KU097508.1	Acanthocercus adramitanus	Acanthocercus adramitanus isolate IBES10359 16S ribosomal RNA gene, partial sequence; mitochondrial
+MG700133.1	Acanthocercus annectens	Acanthocercus annectens voucher USNM:589391 16S ribosomal RNA gene, partial sequence; mitochondrial
+JX668132.1	Acanthocercus atricollis	Acanthocercus atricollis voucher EBG 2167 16S ribosomal RNA gene, partial sequence; mitochondrial
+JX668138.1	Acanthocercus cyanogaster	Acanthocercus cyanogaster voucher MVZ 257937 16S ribosomal RNA gene, partial sequence; mitochondrial
+JX668140.1	Acanthocercus yemensis	Acanthocercus yemensis voucher MVZ 236454 16S ribosomal RNA gene, partial sequence; mitochondrial
+NC_014175.1	Acanthosaura armata	Acanthosaura armata mitochondrion, complete genome
+MG935713.1	Acanthosaura crucigera	Acanthosaura crucigera voucher USNM:587019 16S ribosomal RNA gene, partial sequence; mitochondrial
+```
 
 ---------------
 
