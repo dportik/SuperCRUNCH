@@ -1156,7 +1156,7 @@ This file can be opened and manipulated using other applications such as Excel. 
 
 ### Infer_Supermatrix_Combinations.py <a name="ISC"></a>
 
-The goal of `Infer_Supermatrix_Combinations.py` is to calculating how many supermatrix combinations are available, given the number of filtered sequences available for each taxon for each locus. If all taxa have only one sequence available, the answer is one, but if taxa have multiple sequences available, this number will be extremely large. This module relies on the `[locus]_species_log.txt` files produced from the `Filter_Seqs_and_Species.py` module to calculate the number of sequences available per taxon. The log files for all loci should be present in the input directory for the calculation to be accurate.
+The goal of `Infer_Supermatrix_Combinations.py` is to calculate how many supermatrix combinations are available, given the number of filtered sequences available for each taxon for each locus. If all taxa have only one sequence available, the answer is one, but if taxa have multiple sequences available, this number will be extremely large. This module relies on the `[locus]_species_log.txt` files produced from the `Filter_Seqs_and_Species.py` module to calculate the number of sequences available per taxon. The log files for all loci should be present in the input directory for the calculation to be accurate.
 
 No output files are created, rather the information is logged to the screen.
 
@@ -1191,7 +1191,7 @@ Found 4 loci to examine.
 	Parsing information in TRNL-TRNF_extracted_species_log.txt
 
 
-Number of possible supermatrix combinations (crazy integer) = 23,585,393,330,101,509,977,748,274,541,526,924,398,183,623,226,243,709,268,339,387,872,606,971,131,321,031,032,654,793,314,825,517,791,632,690,451,488,529,178,270,403,709,016,922,288,924,652,228,738,591,235,421,706,300,132,306,309,071,552,868,337,445,042,676,361,861,581,482,286,906,518,734,986,582,600,423,724,641,187,945,561,979,141,257,183,422,301,145,122,812,952,763,816,817,181,582,943,498,141,376,096,275,064,842,431,024,332,800,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000.
+Number of possible supermatrix combinations (unwieldy integer) = 23,585,393,330,101,509,977,748,274,541,526,924,398,183,623,226,243,709,268,339,387,872,606,971,131,321,031,032,654,793,314,825,517,791,632,690,451,488,529,178,270,403,709,016,922,288,924,652,228,738,591,235,421,706,300,132,306,309,071,552,868,337,445,042,676,361,861,581,482,286,906,518,734,986,582,600,423,724,641,187,945,561,979,141,257,183,422,301,145,122,812,952,763,816,817,181,582,943,498,141,376,096,275,064,842,431,024,332,800,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000,000.
 
 
 Number of possible supermatrix combinations (scientific notation) = 2.36E+391, or 2.36*10^391.

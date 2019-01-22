@@ -48,7 +48,7 @@ def main():
     print "\n\nFound {} loci to examine.\n\n".format(len(f_list))
     combinations = make_product(f_list)
     #Use special symbol to separate large number with commas.
-    print "\n\nNumber of possible supermatrix combinations (crazy integer) = {:,}.\n".format(combinations)
+    print "\n\nNumber of possible supermatrix combinations (unwieldy integer) = {:,}.\n".format(combinations)
     #scientific notation, two formats
     val = '*10^'.join(((str("{:.2E}".format(Decimal(combinations)))).split('E+')))
     print "\nNumber of possible supermatrix combinations (scientific notation) = {:.2E}, or {}.\n\n".format(Decimal(combinations), val)
