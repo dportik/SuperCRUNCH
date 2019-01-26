@@ -478,7 +478,7 @@ If the `--no_subspecies` flag is included, the following checks are performed:
     1. If no, the record is ignored.
     2. If yes, the species name is used.
 
-In the example above, `Leycesteria crocothyrsos` and `Linnaea borealis` would be the names used. Essentially, the `--no_subspecies` flag elevates all the subspecies to the species level.
+In the example above, `Leycesteria crocothyrsos` and `Linnaea borealis` would be the names used. Essentially, the `--no_subspecies` flag 'sinks' all the subspecies, and they are all lumped under the relevant species label.
 
 Let's use another example.
 
