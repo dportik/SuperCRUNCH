@@ -17,7 +17,7 @@ The current release of **SuperCRUNCH** is v1.0.
 
 ## Installation
 
-**SuperCRUNCH** SuperCRUNCH consists of a set of modules written in python (2.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install **SuperCRUNCH** as a PYTHON package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used from the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
+**SuperCRUNCH** SuperCRUNCH consists of a set of modules written in Python (2.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install **SuperCRUNCH** as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used from the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
