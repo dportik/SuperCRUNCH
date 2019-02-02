@@ -1170,7 +1170,7 @@ python Infer_Supermatrix_Combinations.py -i <input directory>
 
 ##### `-i <path-to-directory>`
 
-> **Required**: The full path to a directory containing the fThe full path to a directory which contains all the `[locus]_species_log.txt` files.
+> **Required**: The full path to a directory which contains all the `[locus]_species_log.txt` files.
 
 #### Example Uses:
 

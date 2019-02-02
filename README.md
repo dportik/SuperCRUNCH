@@ -4,11 +4,15 @@
 
 ## Overview
 
-**SuperCRUNCH** is a python program used to create, filter and manipulate large phylogenetic data sets based on nucleotide data downloaded directly from NCBI. It can be used to search for any designated set of taxa and loci, including UCEs and other sequence capture loci. **SuperCRUNCH** can produce population or species-level molecular data sets, and was originally designed to construct phylogenetic supermatrices. It offers a variety of transparent and flexible options for orthology detection, sequence selection, alignment, and file manipulation. The main **SuperCRUNCH** workflow allows rapid construction of phylogenetic supermatrices from downloaded sequence data, greatly simplifying the process of updating and improving large phylogenies with newly available molecular data. Because **SuperCRUNCH** streamlines tasks like alignment, trimming, and concatenation, it can be used to efficiently process large genomic data sets. 
+**SuperCRUNCH** is a python toolkit for extracting, filtering, and manipulating nucleotide data. **SuperCRUNCH** uses sequence data downloaded directly from NCBI as a starting point, rather than retrieving sequences through an intermediate step (GenBank database releases and/or NCBI Taxonomy). Sequence sets are created based on designated lists of taxa and loci, offering fine-control for targeted searches. **SuperCRUNCH** also includes refined methods for orthology detection and sequence selection. By offering the option to select representative sequences for taxa or retain all filtered sequences, **SuperCRUNCH** can be used to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). It can also be used to assemble phylogenomic datasets with thousands of loci. **SuperCRUNCH** is modular in design, is intended to be transparent, objective and repeatable, and offers flexibility across all major steps in constructing phylogenetic datasets. 
+
+## Version
+
+The current release of **SuperCRUNCH** is v1.0.
 
 ## Installation
 
-**SuperCRUNCH** consists of several Python modules that can be used as command line scripts, and therefore does not require any installation. The scripts function independently, and do not require being contained and used from the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
+**SuperCRUNCH** SuperCRUNCH consists of a set of modules written in python (2.7) that function as stand-alone command-line scripts. These modules can be downloaded and executed independently without the need to install **SuperCRUNCH** as a PYTHON package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used from the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
@@ -26,19 +30,23 @@ Helpful installation instructions for these dependencies can be found on the wik
 
 Complete instructions for running **SuperCRUNCH** analyses are available on the wiki page [here](to fill in), including detailed usage for all modules, proposed workflows, and common issues.
 
-Example analyses are available for two unrelated clades:
+Several example analyses are available on the **SuperCRUNCH** Open Science Framework project page [here](https://osf.io/bpt94/), including all input files, output files, and complete wiki tutorials. These analyses include:
 
-+ ***Iguania*** - an infraorder of squamate reptiles
-+ ***Dipsacales*** - an order of flowering plants 
++ **Iguania Supermatrix:** SuperCRUNCH analysis of Iguania using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/vsu5k/).
++ **UCE Supermatrix:** SuperCRUNCH analysis of UCE loci available for the frog genus *Kaloula*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/5rey2/).
++ **Population-level Dataset (*Uma*):** SuperCRUNCH analysis to retrieve population level data for the lizard genus *Uma*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/49wz3/).
++ **Population-level Dataset (*Callisaurus*):** SuperCRUNCH analysis to retrieve population level data for the lizard genus *Callisaurus*, using sequence data. Direct link [here](https://osf.io/6bwhf/).
 
-The complete set of material for these analyses, including all input files, command instructions, and output files, is freely available [here](https://osf.io/bpt94/) on the **SuperCRUNCH** Open Science Framework project page.
 
 ## Citation
 
-**SuperCRUNCH** was introduced in the following publication:
+**SuperCRUNCH** is currently described in a pre-print available on BioRxiv:
 
+Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
 
-If you use **SuperCRUNCH** for your research, please cite this publication.
+It is also currently in review at Methods in Ecology and Evolution, and we hope to have a peer-reviewed journal citation soon. 
+
+If you use **SuperCRUNCH** for your research, please cite the above BioRxiv publication (for now).
 
 ## License
 
@@ -46,6 +54,4 @@ GNU Lesser General Public License v3.0
 
 ## Contact
 
-Daniel Portik, PhD
-
-daniel.portik@gmail.com
+SuperCRUNCH is written and maintained by Daniel Portik (daniel.portik@gmail.com)
