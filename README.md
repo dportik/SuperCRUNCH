@@ -28,7 +28,7 @@ Helpful installation instructions for these dependencies can be found on the wik
 
 ## Complete Instructions for Analyses
 
-An overview of the components of **SuperCRUNCH** can be found on the wiki overview page [here](https://github.com/dportik/SuperCRUNCH/wiki/Overview). This page outlines all major topics and navigates to detailed instructions for all major topics, including usage for all modules, proposed workflows, and common issues.
+An overview of the components of **SuperCRUNCH** can be found on the wiki overview page [here](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview). This page outlines all major topics and navigates to detailed instructions for all major topics, including usage for all modules, proposed workflows, and common issues.
 
 ## Tutorials and Examples
 
