@@ -36,8 +36,8 @@ Several example analyses are available on the **SuperCRUNCH** Open Science Frame
 
 + **Iguania Supermatrix:** SuperCRUNCH analysis of Iguania using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/vsu5k/).
 + **UCE Supermatrix:** SuperCRUNCH analysis of UCE loci available for the frog genus *Kaloula*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/5rey2/).
-+ **Population-level Dataset (*Uma*):** SuperCRUNCH analysis to retrieve population level data for the lizard genus *Uma*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/49wz3/).
-+ **Population-level Dataset (*Callisaurus*):** SuperCRUNCH analysis to retrieve population level data for the lizard genus *Callisaurus*, using sequence data. Direct link [here](https://osf.io/6bwhf/).
++ **Population Dataset (*Uma*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Uma*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/49wz3/).
++ **Population Dataset (*Callisaurus*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Callisaurus*, using sequence data. Direct link [here](https://osf.io/6bwhf/).
 
 
 ## Citation
