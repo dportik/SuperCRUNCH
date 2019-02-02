@@ -33,7 +33,7 @@ Helpful installation instructions for these dependencies can be found on the [wi
 
 ## Complete Instructions for Analyses
 
-An overview of the components of **SuperCRUNCH** can be found on the [wiki overview page](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview). This page outlines all major topics and navigates to detailed instructions for all major topics, including usage for all modules, proposed workflows, and common issues.
+An overview of the components of **SuperCRUNCH** can be found on the [wiki overview page](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview). This page outlines all major topics and navigates to detailed instructions for each step, including usage for all modules, proposed workflows, and common issues.
 
 ## Tutorials and Examples
 
@@ -44,7 +44,9 @@ Several example analyses are available on the [**SuperCRUNCH** project page](htt
 + **Population Dataset (*Uma*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Uma*, using sequence data downloaded directly from NCBI. [Direct link](https://osf.io/49wz3/).
 + **Population Dataset (*Callisaurus*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Callisaurus*, using sequence data. [Direct link](https://osf.io/6bwhf/).
 
-Several example files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include locus search terms files and reference sequence sets. 
+On the OSF project page, there are also several analyses that compare the performance of **SuperCRUNCH** to other available programs. 
+
+In addition to the OSF page, several example files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include locus search terms files and reference sequence sets. 
 
 ## Citation
 
