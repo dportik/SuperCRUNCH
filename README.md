@@ -42,9 +42,9 @@ Several example analyses are available on the **SuperCRUNCH** Open Science Frame
 
 **SuperCRUNCH** is currently described in a pre-print available on BioRxiv:
 
-Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
++ Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
 
-It is also currently in review at Methods in Ecology and Evolution, and we hope to have a peer-reviewed journal citation soon. 
+SuperCRUNCH is also in peer-review, and we hope to have a formal publication soon. 
 
 If you use **SuperCRUNCH** for your research, please cite the above BioRxiv publication (for now).
 
