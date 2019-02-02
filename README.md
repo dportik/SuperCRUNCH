@@ -32,7 +32,7 @@ Complete instructions for running **SuperCRUNCH** analyses are available on the 
 
 ## Tutorials and Examples
 
-Several example analyses are available on the **SuperCRUNCH** Open Science Framework project page [here](https://osf.io/bpt94/), including all input files, output files, and complete wiki tutorials. These analyses include:
+Several example analyses are available on the [**SuperCRUNCH** project page](https://osf.io/bpt94/) on the Open Science Framework, including all input files, output files, and complete wiki tutorials. These analyses include:
 
 + **Iguania Supermatrix:** SuperCRUNCH analysis of Iguania using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/vsu5k/).
 + **UCE Supermatrix:** SuperCRUNCH analysis of UCE loci available for the frog genus *Kaloula*, using sequence data downloaded directly from NCBI. Direct link [here](https://osf.io/5rey2/).
