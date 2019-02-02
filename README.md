@@ -6,6 +6,11 @@
 
 **SuperCRUNCH** is a python toolkit for extracting, filtering, and manipulating nucleotide data. **SuperCRUNCH** uses sequence data downloaded directly from NCBI as a starting point, rather than retrieving sequences through an intermediate step (GenBank database releases and/or NCBI Taxonomy). Sequence sets are created based on designated lists of taxa and loci, offering fine-control for targeted searches. **SuperCRUNCH** also includes refined methods for orthology detection and sequence selection. By offering the option to select representative sequences for taxa or retain all filtered sequences, **SuperCRUNCH** can be used to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). It can also be used to assemble phylogenomic datasets with thousands of loci. **SuperCRUNCH** is modular in design, is intended to be transparent, objective and repeatable, and offers flexibility across all major steps in constructing phylogenetic datasets. 
 
+**SuperCRUNCH** is described in the following pre-print:
+
++ Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
+
+
 ## Version
 
 The current release of **SuperCRUNCH** is v1.0.
