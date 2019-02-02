@@ -23,12 +23,12 @@ The current release of **SuperCRUNCH** is v1.0.
 + [MACSE](https://bioweb.supagro.inra.fr/macse/)
 + [trimAl](http://trimal.cgenomics.org/)
 
-Helpful installation instructions for these dependencies can be found on the wiki installation page [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions).
+Helpful installation instructions for these dependencies can be found on the [wiki installation page](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions).
 
 
 ## Complete Instructions for Analyses
 
-An overview of the components of **SuperCRUNCH** can be found on the wiki overview page [here](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview). This page outlines all major topics and navigates to detailed instructions for all major topics, including usage for all modules, proposed workflows, and common issues.
+An overview of the components of **SuperCRUNCH** can be found on the [wiki overview page](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview). This page outlines all major topics and navigates to detailed instructions for all major topics, including usage for all modules, proposed workflows, and common issues.
 
 ## Tutorials and Examples
 
