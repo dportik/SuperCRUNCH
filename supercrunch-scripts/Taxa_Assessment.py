@@ -253,7 +253,7 @@ def search_fasta(f, species, subspecies, no_subspecies):
                             acc_unmatch.add(acc)
                             tax_unmatch.add(taxon_sp.capitalize())
                             #print "{} NOT found in species and {} NOT found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize())
-                #Second set of statements are when subspecies are desired
+                #Second set of statements are when subspecies are NOT desired
                 if no_subspecies is True:
                     if taxon_match_sp(taxon_sp,species) is True:
                         acc_match.add(acc)
