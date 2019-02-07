@@ -100,7 +100,7 @@ def get_taxa(f):
         	if line.startswith(">"):
         		parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if len(line.split()) >= int(3)][1:3]
         		if parts1:
-        			if parts1[0].isalpha() and len(parts1[0]) > 1 and parts1[-1].isalpha()and len(parts1[-1]) > 1:
+        			if parts1[0].isalpha() and len(parts1[0]) > 1 and parts1[-1].isalpha() and len(parts1[-1]) > 1:
 						if parts1[0].upper() not in badwords and parts1[-1].upper() not in badwords:
 							if parts1[0].upper() not in genes and parts1[-1].upper() not in genes:
 								taxon_sp = " ".join(parts1)
