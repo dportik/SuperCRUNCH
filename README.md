@@ -46,7 +46,7 @@ Several example analyses are available on the [**SuperCRUNCH** project page](htt
 
 On the OSF project page, there are also several analyses that compare the performance of **SuperCRUNCH** to other available programs. 
 
-In addition to the OSF page, several example files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include locus search terms files and reference sequence sets. 
+The analyses available on the OSF page will have examples of all the input files required to run various steps. Additionally, several example input files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include several locus search terms files (including the 5k UCE set) and multiple reference sequence sets. 
 
 ## Citation
 
