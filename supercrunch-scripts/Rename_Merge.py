@@ -196,7 +196,7 @@ def search_fasta_and_write(f,taxa_list,taxa_dict,record_index,out_f):
                 uline = line.upper().strip()
                 taxon = get_taxon(uline)
                 if taxon in taxa_list:
-                    acc = get_accession(uline)
+                    acc = get_accession(line)
                     parts = [l.strip() for l in line.split()]
                     assemble = [parts[0], taxa_dict[taxon].capitalize()]
                     for p in parts[3:]:

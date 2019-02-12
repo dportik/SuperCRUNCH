@@ -433,11 +433,11 @@ def search_fasta(f, terms1, terms2, high, species, subspecies, no_subspecies):
                 if '|' in line:
                     line.replace("|"," ")
                 #convert line to uppercase and remove line break
-                line = line.upper().strip()
+                uline = line.upper().strip()
                 #search locus terms with function, will return T or F
-                if locus_searchv2(line,terms1,terms2) is True:
+                if locus_searchv2(uline, terms1, terms2) is True:
                     #check if taxon is in databse with function, will return T or F
-                    if taxon_match_on_line(line, species, subspecies, no_subspecies) is True:
+                    if taxon_match_on_line(uline, species, subspecies, no_subspecies) is True:
                         #if above is all passed, add accession to set
                         #extract accession number with function
                         acc = get_accession(line)

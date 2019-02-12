@@ -228,9 +228,9 @@ def search_fasta(f, species, subspecies, no_subspecies):
             if line.startswith('>'):
                 if '|' in line:
                     line.replace("|"," ")
-                line = line.upper().strip()
-                taxon_sp, taxon_ssp = get_taxon(line)
                 acc = get_accession(line)
+                uline = line.upper().strip()
+                taxon_sp, taxon_ssp = get_taxon(uline)
                 #Statement for testing if species and subspecies names
                 #occur in the line. This should handle all cases correctly.
                 #First set of statements are when subspecies are desired:
