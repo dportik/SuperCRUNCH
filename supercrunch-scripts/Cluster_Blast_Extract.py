@@ -684,17 +684,19 @@ def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_di
         for f in fasta_list:
             if f.split('.')[0] == gene_name:
                 emp_fasta = f
-        #move to main directory and write sequences (based on coordinates) to fasta file
-        os.chdir(main_dir)
-        pull_records(emp_fasta, parsing_list)
-        
-        #move outputs to trimmed directory
-        for f in os.listdir('.'):
-            if f.endswith("_extracted.fasta") or f.startswith("Log_File_"):
-                shutil.move(f, trim_dir)
-            
-        #move back to parsing directory
-        os.chdir(in_dir)
+                
+        if parsing_list:
+            #move to main directory and write sequences (based on coordinates) to fasta file
+            os.chdir(main_dir)
+            pull_records(emp_fasta, parsing_list)
+
+            #move outputs to trimmed directory
+            for f in os.listdir('.'):
+                if f.endswith("_extracted.fasta") or f.startswith("Log_File_"):
+                    shutil.move(f, trim_dir)
+
+            #move back to parsing directory
+            os.chdir(in_dir)
 
         #show elapsed time
         tf = datetime.now()
