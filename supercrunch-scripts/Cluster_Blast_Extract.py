@@ -254,7 +254,7 @@ def Cluster(fasta, out_dir):
     output to directory 'out_dir'.
     '''
     names = fasta.split('.')
-    call_string = "cd-hit-est -i {0}.fasta -o {0}_Out -c 0.8 -n 4 -M 16000".format(names[0])
+    call_string = "cd-hit-est -i {0}.fasta -o {0}_Out -c 0.8 -n 4 -M 16000 -d 0".format(names[0])
     proc = sp.call(call_string, shell=True)
     print '\n\n\n'
 
