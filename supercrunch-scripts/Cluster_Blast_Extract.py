@@ -329,6 +329,7 @@ def Identify_Clusters(in_dir, main_dir):
     of lists, where sublists contain:
     [cluster file name, record count]
     '''
+    print "Gathering cluster info for all loci (this may take a while)..."
     os.chdir(in_dir)
     gene_set = set()
     for f in os.listdir('.'):
@@ -535,58 +536,60 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
                 coord1 = int(l[6]) - int(1)
                 coord2 = int(l[7]) - int(1)
                 coord_list.append([coord1, coord2])
-        #use merge function to merge all overlapping coordinates found in blast output file
-        merged_list = merge_coords(coord_list)
-        
-        #Initiate list to store information for accession number:
-        #Under -m options span or nospan - [accn number, [coordinate set1]]
-        #Under -m option all - [accn number, [coordinate set1], [coordinateset2], ...]
-        summary_list = [a]
+        #make sure coord list not empty (ie blast results were pure self hits)
+        if coord_list:
+            #use merge function to merge all overlapping coordinates found in blast output file
+            merged_list = merge_coords(coord_list)
 
-        #This can return single intervals like: [1,500]
-        #But can also return multiple intervals like: [[0, 445], [509, 1088]]
+            #Initiate list to store information for accession number:
+            #Under -m options span or nospan - [accn number, [coordinate set1]]
+            #Under -m option all - [accn number, [coordinate set1], [coordinateset2], ...]
+            summary_list = [a]
 
-        #Multiple intervals (non-overlapping coordinates) can result from two main reasons,
-        #including a large stretch or stretches of N's in sequence, or paralogy.
-        #If paralogy, we want to exclude paralogous intervals, but if N's, we could try
-        #to bridge those intervals if the number of N's is reasonably low and will allow
-        #for good sequence alignments downstream.
-        
-        #I've come up with three strategies for dealing with multiple intervals:
-        #1) Default option (-m span) Merge intervals if they are <100 bp apart. If this still results
-        #in multiple non-overlapping intervals (separated by too many N's or from paralogous hits), then
-        #take the longest interval as the target sequence.
-        
-        #2) 'Pure' option (-m nospan) For multiple non-overlapping intervals (separated by too many
-        #N's or from paralogous hits), then simply take the longest interval as the sequence. This ensures
-        #that all final sequences are free of N's.
-        
-        #3) 'All' option (-m all) Keeps all intervals and writes the final sequence from these.
-        #If the non-overlapping intervals result just from stretches of N's, this will
-        #essentially strip the sequence of N's. However, if it results from paralogous hits,
-        #then the final sequence will be a composite sequence of target and paralogous sequence.
-        #Since there is no easy way to objectively check, this is risky and can result in
-        #spurious sequences. It will be visible in the log file, which lists all coordinates
-        #used to write a give sequence, and could be useful for finding duplicates or
-        #paralogy, which often results in sequences much longer than the references.
-        
-        if merge_strategy == "span":
-            final_coord = one_coord_span(merged_list)
-            summary_list.append(final_coord)
+            #This can return single intervals like: [1,500]
+            #But can also return multiple intervals like: [[0, 445], [509, 1088]]
 
-        elif merge_strategy == "nospan":
-            final_coord = one_coord_nospan(merged_list)
-            summary_list.append(final_coord)
+            #Multiple intervals (non-overlapping coordinates) can result from two main reasons,
+            #including a large stretch or stretches of N's in sequence, or paralogy.
+            #If paralogy, we want to exclude paralogous intervals, but if N's, we could try
+            #to bridge those intervals if the number of N's is reasonably low and will allow
+            #for good sequence alignments downstream.
 
-        elif merge_strategy == "all":
-            #if accn had more than one non-overlapping merged coord, we add all.
-            for m in merged_list:
-                summary_list.append(m)
-                
-        parsing_list.append(summary_list)
-        
-        #add to accn count
-        count += 1
+            #I've come up with three strategies for dealing with multiple intervals:
+            #1) Default option (-m span) Merge intervals if they are <100 bp apart. If this still results
+            #in multiple non-overlapping intervals (separated by too many N's or from paralogous hits), then
+            #take the longest interval as the target sequence.
+
+            #2) 'Pure' option (-m nospan) For multiple non-overlapping intervals (separated by too many
+            #N's or from paralogous hits), then simply take the longest interval as the sequence. This ensures
+            #that all final sequences are free of N's.
+
+            #3) 'All' option (-m all) Keeps all intervals and writes the final sequence from these.
+            #If the non-overlapping intervals result just from stretches of N's, this will
+            #essentially strip the sequence of N's. However, if it results from paralogous hits,
+            #then the final sequence will be a composite sequence of target and paralogous sequence.
+            #Since there is no easy way to objectively check, this is risky and can result in
+            #spurious sequences. It will be visible in the log file, which lists all coordinates
+            #used to write a give sequence, and could be useful for finding duplicates or
+            #paralogy, which often results in sequences much longer than the references.
+
+            if merge_strategy == "span":
+                final_coord = one_coord_span(merged_list)
+                summary_list.append(final_coord)
+
+            elif merge_strategy == "nospan":
+                final_coord = one_coord_nospan(merged_list)
+                summary_list.append(final_coord)
+
+            elif merge_strategy == "all":
+                #if accn had more than one non-overlapping merged coord, we add all.
+                for m in merged_list:
+                    summary_list.append(m)
+
+            parsing_list.append(summary_list)
+
+            #add to accn count
+            count += 1
     print "\t\tFinished retrieving blast coordinates for {} accessions.\n".format(count)
     
     return parsing_list
