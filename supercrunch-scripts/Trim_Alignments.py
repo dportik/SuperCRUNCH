@@ -2,17 +2,17 @@
 SuperCRUNCH: Trim_Alignments module
 
 Usage: python Trim_Alignments.py  -i [directory with all alignment files] (REQUIRED)
-                                  -a [trimal method (choices: gt, noallgaps, both)] (REQUIRED)
+                                  -a [trimal method (choices: gt, noallgaps, both, gappyout)] (REQUIRED)
                                   -f [output format (choices: fasta, nexus, or phylip)] (REQUIRED)
                                   --gt [value for gap threshold arg in trimal (0.01-1)] (Optional)
 
 	Trim_Alignments: Use the program trimal to batch trim all alignment files in a directory.
-    There are three options (-a) for using trimal in this script. The first is to use the 'gt' method. The
+    There are four options (-a) for using trimal in this script. The first is to use the 'gt' method. The
     default value is set to 0.05, meaning for a column to be kept 95% of the
     sequences must not have a gap. This value can be changed using the --gt
     flag with your own value selected. The second option is 'noallgaps', which removes
     any columns composed entirely of gaps. The third option 'both' runs the gt method, followed
-    by the noallgaps method.
+    by the noallgaps method. The fourth option is to run the 'gappyout' method.
     
     Input alignment file formats are auto-detected and can be include fasta, nexus, or 
     phylip formats. The input alignment files must be labeled with one of the following 
@@ -55,12 +55,12 @@ def get_args():
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
 	Trim_Alignments: Use the program trimal to batch trim all alignment files in a directory.
-    There are three options (-a) for using trimal in this script. The first is to use the 'gt' method. The
+    There are four options (-a) for using trimal in this script. The first is to use the 'gt' method. The
     default value is set to 0.05, meaning for a column to be kept 95% of the
     sequences must not have a gap. This value can be changed using the --gt
     flag with your own value selected. The second option is 'noallgaps', which removes
     any columns composed entirely of gaps. The third option 'both' runs the gt method, followed
-    by the noallgaps method.
+    by the noallgaps method. The fourth option is to run the 'gappyout' method.
     
     Input alignment file formats are auto-detected and can be include fasta, nexus, or 
     phylip formats. The input alignment files must be labeled with one of the following 
@@ -78,13 +78,13 @@ def get_args():
         ---------------------------------------------------------------------------""")
     parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input alignment files. File formats are auto-detected and can be include fasta, nexus, or phylip formats, but input alignment files must be labeled with one of the following extensions: NAME.fasta, NAME.fa, NAME.nexus, NAME.nex, NAME.phylip, or NAME.phy.")
     parser.add_argument("-f", "--format", required=True, choices=["fasta","nexus","phylip"], help="REQUIRED: Specify the output file format for trimmed alignment.")
-    parser.add_argument("-a", "--analysis", required=True, choices=["gt","noallgaps","both"], help="REQUIRED: Specify the trimal method for trimming alignments.")
+    parser.add_argument("-a", "--analysis", required=True, choices=["gt","noallgaps","both","gappyout"], help="REQUIRED: Specify the trimal method for trimming alignments.")
     parser.add_argument("--gt", default="0.05", help="OPTIONAL: Specify the gt (gap threshold) value for trimal - the minimum fraction of sequences without a gap. (default=0.05)")
     return parser.parse_args()
 
 def trim_align_gt(aln_file, out_format, gt):
     '''
-    Trim alns in correct format using gap threshold option 
+    Trim alns in correct format using 'gap threshold' option 
     and unless user provides value, use default of 0.05.
     '''
     print "\n\nTrimming alignment {}:".format(aln_file)
@@ -100,7 +100,7 @@ def trim_align_gt(aln_file, out_format, gt):
     
 def trim_align_nag(aln_file, out_format):
     '''
-    Trim alns in correct format using noallgaps option.
+    Trim alns in correct format using 'noallgaps' option.
     '''
     print "\n\nTrimming alignment {}:".format(aln_file)
     prefix = aln_file.split('.')[0]
@@ -113,6 +113,20 @@ def trim_align_nag(aln_file, out_format):
     print call_string
     proc = sp.call(call_string, shell=True)
 
+def trim_align_go(aln_file, out_format):
+    '''
+    Trim alns in correct format using 'gappyout' option.
+    '''
+    print "\n\nTrimming alignment {}:".format(aln_file)
+    prefix = aln_file.split('.')[0]
+    if out_format == "fasta":
+        call_string = "trimal -in {0} -out {1}_trimmed.fasta -fasta -gappyout".format(aln_file, prefix)
+    elif out_format == "nexus":
+        call_string = "trimal -in {0} -out {1}_trimmed.nex -nexus -gappyout".format(aln_file, prefix)
+    elif out_format == "phylip":
+        call_string = "trimal -in {0} -out {1}_trimmed.phy -phylip_paml -gappyout".format(aln_file, prefix)
+    print call_string
+    proc = sp.call(call_string, shell=True)
 
 def trim_align_both(aln_file, out_format, gt):
     '''
@@ -160,6 +174,8 @@ def main():
             trim_align_nag(f, args.format)
         elif args.analysis == "both":
             trim_align_both(f, args.format, args.gt)
+        elif args.analysis == "gappyout":
+            trim_align_go(f, args.format)
         out_list = [o for o in os.listdir('.') if o.endswith('_trimmed.fasta') or o.endswith('_trimmed.nex') or o.endswith('_trimmed.phy')]
         for out in out_list:
             shutil.move(out, out_dir)
