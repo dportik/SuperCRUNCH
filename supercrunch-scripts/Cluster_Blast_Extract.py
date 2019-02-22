@@ -114,6 +114,13 @@ Usage: python Cluster_Blast_Extract.py  -i [directory containing fasta files] RE
                                      record). The headers of this file include:
                                      Accn	Original_Length		Retained_Length		Coordinates_Used
 
+        Log_BadSeqs_[fasta name].fasta - If any sequences did not pass the orthology filters, they
+                                         will be written to this file. If all sequences pass the 
+                                         orthology filter, this file will not be created. You can
+                                         inspect the sequences within this file to understand if
+                                         they contain errors (mislabeled, wrong organism) and try
+                                         to determine what caused them to fail the orthology filters.
+
 -------------------------
 For Python 2.7
 Python modules required:
@@ -590,7 +597,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
 
             #add to accn count
             count += 1
-    print "\t\tFinished retrieving blast coordinates for {} accessions.\n".format(count)
+    print "\n\t\tFinished retrieving blast coordinates for {} accessions.\n".format(count)
     
     return parsing_list
 
@@ -600,9 +607,15 @@ def pull_records(emp_fasta, parsing_list):
     #load the fasta file using the indexing function
     #will create a dictionary with accn as keys
     record_dict = SeqIO.index(emp_fasta, "fasta")
+    #create set of accession numbers from empirical fasta
+    emp_accs = set(list(record_dict.keys()))
+    #initiate empty set to populate with accession for seqs extracted
+    extracted_accs = set()
     #initiate output files
     autoname = "{}_extracted.fasta".format(emp_fasta.split('.')[0])
     logname = "Log_File_{}.txt".format(emp_fasta.split('.')[0])
+    badname = "Log_BadSeqs_{}.fasta".format(emp_fasta.split('.')[0])
+    
     with open(logname, 'a') as fh_log:
         fh_log.write("Accn\tOriginal_Length\tRetained_Length\tCoordinates_Used\n")
     with open(autoname, 'a') as fh_out:
@@ -610,6 +623,7 @@ def pull_records(emp_fasta, parsing_list):
         count = int(0)
         #iterate over list with accns and coordinates
         for item in parsing_list:
+            extracted_accs.add(item[0])
             #test if number of accns processed divisible by 100, if so print number
             #ie an on-screen progress report
             if count != int(0) and count % int(100) == 0:
@@ -635,7 +649,18 @@ def pull_records(emp_fasta, parsing_list):
             fh_out.write(">{}\n{}\n".format(record_dict[item[0]].description, newseq))
             #add to counter
             count += 1
-    print "\t\tWrote a total of {0} sequences to {1}\n".format(count, autoname) 
+    #write file of sequences that failed
+    badseqs = emp_accs - extracted_accs
+    if len(badseqs) >= 1:
+        with open(badname, 'a') as fh_out:
+            for acc in badseqs:
+                fh_out.write(">{}\n{}\n".format(record_dict[acc].description, (record_dict[acc].seq)))
+                                 
+    print "\n\t\tWrote a total of {0} sequences to {1}.".format(count, autoname)
+    if len(badseqs) >= 1:
+        print "\t\t{0} starting sequence(s) did not pass orthology filtering and are written to {1}.".format(len(badseqs), badname)
+    elif len(badseqs) == int(0):
+        print "\t\tAll starting sequences passed orthology filtering!"
 
     
 def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_dir, task, max_hits, merge_strategy):
@@ -692,7 +717,7 @@ def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_di
 
             #move outputs to trimmed directory
             for f in os.listdir('.'):
-                if f.endswith("_extracted.fasta") or f.startswith("Log_File_"):
+                if f.endswith("_extracted.fasta") or f.startswith("Log_File_") or f.startswith("Log_BadSeqs_"):
                     shutil.move(f, trim_dir)
 
             #move back to parsing directory

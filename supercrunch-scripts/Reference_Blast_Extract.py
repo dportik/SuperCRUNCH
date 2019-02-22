@@ -422,7 +422,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
         parsing_list.append(summary_list)
         #add to accn count
         count += 1
-    print "Finished retrieving blast coordinates for {} accessions.\n".format(count)
+    print "\nFinished retrieving blast coordinates for {} accessions.\n".format(count)
     
     return parsing_list
 
@@ -432,9 +432,15 @@ def pull_records(emp_fasta, parsing_list):
     #load the fasta file using the indexing function
     #will create a dictionary with accn as keys
     record_dict = SeqIO.index(emp_fasta, "fasta")
+    #create set of accession numbers from empirical fasta
+    emp_accs = set(list(record_dict.keys()))
+    #initiate empty set to populate with accession for seqs extracted
+    extracted_accs = set()
     #initiate output files
     autoname = "{}_extracted.fasta".format(emp_fasta.split('.')[0])
     logname = "Log_File_{}.txt".format(emp_fasta.split('.')[0])
+    badname = "Log_BadSeqs_{}.fasta".format(emp_fasta.split('.')[0])
+    
     with open(logname, 'a') as fh_log:
         fh_log.write("Accn\tOriginal_Length\tRetained_Length\tCoordinates_Used\n")
     with open(autoname, 'a') as fh_out:
@@ -442,6 +448,7 @@ def pull_records(emp_fasta, parsing_list):
         count = int(0)
         #iterate over list with accns and coordinates
         for item in parsing_list:
+            extracted_accs.add(item[0])
             #test if number of accns processed divisible by 100, if so print number
             #ie an on-screen progress report
             if count != int(0) and count % int(100) == 0:
@@ -467,7 +474,18 @@ def pull_records(emp_fasta, parsing_list):
             fh_out.write(">{}\n{}\n".format(record_dict[item[0]].description, newseq))
             #add to counter
             count += 1
-    print "Wrote a total of {0} sequences to {1}\n\n".format(count, autoname) 
+    #write file of sequences that failed
+    badseqs = emp_accs - extracted_accs
+    if len(badseqs) >= 1:
+        with open(badname, 'a') as fh_out:
+            for acc in badseqs:
+                fh_out.write(">{}\n{}\n".format(record_dict[acc].description, (record_dict[acc].seq)))
+
+    print "\nWrote a total of {0} sequences to {1}.".format(count, autoname)
+    if len(badseqs) >= 1:
+        print "{0} starting sequence(s) did not pass orthology filtering and are written to {1}.\n\n".format(len(badseqs), badname)
+    elif len(badseqs) == int(0):
+        print "All starting sequences passed orthology filtering!\n\n"
 
 #-----------------------------------------------------------------------------------------
 
