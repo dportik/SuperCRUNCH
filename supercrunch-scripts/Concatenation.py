@@ -292,7 +292,7 @@ def main():
     dict_list = collect_dicts(f_list, args.in_format)     
     lengths = collect_bp_lengths(dict_list)
     
-    print "\nGathering sequences for all taxa..."
+    print "\nGathering sequences for all taxa (this could take some time)..."
     sym_val = symbol_dict(args.symbol)
     concat_dict = create_concat_dict(dict_list, taxa, lengths, f_list, sym_val)
     print "\tDone."
