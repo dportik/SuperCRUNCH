@@ -1,0 +1,326 @@
+SuperCRUNCH tutorial for: 
+Trees in the Desert Workshop 
+April 13, 2019
+
+
+In this exercise we will use SuperCRUNCH to create a supermatrix for the lizard family
+Phrynosomatidae. In the interest of time we will only use some of the features available 
+in SuperCRUNCH to conduct this analysis.
+
+SuperCRUNCH can be downloaded from:
+https://github.com/dportik/SuperCRUNCH
+
+The other materials for this tutorial are available from our google page, specifically:
+TreesInTheDesert/Exercises/SuperCRUNCH
+
+The data required to complete this tutorial are in a file called: 
+Phrynosomatidae-data.zip
+
+The complete outputs that would result from following this tutorial are available in: 
+Phrynosomatidae-Analysis.zip
+
+The above finished analysis can be helpful for seeing the directory structure I used 
+to manage the outputs from the different steps described below.
+
+A really nice overview of all the steps (and associated scripts) involved in SuperCRUNCH
+can be found here: 
+https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview 
+
+Each step links to a more detailed wiki with a visual workflow and instructions for every
+script. If you plan to run an analysis with SuperCRUNCH, you should ensure all the 
+dependencies have been installed and are working. Instructions for this can be found
+here:
+https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions
+
+
+
+
+#######1: PARSING LOCI
+
+Let's parse loci from the starting fasta file using the taxon list and gene list. We will
+use the Parse_Loci.py script to do this. The usage of the Parse_Loci.py script is detailed
+here: 
+https://github.com/dportik/SuperCRUNCH/wiki/3:-Taxon-Filtering-and-Locus-Extraction
+
+We should first create a directory to place the outputs, which will be called 
+'01-parse-loci'. Let's use the following command structure to use the script 
+(NOTE: the paths will be different on your cpu, for this step and the others!):
+
+python Parse_Loci.py -i Phrynosomatidae.fasta -l Phrynosomatidae-Gene-List.txt -t
+Phrynosomatidae-Taxon-List.txt -o /01-parse-loci
+
+In this case, we are leaving the subspecies option ON.
+
+Now we should move a subset of the fasta files (all nuclear loci, 'simple' records) to a
+new directory to perform clustering, blasting, and extracting using an automatically
+selected reference set.
+
+Make a directory called '02-cluster-blast-extract' and copy these files to it: 
+
+	BDNF.fasta
+	EXPH5.fasta 
+	FSHR.fasta 
+	MLL3.fasta 
+	NKTR.fasta 
+	PRLR.fasta
+
+
+We also need to move the remaining two fasta files (the mtDNA genes, 'complex' records)
+to their own directories for reference blast and extraction:
+
+First make a directory called '03-reference-blast-extract'. Inside it, make two additional
+directories:
+
+	Create a directory called '16S' and copy these files to it: 
+	
+	16S.fasta
+	Squamate_16S_References.fasta (from the references folder)
+
+
+
+	Create a directory called 'ND2' and copy these files to it: 
+	
+	ND2.fasta
+	Squamate_ND2_References.fasta (from the references folder)
+
+Now we are ready to run the next step.
+
+
+
+
+#######2: ORTHOLOGY FILTERING
+
+Perform automated clustering, blasting, and extracting with the nuclear loci using the
+Cluster_Blast_Extract.py script. The usage of the Cluster_Blast_Extract.py script is
+detailed here: 
+https://github.com/dportik/SuperCRUNCH/wiki/4:-Orthology-Filtering
+
+Let's use the following command structure:
+
+python Cluster_Blast_Extract.py -i /02-cluster-blast-extract -b dc-megablast -m span
+--max_hits 200
+
+Here, we are using discontiguous megablast for searches, and limiting the number of
+searches to the references to 200. If the max hits are not specified, each sequence will
+be blasted to EVERY sequence in the reference cluster. If the reference cluster is very
+large (>400 seqs), this can take a long time (but it will be very thorough!).
+
+A series of directories are created within the starting directory:
+
+	-The cluster outputs from cd-hit-est are in /01_Clustering_Results
+
+	-The reconstituted cluster fasta files are in /02_Parsed_Results
+
+	-The BLAST outputs are in /03_Blast_Results
+
+	-The most important outputs (summary files, extracted sequence files) are in 
+	 /04_Trimmed_Results. The 'Gene'_extracted.fasta files are used for the next step.
+	 
+	 
+Now let's perform the reference blasting and extracting for the mtDNA genes, using the
+supplied set of reference sequences. These references span the full length of 16S or ND2
+and come from a large set of reptile mtDNA genomes.
+
+For 16S, use the following command structure:
+
+python Reference_Blast_Extract.py -i /03-reference-blast-extract/16S/ -d
+Squamate_16S_References.fasta -e 16S.fasta -b dc-megablast -m span --max_hits 300
+
+
+For ND2, use the following command structure:
+
+python Reference_Blast_Extract.py -i /03-reference-blast-extract/ND2 -d
+Squamate_ND2_References.fasta -e ND2.fasta -b dc-megablast -m span --max_hits 300
+
+
+In each of the directories, you'll find similar outputs to what we generate using
+automated clustering, blasting, and extracting (but there are no new directories created
+inside).
+
+
+Now we can take ALL the filtered output files ('Gene'_extracted.fasta) from these analyses
+and move on to the next step. Let's create a directory called '04-seq-selection', and copy
+the filtered output fasta files to it. These include:
+
+	16S_extracted.fasta
+	ND2_extracted.fasta
+	BDNF_extracted.fasta
+	EXPH5_extracted.fasta
+	FSHR_extracted.fasta
+	MLL3_extracted.fasta
+	PRLR_extracted.fasta
+	
+
+
+
+
+
+#######3: SEQUENCE SELECTION
+
+To apply additional filters and select sequences for our eventual supermatrix, we will use
+the Filter_Seqs_and_Species.py script. The usage of this script is detailed here:
+https://github.com/dportik/SuperCRUNCH/wiki/5:-Sequence-Quality-Filtering-and-Selection
+
+We will use the simplest method for sequence selection (length) and apply it to all the
+genes. We will also enforce a minimum length of 200 bp. Note that we need to provide the 
+taxon list file again. 
+
+Let's use the following command structure:
+
+python Filter_Seqs_and_Species.py -i /04-seq-selection -f length -l 200 -t
+Phrynosomatidae-Taxon-List.txt
+
+
+Here, we have selected a single representative sequence per species per gene. If we wanted
+to make a population-level dataset, we simply use the --allseqs flag.
+
+A directory called 'Species_Filtering_Results' is created in the starting directory, which
+has all the results and several output files per gene. The
+'Gene'_extracted_single_taxon.fasta files should be used for the sequence adjustment and
+alignment steps. Let's create a directory called '05-adjust' and copy these files to it.
+
+
+
+**** Super fun and completely optional step:
+
+Given our sequence set to select from, how many possible supermatrix combinations are
+there? Let's use the Infer_Supermatrix_Combinations.py script to find out. The usage of
+the Infer_Supermatrix_Combinations.py script is detailed here:
+https://github.com/dportik/SuperCRUNCH/wiki/5:-Sequence-Quality-Filtering-and-Selection
+
+This step relies on the outputs created from the Filter_Seqs_and_Species.py script,
+specifically the 'Gene'_species_log.txt files. We can simply point to the
+'Species_Filtering_Results' directory, and the script will find them.
+
+Let's use the following command structure:
+
+python Infer_Supermatrix_Combinations.py -i /04-seq-selection/Species_Filtering_Results
+
+It returns 1.48E+109... that's a lot of possibilities! 
+
+*****
+
+
+If we wanted to, we could also make a table of species and accession numbers for each 
+gene using the Infer_Supermatrix_Combinations.py script. This is a major time saver! 
+You can read more about it here:
+https://github.com/dportik/SuperCRUNCH/wiki/5:-Sequence-Quality-Filtering-and-Selection
+This is the appropriate point in the workflow to use the Infer_Supermatrix_Combinations.py
+script, if you want to try it. 
+
+
+
+
+
+#######4: SEQUENCE ADJUSTMENT AND ALIGNMENT
+
+Before performing multiple sequence alignments, we need to make sure that sequences are
+in the correct direction. We can use the Adjust_Direction.py script to do this, which is
+detailed here: 
+https://github.com/dportik/SuperCRUNCH/wiki/6:-Sequence-Alignment
+
+Let's use the following command structure:
+
+python Adjust_Direction.py -i /05-adjust
+
+A new directory is created in the starting directory called
+'Output_mafft_Adjust_Fasta_Files', which has the adjusted files with reports, and a
+summary file (Log_Sequences_Adjusted.txt) which indicates how many sequences were flipped
+for ALL the genes included.
+
+Time for sequence alignment! Let's copy the 'Gene'_extracted_single_taxon_Adjusted.fasta
+files to a new directory called '06-align'.
+
+
+
+Alignment can be conducted using many options with the Align.py script, which is
+detailed here: 
+https://github.com/dportik/SuperCRUNCH/wiki/6:-Sequence-Alignment
+
+We will use one of the fastest aligner options (mafft --auto) for this tutorial, using the 
+following command structure:
+
+python Align.py -i /06-align -a mafft
+
+The alignments will be in the newly created directory called 'Output_MAFFT_Alignments'. If
+we ran the other aligners (MAFFT, MUSCLE, Clustal-O), an aligner-specific directory would
+be created here too. This way, we can run all three aligner options using this directory
+without any issues.
+
+Time for post-alignment tasks... let's move the alignments to a new directory called 
+'07-relabel'.
+
+
+
+
+
+#######5: RELABELING AND CONCATENATION
+
+In general it is a good idea to relabel the sequences, trim them, and then convert file
+formats or perform concatenation. To save time, we will just relabel and concatenate.
+
+To relabel sequences, we will use the Relabel_Fasta.py script. The details on how to use
+this script can be found here:
+https://github.com/dportik/SuperCRUNCH/wiki/7:-Post-Alignment-Tasks
+
+We will want to relabel our sequences using the 'species' option (to allow concatenation),
+but we also need to ensure subspecies names are being used (this requires our starting
+taxa list). Let's use the following command structure to accomplish this:
+
+python Relabel_Fasta.py -i /07-relabel -r species -s Phrynosomatidae-Taxon-List.txt
+
+You can look in the newly created 'Relabeled_Fasta_Files_Species' directory to see the
+outputs. To prepare for conatenation, let's copy the relabeled fasta files to a new 
+directory called '08-concat'.
+
+
+
+
+Now we will concatenate the sequences to create our final supermatrix. To do this we will
+use the Concatenate.py script, which is detailed here:
+https://github.com/dportik/SuperCRUNCH/wiki/7:-Post-Alignment-Tasks
+
+
+We will create a phylip output file and use dashes for missing data. Let's use the
+following command structure to accomplish this:
+
+python Concatenation.py -i /08-concat -f fasta -s dash -o phylip
+
+In the directory a few new files are created: 
+	Concatenated_Alignment.phy - our final supermatrix 
+	Data_Partitions.txt - the location of each gene in the alignment (ie blocks or
+						  charsets) 
+	Taxa_Loci_Count.log - a complete list of taxa, and the number of loci present for each
+
+
+
+
+If you followed these steps, your final matrix should contain: 
+	7 genes 
+	144 taxa 
+	6,810 bp
+
+And that's it! This was a relatively simple run of SuperCRUNCH for a small data set. 
+
+
+
+
+
+There are other tutorials available on the SuperCRUNCH OSF page here:
+https://osf.io/bpt94/
+Each analysis section has its own wiki that explains how SuperCRUNCH was run. This
+includes examples for running population-level analyses, as well as larger supermatrices
+using more of the available features.
+
+Please let me know if you encounter issues along the way, and thanks for trying out
+SuperCRUNCH!
+
+
+
+
+
+Daniel Portik
+daniel.portik@gmail.com
+Postdoctoral Researcher
+University of Arizona
+
