@@ -4,7 +4,7 @@
 
 ## Overview
 
-**SuperCRUNCH** is a python toolkit for extracting, filtering, and manipulating nucleotide data. **SuperCRUNCH** can be run using any set of sequence data, as long as sequences are in fasta format with standard naming conventions (described [here](https://github.com/dportik/SuperCRUNCH/wiki/2:-Starting-Materials)). Many phylogenetic workflows fetch sequences using GenBank releases or the NCBI Taxonomy browser. Rather than retrieve sequences through these intermediate steps, **SuperCRUNCH** can use sequences downloaded directly from GenBank/NCBI as a starting point. **SuperCRUNCH** can also be used to process local sequence data (e.g. sequences not downloaded from GenBank, such as unpublished data). Combinations of GenBank and local sequence data can be used to run analyses. Sequence sets are created based on designated lists of taxa and loci, offering fine-control for targeted searches. **SuperCRUNCH** includes improved methods for orthology detection and sequence selection. By offering the option to select representative sequences for taxa or retain all filtered sequences, **SuperCRUNCH** can be used to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). It can be used to assemble phylogenomic datasets with thousands of loci (such as UCEs or other sequence capture datasets). **SuperCRUNCH** is modular in design, and was intended to be transparent, objective and repeatable.
+**SuperCRUNCH** is a python toolkit for extracting, filtering, and manipulating nucleotide data. SuperCRUNCH can be run using any set of sequence data, as long as sequences are in fasta format with standard naming conventions (described [here](https://github.com/dportik/SuperCRUNCH/wiki/2:-Starting-Materials)). Many phylogenetic workflows fetch sequences using GenBank releases or the NCBI Taxonomy browser. Rather than retrieve sequences through these intermediate steps, SuperCRUNCH can use sequences downloaded directly from GenBank/NCBI as a starting point. SuperCRUNCH can also be used to process local sequence data (e.g. sequences not downloaded from GenBank, such as unpublished data). Combinations of GenBank and local sequence data can be used to run analyses. Sequence sets are created based on designated lists of taxa and loci, offering fine-control for targeted searches. SuperCRUNCH includes improved methods for orthology detection and sequence selection. By offering the option to select representative sequences for taxa or retain all filtered sequences, SuperCRUNCH can be used to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). It can be used to assemble phylogenomic datasets with thousands of loci (such as UCEs or other sequence capture datasets). SuperCRUNCH is modular in design, and was intended to be transparent, objective and repeatable.
 
 A full overview of **SuperCRUNCH** is described in the following pre-print article:
 
@@ -18,7 +18,7 @@ The current release of **SuperCRUNCH** is v1.0.
 
 ## Installation
 
-**SuperCRUNCH** SuperCRUNCH consists of a set of modules written in Python (2.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install **SuperCRUNCH** as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of **SuperCRUNCH**, including:
+**SuperCRUNCH** consists of a set of modules written in Python (2.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
@@ -49,7 +49,7 @@ On the OSF project page, there are also several analyses that compare the perfor
 
 The analyses available on the OSF page will have examples of all the input files required to run various steps. Additionally, several example input files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include several locus search terms files (including the 5k UCE set) and multiple reference sequence sets. 
 
-**SuperCRUNCH** was presented at the [Trees in the Desert workshop](http://db.herbarium.arizona.edu/phlora/TID/WorkshopPage.html), which was held to discuss challenges related to ultra-large phylogenetic trees. Several materials from the workshop, including a [presentation](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/Portik_SuperCRUNCH_presentation.pdf) and short tutorial (with input data) are available [here](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/). 
+**SuperCRUNCH** was presented at the [**Trees in the Desert workshop**](http://db.herbarium.arizona.edu/phlora/TID/WorkshopPage.html), which was held to discuss challenges related to ultra-large phylogenetic trees. Several materials from the workshop, including a [presentation](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/Portik_SuperCRUNCH_presentation.pdf) and short tutorial (with input data) are available [here](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/). 
 
 ## Citation
 
@@ -59,7 +59,7 @@ The analyses available on the OSF page will have examples of all the input files
 
 SuperCRUNCH is also in peer-review, and we hope to have a formal publication soon. 
 
-If you use **SuperCRUNCH** for your research, please cite the above BioRxiv publication (for now).
+If you use SuperCRUNCH for your research, please cite the above BioRxiv publication (for now).
 
 ## License
 
