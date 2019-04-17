@@ -47,7 +47,7 @@ We should first create a directory to place the outputs, which will be called
 (NOTE: the paths will be different on your cpu, for this step and the others!):
 
 python Parse_Loci.py -i Phrynosomatidae.fasta -l Phrynosomatidae-Gene-List.txt -t
-Phrynosomatidae-Taxon-List.txt -o /01-parse-loci
+Phrynosomatidae-Taxon-List.txt -o /01-parse-loci/
 
 In this case, we are leaving the subspecies option ON.
 
@@ -97,7 +97,7 @@ https://github.com/dportik/SuperCRUNCH/wiki/4:-Orthology-Filtering
 
 Let's use the following command structure:
 
-python Cluster_Blast_Extract.py -i /02-cluster-blast-extract -b dc-megablast -m span
+python Cluster_Blast_Extract.py -i /02-cluster-blast-extract/ -b dc-megablast -m span
 --max_hits 200
 
 Here, we are using discontiguous megablast for searches, and limiting the number of
@@ -107,14 +107,14 @@ large (>400 seqs), this can take a long time (but it will be very thorough!).
 
 A series of directories are created within the starting directory:
 
-	-The cluster outputs from cd-hit-est are in /01_Clustering_Results
+	-The cluster outputs from cd-hit-est are in /01_Clustering_Results/
 
-	-The reconstituted cluster fasta files are in /02_Parsed_Results
+	-The reconstituted cluster fasta files are in /02_Parsed_Results/
 
-	-The BLAST outputs are in /03_Blast_Results
+	-The BLAST outputs are in /03_Blast_Results/
 
 	-The most important outputs (summary files, extracted sequence files) are in 
-	 /04_Trimmed_Results. The 'Gene'_extracted.fasta files are used for the next step.
+	 /04_Trimmed_Results/. The 'Gene'_extracted.fasta files are used for the next step.
 	 
 	 
 Now let's perform the reference blasting and extracting for the mtDNA genes, using the
@@ -129,7 +129,7 @@ Squamate_16S_References.fasta -e 16S.fasta -b dc-megablast -m span --max_hits 30
 
 For ND2, use the following command structure:
 
-python Reference_Blast_Extract.py -i /03-reference-blast-extract/ND2 -d
+python Reference_Blast_Extract.py -i /03-reference-blast-extract/ND2/ -d
 Squamate_ND2_References.fasta -e ND2.fasta -b dc-megablast -m span --max_hits 300
 
 
@@ -167,7 +167,7 @@ taxon list file again.
 
 Let's use the following command structure:
 
-python Filter_Seqs_and_Species.py -i /04-seq-selection -f length -l 200 -t
+python Filter_Seqs_and_Species.py -i /04-seq-selection/ -f length -l 200 -t
 Phrynosomatidae-Taxon-List.txt
 
 
@@ -194,7 +194,7 @@ specifically the 'Gene'_species_log.txt files. We can simply point to the
 
 Let's use the following command structure:
 
-python Infer_Supermatrix_Combinations.py -i /04-seq-selection/Species_Filtering_Results
+python Infer_Supermatrix_Combinations.py -i /04-seq-selection/Species_Filtering_Results/
 
 It returns 1.48E+109... that's a lot of possibilities! 
 
@@ -221,7 +221,7 @@ https://github.com/dportik/SuperCRUNCH/wiki/6:-Sequence-Alignment
 
 Let's use the following command structure:
 
-python Adjust_Direction.py -i /05-adjust
+python Adjust_Direction.py -i /05-adjust/
 
 A new directory is created in the starting directory called
 'Output_mafft_Adjust_Fasta_Files', which has the adjusted files with reports, and a
@@ -240,7 +240,7 @@ https://github.com/dportik/SuperCRUNCH/wiki/6:-Sequence-Alignment
 We will use one of the fastest aligner options (mafft --auto) for this tutorial, using the 
 following command structure:
 
-python Align.py -i /06-align -a mafft
+python Align.py -i /06-align/ -a mafft
 
 The alignments will be in the newly created directory called 'Output_MAFFT_Alignments'. If
 we ran the other aligners (MAFFT, MUSCLE, Clustal-O), an aligner-specific directory would
@@ -267,7 +267,7 @@ We will want to relabel our sequences using the 'species' option (to allow conca
 but we also need to ensure subspecies names are being used (this requires our starting
 taxa list). Let's use the following command structure to accomplish this:
 
-python Relabel_Fasta.py -i /07-relabel -r species -s Phrynosomatidae-Taxon-List.txt
+python Relabel_Fasta.py -i /07-relabel/ -r species -s Phrynosomatidae-Taxon-List.txt
 
 You can look in the newly created 'Relabeled_Fasta_Files_Species' directory to see the
 outputs. To prepare for conatenation, let's copy the relabeled fasta files to a new 
@@ -284,14 +284,15 @@ https://github.com/dportik/SuperCRUNCH/wiki/7:-Post-Alignment-Tasks
 We will create a phylip output file and use dashes for missing data. Let's use the
 following command structure to accomplish this:
 
-python Concatenation.py -i /08-concat -f fasta -s dash -o phylip
+python Concatenation.py -i /08-concat/ -o /08-concat/ --in_format fasta --out_format phylip 
+-s dash 
 
-In the directory a few new files are created: 
+The output files will be generated in the same directory as our input alignment files.
+A few output files are created: 
 	Concatenated_Alignment.phy - our final supermatrix 
 	Data_Partitions.txt - the location of each gene in the alignment (ie blocks or
 						  charsets) 
 	Taxa_Loci_Count.log - a complete list of taxa, and the number of loci present for each
-
 
 
 
