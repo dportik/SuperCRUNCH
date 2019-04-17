@@ -2,9 +2,10 @@
 SuperCRUNCH: Concatenation module
 
 Usage: python Concatenation.py  -i [full path to directory with all fasta files] (REQUIRED)
-                                -f [fasta or phylip] (REQUIRED)
+                                --in_format [fasta or phylip] (REQUIRED)
                                 -s [dash, N, or ?] (REQUIRED)
-                                -o [fasta or phylip] (REQUIRED)
+                                --out_format [fasta or phylip] (REQUIRED)
+                                -o [full path to existing output directory] (REQUIRED)
 						
     Concatenation: Combine multiple alignments into a single concatenated alignment.
     The input file format can be non-interleaved fasta or phylip, and is selected using the -f flag.
@@ -82,10 +83,11 @@ def get_args():
                                    format specified. Taxa are written in alphabetical order.
     DEPENDENCIES: None.
     ---------------------------------------------------------------------------""")
-    parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input fasta files.")
-    parser.add_argument("-f", "--in_format", required=True, choices=["fasta", "phylip"], help="REQUIRED: The input file format for alignments.")
+    parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input alignment files (fasta or phylip).")
+    parser.add_argument("-o", "--out_dir", required=True, help="REQUIRED: The full path to an existing directory to write output files.")
+    parser.add_argument("--in_format", required=True, choices=["fasta", "phylip"], help="REQUIRED: The file format of the INPUT alignments.")
+    parser.add_argument("--out_format", required=True, choices=["fasta", "phylip"], help="REQUIRED: The file format for the final OUTPUT concatenated alignment.")
     parser.add_argument("-s", "--symbol", required=True, choices=["dash", "N", "?"], help="REQUIRED: A base pair symbol used to represent missing data when sequences are not available for a taxon.")
-    parser.add_argument("-o", "--out_format", required=True, choices=["fasta", "phylip"], help="REQUIRED: The output file format for the final concatenated alignment.")
     return parser.parse_args()        
 
 def get_taxa_fasta(f):
@@ -291,6 +293,8 @@ def main():
     
     dict_list = collect_dicts(f_list, args.in_format)     
     lengths = collect_bp_lengths(dict_list)
+
+    os.chdir(args.out_dir)
     
     print "\nGathering sequences for all taxa (this could take some time)..."
     sym_val = symbol_dict(args.symbol)
