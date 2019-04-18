@@ -343,11 +343,14 @@ def directory_mafft_aln(in_dir, acc, threads):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
             mafft_align(fasta, acc, threads)
             output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
             for o in output:
-                shutil.move(o, out_dir)
+                try:
+                    shutil.move(o, out_dir)
+                except:
+                    print "{} was not moved. It is already in the MAFFT alignment output directory, you may want to check this.".format(o)
                     
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tFinished MAFFT alignments"
@@ -393,7 +396,7 @@ def directory_muscle_aln(in_dir):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
             muscle_align(fasta)
         
     output = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
@@ -444,7 +447,7 @@ def directory_clustalo_aln(in_dir, acc, threads):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
             clustalo_align(fasta, acc, threads)
         
     output = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
