@@ -166,7 +166,16 @@ def get_args():
     parser.add_argument("--accurate", action='store_true', help="MACSE/MAFFT OPTIONAL: Specifies mafft, clustalo, or macse to use more thorough search settings.")
     parser.add_argument("--threads", default=None, help="OPTIONAL: Specifies number of threads to use in mafft or clustalo.")
     return parser.parse_args()
-    
+
+def table_dict(symbol):
+    '''
+    Get MACSE specific translation table value from table choice.
+    '''
+    table_dictv1 = {"standard":"1","vertmtdna":"2","invertmtdna":"5","yeastmtdna":"3","plastid":"11","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","9":"9","10":"10","11":"11","12":"12","13":"13","14":"14","15":"15","16":"16","21":"21","22":"22","23":"23"}
+    table_dictv2 = {"standard":"01_The_Standard_Code", "vertmtdna":"02_The_Vertebrate_Mitochondrial_Code", "invertmtdna":"05_The_Invertebrate_Mitochondrial_Code", "yeastmtdna":"03_The_Yeast_Mitochondrial_Code", "plastid":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "1":"01_The_Standard_Code", "2":"02_The_Vertebrate_Mitochondrial_Code", "3":"03_The_Yeast_Mitochondrial_Code", "4":"04_The_Mold_Protozoan_and_Coelenterate_Mitochondrial_Code_and_the_Mycoplasma_Spiroplasma_Code", "5":"05_The_Invertebrate_Mitochondrial_Code", "6":"06_The_Ciliate_Dasycladacean_and_Hexamita_Nuclear_Code", "9":"09_The_Echinoderm_and_Flatworm_Mitochondrial_Code", "10":"10_The_Euplotid_Nuclear_Code", "11":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "12":"12_The_Alternative_Yeast_Nuclear_Code", "13":"13_The_Ascidian_Mitochondrial_Code", "14":"14_The_Alternative_Flatworm_Mitochondrial_Code", "15":"15_Blepharisma_Nuclear_Code", "16":"16_Chlorophycean_Mitochondrial_Code", "21":"21_Trematode_Mitochondrial_Code", "22":"22_Scenedesmus_obliquus_mitochondrial_Code", "23":"23_Thraustochytrium_Mitochondrial_Code"}
+    table_val = table_dictv1[symbol]
+    return table_val
+
 def directory_macse_aln(in_dir, mpath, mem, incode, acc):
     '''
     Iterates over files in a directory to locate those with
@@ -213,42 +222,22 @@ def macse_align(fasta_file, mpath, mem, tcode, acc):
     t_begin = datetime.now()
     #gcdef codes: (1:Standard; 2:Vert mtDNA)
     #macse can automatically name output files here so no need to define prefix
-    if tcode == "standard":
-        if mem is not None:
-            if acc is True:
-                call_string = "java -jar -Xmx{2}g {0} -prog alignSequences -seq {1} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, fasta_file, mem)
-            else:
-                call_string = "java -jar -Xmx{2}g {0} -prog alignSequences -seq {1} ".format(mpath, fasta_file, mem)
+    if mem is not None:
+        if acc is True:
+            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, tcode, fasta_file)
         else:
-            if acc is True:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -seq {1} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, fasta_file)
-            else:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -seq {1} ".format(mpath, fasta_file)
-    elif tcode == "vmtdna":
-        if mem is not None:
-            if acc is True:
-                call_string = "java -jar -Xmx{2}g {0} -prog alignSequences -gc_def 2 -seq {1} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, fasta_file, mem)
-            else:
-                call_string = "java -jar -Xmx{2}g {0} -prog alignSequences -gc_def 2 -seq {1} ".format(mpath, fasta_file, mem)
+            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} ".format(mem, mpath, tcode, fasta_file)
+    else:
+        if acc is True:
+            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, tcode, fasta_file)
         else:
-            if acc is True:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def 2 -seq {1} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, fasta_file)
-            else:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def 2 -seq {1} ".format(mpath, fasta_file)
+            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} ".format(mpath, tcode, fasta_file)
         
     print call_string
     proc = sp.call(call_string, shell=True)
     t_finish = datetime.now()
     elapsed = t_finish - t_begin
     print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
-
-def table_dict(symbol):
-    '''
-    Get MACSE specific translation table value from table choice.
-    '''
-    table_dict = {"standard":"01_The_Standard_Code", "vertmtdna":"02_The_Vertebrate_Mitochondrial_Code", "invertmtdna":"05_The_Invertebrate_Mitochondrial_Code", "yeastmtdna":"03_The_Yeast_Mitochondrial_Code", "plastid":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "1":"01_The_Standard_Code", "2":"02_The_Vertebrate_Mitochondrial_Code", "3":"03_The_Yeast_Mitochondrial_Code", "4":"04_The_Mold_Protozoan_and_Coelenterate_Mitochondrial_Code_and_the_Mycoplasma_Spiroplasma_Code", "5":"05_The_Invertebrate_Mitochondrial_Code", "6":"06_The_Ciliate_Dasycladacean_and_Hexamita_Nuclear_Code", "9":"09_The_Echinoderm_and_Flatworm_Mitochondrial_Code", "10":"10_The_Euplotid_Nuclear_Code", "11":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "12":"12_The_Alternative_Yeast_Nuclear_Code", "13":"13_The_Ascidian_Mitochondrial_Code", "14":"14_The_Alternative_Flatworm_Mitochondrial_Code", "15":"15_Blepharisma_Nuclear_Code", "16":"16_Chlorophycean_Mitochondrial_Code", "21":"21_Trematode_Mitochondrial_Code", "22":"22_Scenedesmus_obliquus_mitochondrial_Code", "23":"23_Thraustochytrium_Mitochondrial_Code"}
-    table_val = table_dict[symbol]
-    return table_val
 
 
 def split_name(string, index, delimiter):
@@ -267,7 +256,7 @@ def pass_fail_finder(in_dir):
     prefix_list.sort()
     return prefix_list
     
-def directory_macse_aln_pass_fail(in_dir, mpath, mem, tcode, acc):
+def directory_macse_aln_pass_fail(in_dir, mpath, mem, incode, acc):
     '''
     Iterates over files in a directory to locate those with
     same prefix but different extensions '_Passed.fasta' and
@@ -279,6 +268,8 @@ def directory_macse_aln_pass_fail(in_dir, mpath, mem, tcode, acc):
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tBeginning paired MACSE alignments"
     print "--------------------------------------------------------------------------------------"
+
+    tcode = table_dict(incode)
     
     prefix_list = pass_fail_finder(in_dir)
 
@@ -315,30 +306,18 @@ def directory_macse_aln_pass_fail(in_dir, mpath, mem, tcode, acc):
 def macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc):
     print "\n\nPerforming MACSE alignment for {0} and {1}\n\n".format(f1,f2)
     t_begin = datetime.now()
-    #gcdef codes: (1:Standard; 2:Vert mtDNA)
+    
     #macse automatically names output files here so no need to define prefix
-    if tcode == "standard":
-        if mem is not None:
-            if acc is True:
-                call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -seq {2} -seq_lr {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, f1, f2)
-            else:
-                call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -seq {2} -seq_lr {3} ".format(mem, mpath, f1, f2)
+    if mem is not None:
+        if acc is True:
+            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, tcode, f1, f2)
         else:
-            if acc is True:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -seq {1} -seq_lr {2}  -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, f1, f2)
-            else:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -seq {1} -seq_lr {2} ".format(mpath, f1, f2)
-    elif tcode == "vmtdna":
-        if mem is not None:
-            if acc is True:
-                call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def 2 -seq {2} -seq_lr {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, f1, f2)
-            else:
-                call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def 2 -seq {2} -seq_lr {3} ".format(mem, mpath, f1, f2)
+            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} ".format(mem, mpath, tcode, f1, f2)
+    else:
+        if acc is True:
+            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -seq_lr {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, tcode, f1, f2)
         else:
-            if acc is True:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def 2 -seq {1} -seq_lr {2} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, f1, f2)
-            else:
-                call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def 2 -seq {1} -seq_lr {2} ".format(mpath, f1, f2)
+            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -seq_lr {3} ".format(mpath, tcode, f1, f2)
         
     print call_string
     proc = sp.call(call_string, shell=True)
