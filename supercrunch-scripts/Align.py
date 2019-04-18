@@ -8,6 +8,7 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
                         --table [Specifies translation table for macse (standard, vmtdna), default=standard] (Optional for -a macse)
                         --pass_fail (Optional for -a macse)
                         --accurate (Optional for -a mafft/macse)
+                        --threads [integer] (Optional for mafft and clustalo)
 						
     Align: Perform alignments for a directory of unaligned fasta files using mafft, macse, 
     muscle, or clustalo. 
@@ -17,12 +18,11 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
     underscores. Output files are labeled using a prefix identical to NAME. See below for
     special case with macse.
 
-    Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse 
-    option is selected, user must provide the --mpath flag with the full path to a 
-    macse.jar file. Optional for macse are assigning a value for memory in GB 
-    (--mem, default 1GB) and to specify a different translation table 
-    (--table, default = standard code). The current option include Standard Code (standard) or
-    Vertebrate Mitochondrial Code (vmtdna). The macse alignments can take a long time to complete
+    Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse option is selected, user must
+    provide the --mpath flag with the full path to a macse.jar file. Optional for macse are assigning
+    a value for memory in GB (--mem, default 1GB) and to specify a different translation table
+    (--table, default = standard code). The current options include: standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23. 
+    The macse alignments can take a long time to complete
     so the elapsed time is shown after an alignment is produced for a given fasta file. Because
     macse will insert an ! at corrected bp locations, a cleaned fasta file (in which ! is replaced 
     by N) is also output.
@@ -33,8 +33,8 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
     penalty parameters. To use this feature the --pass_fail flag can be used. However, to work
     the fasta files must follow this naming format:
     
-    'prefix_Passed.fasta' - Reliable sequences fasta file
-    'prefix_Failed.fasta' - Unreliable sequences fasta file
+    'prefix_Passed.fasta' - Reliable sequences fasta file.
+    'prefix_Failed.fasta' - Unreliable sequences fasta file.
     
     The prefix portion of the name cannot contain any underscores, and should ideally just be
     the name of the gene/locus. 
@@ -42,18 +42,19 @@ Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
     For other analyses, mafft, muscle, and clustalo must be installed in path (with identical 
     executable names as just written) for this script to work properly. These analyses will 
     run under the default settings (muscle) or the auto select settings (mafft,
-    clustalo), but see below for an additional mafft, clustalo, and macse setting.
+    clustalo), but see below for an additional mafft, clustalo, and macse setting. The number of 
+    threads can be specified for mafft and clustalo using the --threads flag.
     
     The optional flag --accurate can be used for mafft, clustalo, and macse v2.0+ to change the analysis 
     settings for increased accuracy. For mafft, this option changes the default from auto select
-    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may help 
-    with large (>2,000 seqs) and difficult alignments. For clustalo, this de-selects the --auto
+    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may  
+    result in higher accuracy (but slower run times). For clustalo, this de-selects the --auto
     option and enables --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather
-    than only one.  For macse, this adds the commands -local_realign_init 0.9
+    than only one. For macse, this adds the commands -local_realign_init 0.9
     -local_realign_dec 0.9 (both defaults = 0.5), which will slow down optimizations but increase
-    alignment accuracy (sometimes considerably). If using macse v2.0+, these search settings will
-    more closely resemble macse v1 (both defaults = 1.0).
-
+    alignment accuracy, sometimes considerably. If using macse v2.0+, these search settings will
+    more closely resemble macse v1, for which both defaults = 1.0.
+ 
     Output files vary between aligners but will be moved to following output directories
     created in the main fasta directory:
 
@@ -128,8 +129,8 @@ def get_args():
     penalty parameters. To use this feature the --pass_fail flag can be used. However, to work
     the fasta files must follow this naming format:
     
-    'prefix_Passed.fasta' - Reliable sequences fasta file
-    'prefix_Failed.fasta' - Unreliable sequences fasta file
+    'prefix_Passed.fasta' - Reliable sequences fasta file.
+    'prefix_Failed.fasta' - Unreliable sequences fasta file.
     
     The prefix portion of the name cannot contain any underscores, and should ideally just be
     the name of the gene/locus. 
@@ -137,23 +138,24 @@ def get_args():
     For other analyses, mafft, muscle, and clustalo must be installed in path (with identical 
     executable names as just written) for this script to work properly. These analyses will 
     run under the default settings (muscle) or the auto select settings (mafft,
-    clustalo), but see below for an additional mafft, clustalo, and macse setting.
+    clustalo), but see below for an additional mafft, clustalo, and macse setting. The number of 
+    threads can be specified for mafft and clustalo using the --threads flag.
     
     The optional flag --accurate can be used for mafft, clustalo, and macse v2.0+ to change the analysis 
     settings for increased accuracy. For mafft, this option changes the default from auto select
-    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may help 
-    with large (>2,000 seqs) and difficult alignments. For clustalo, this de-selects the --auto
+    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may  
+    result in higher accuracy (but slower run times). For clustalo, this de-selects the --auto
     option and enables --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather
-    than only one.  For macse, this adds the commands -local_realign_init 0.9
+    than only one. For macse, this adds the commands -local_realign_init 0.9
     -local_realign_dec 0.9 (both defaults = 0.5), which will slow down optimizations but increase
-    alignment accuracy (sometimes considerably). If using macse v2.0+, these search settings will
-    more closely resemble macse v1 (both defaults = 1.0).
+    alignment accuracy, sometimes considerably. If using macse v2.0+, these search settings will
+    more closely resemble macse v1, for which both defaults = 1.0.
 
-    Output files vary between aligners but will be moved to  output directories
+    Output files vary between aligners but will be moved to output directories
     created in the main fasta directory.
     
     DEPENDENCIES: Python: BioPython; Executables in path: mafft, muscle, clustalo (with
-    names identical to those listed here); macse jar file.
+    names identical to those listed here); macse jar file required.
     ---------------------------------------------------------------------------""")
     parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input fasta files. Follow labeling format: NAME.fasta")
     parser.add_argument("-a", "--aln", required=True, choices=["mafft","macse","muscle", "clustalo","all"], help="REQUIRED: Specify whether alignment is by mafft, macse, muscle, or clustalo. If macse must provide flags --mpath with full path to macse jar file and --table with translation table option. Selecting 'all' will run mafft, muscle, and clustalo sequentially.")
@@ -161,7 +163,8 @@ def get_args():
     parser.add_argument("--table", default="standard", choices=["standard","vertmtdna","invertmtdna","yeastmtdna","plastid","1","2","3","4","5","6","9","10","11","12","13","14","15","16","21","22","23"], help="MACSE REQUIRED: Specifies translation table for macse.")
     parser.add_argument("--mem", default=None, help="MACSE OPTIONAL: An integer for how much memory to assign to macse (in GB), default=1.")
     parser.add_argument("--pass_fail", action='store_true', help="MACSE OPTIONAL: Specifies macse to use two fasta files (one with seqs passing translation, and one with those that failed) for dual file alignment. Follow labeling format: NAME_Passed.fasta, NAME_Failed.fasta")
-    parser.add_argument("--accurate", action='store_true', help="MACSE/MAFFT OPTIONAL: Specifies mafft or macse to use more thorough search settings.")
+    parser.add_argument("--accurate", action='store_true', help="MACSE/MAFFT OPTIONAL: Specifies mafft, clustalo, or macse to use more thorough search settings.")
+    parser.add_argument("--threads", default=None, help="OPTIONAL: Specifies number of threads to use in mafft or clustalo.")
     return parser.parse_args()
     
 def directory_macse_aln(in_dir, mpath, mem, incode, acc):
@@ -343,7 +346,7 @@ def macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc):
     elapsed = t_finish - t_begin
     print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
     
-def directory_mafft_aln(in_dir, acc):
+def directory_mafft_aln(in_dir, acc, threads):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the mafft_align function
@@ -361,23 +364,27 @@ def directory_mafft_aln(in_dir, acc):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        mafft_align(fasta, acc)
-        output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
-        for o in output:
-            shutil.move(o, out_dir)
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+            mafft_align(fasta, acc, threads)
+            output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
+            for o in output:
+                shutil.move(o, out_dir)
                     
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tFinished MAFFT alignments"
     print "--------------------------------------------------------------------------------------\n\n"
 
-def mafft_align(fasta_file, acc):
+def mafft_align(fasta_file, acc, threads):
     print "\n\nPerforming MAFFT alignment for {}\n\n".format(fasta_file)
     names = fasta_file.split('.')
+
+    if threads is None:
+        threads = 1
     
     if acc is False:
-    	call_string = "mafft --auto {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0])
+    	call_string = "mafft --thread {2} --auto {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
     else:
-    	call_string = "mafft --retree 2 --maxiterate 1000 {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0])
+    	call_string = "mafft --thread {2} --retree 2 --maxiterate 1000 {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
     print call_string
     proc = sp.call(call_string, shell=True)
 
@@ -407,7 +414,8 @@ def directory_muscle_aln(in_dir):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        muscle_align(fasta)
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+            muscle_align(fasta)
         
     output = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
     for o in output:
@@ -439,7 +447,7 @@ def muscle_align(fasta_file):
     print call_string
     proc = sp.call(call_string, shell=True)
 
-def directory_clustalo_aln(in_dir,acc):
+def directory_clustalo_aln(in_dir, acc, threads):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the clustalo_align function
@@ -457,7 +465,8 @@ def directory_clustalo_aln(in_dir,acc):
         
     f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
     for fasta in f_list:
-        clustalo_align(fasta,acc)
+        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta"):
+            clustalo_align(fasta, acc, threads)
         
     output = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
     for o in output:
@@ -481,17 +490,16 @@ def directory_clustalo_aln(in_dir,acc):
     print "\t\t\tFinished Clustal-Omega alignments"
     print "--------------------------------------------------------------------------------------\n\n"
 
-def clustalo_align(fasta_file,acc):
+def clustalo_align(fasta_file, acc, threads):
     print "\n\nPerforming Clustal-Omega alignment for {}\n\n".format(fasta_file)
     names = fasta_file.split('.')
+    if threads is None:
+        threads = 1
+    
     if acc is False:
-        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --auto -v --threads=1 --output-order=tree-order".format(fasta_file, names[0])
+        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --auto -v --threads={2} --output-order=tree-order --force".format(fasta_file, names[0], threads)
     else:
-        #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full-iter --iter=2 -v --threads=3 --output-order=tree-order".format(fasta_file, names[0])
-        #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=3 -v --threads=3 --cluster-size=300 --output-order=tree-order".format(fasta_file, names[0])
-        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads=1 --cluster-size=500 --output-order=tree-order".format(fasta_file, names[0])
-        #test: call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --iter=5 -v --threads=1 --cluster-size=400 --output-order=tree-order".format(fasta_file, names[0])
-        #call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --iter=3 -v --threads=1 --output-order=tree-order".format(fasta_file, names[0])
+        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads={2} --cluster-size=500 --output-order=tree-order --force".format(fasta_file, names[0], threads)
     print call_string
     proc = sp.call(call_string, shell=True)
 
@@ -502,7 +510,7 @@ def main():
     
     if args.aln == "mafft":
         tb = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate)
+        directory_mafft_aln(args.in_dir, args.accurate, args.threads)
         tf = datetime.now()
         te = tf - tb
         print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
@@ -531,7 +539,7 @@ def main():
         
     elif args.aln == "clustalo":
         tb = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate)
+        directory_clustalo_aln(args.in_dir, args.accurate, args.threads)
         tf = datetime.now()
         te = tf - tb
         print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
@@ -540,12 +548,12 @@ def main():
         tb = datetime.now()
 
         tbmaf = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate)
+        directory_mafft_aln(args.in_dir, args.accurate, args.threads)
         tfmaf = datetime.now()
         temaf = tfmaf - tbmaf
 
         tbclu = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate)
+        directory_clustalo_aln(args.in_dir, args.accurate, args.threads)
         tfclu = datetime.now()
         teclu = tfclu - tbclu
         
