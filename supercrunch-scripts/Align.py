@@ -176,7 +176,7 @@ def table_dict(symbol):
     table_val = table_dictv1[symbol]
     return table_val
 
-def directory_macse_aln(in_dir, mpath, mem, incode, acc):
+def directory_macse_aln(in_dir, mpath, mem, incode, acc, flist):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the macse_align function
@@ -194,8 +194,7 @@ def directory_macse_aln(in_dir, mpath, mem, incode, acc):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         
-    f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    for fasta in f_list:
+    for fasta in flist:
         macse_align(fasta, mpath, mem, tcode, acc)
         
     output = [f for f in os.listdir('.') if f.endswith('_AA.fasta') or f.endswith('_NT.fasta')]
@@ -325,7 +324,7 @@ def macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc):
     elapsed = t_finish - t_begin
     print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
     
-def directory_mafft_aln(in_dir, acc, threads):
+def directory_mafft_aln(in_dir, acc, threads, flist):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the mafft_align function
@@ -341,16 +340,14 @@ def directory_mafft_aln(in_dir, acc, threads):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         
-    f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
-            mafft_align(fasta, acc, threads)
-            output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
-            for o in output:
-                try:
-                    shutil.move(o, out_dir)
-                except:
-                    print "{} was not moved. It is already in the MAFFT alignment output directory, you may want to check this.".format(o)
+    for fasta in flist:
+        mafft_align(fasta, acc, threads)
+    output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
+    for o in output:
+        try:
+            shutil.move(o, out_dir)
+        except:
+            print "{} was not moved. It is already in the MAFFT alignment output directory, you may want to check this.".format(o)
                     
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tFinished MAFFT alignments"
@@ -359,15 +356,13 @@ def directory_mafft_aln(in_dir, acc, threads):
 def mafft_align(fasta_file, acc, threads):
     print "\n\nPerforming MAFFT alignment for {}\n\n".format(fasta_file)
     names = fasta_file.split('.')
-
     if threads is None:
         threads = 1
-    
     if acc is False:
     	call_string = "mafft --thread {2} --auto {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
     else:
     	call_string = "mafft --thread {2} --retree 2 --maxiterate 1000 {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
-    print call_string
+    print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
     fasta_dict = SeqIO.index("{0}_mafft_temp.fasta".format(names[0]), "fasta")
@@ -378,7 +373,7 @@ def mafft_align(fasta_file, acc, threads):
             fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
     os.remove("{0}_mafft_temp.fasta".format(names[0]))
     
-def directory_muscle_aln(in_dir):
+def directory_muscle_aln(in_dir, flist):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the mafft_align function
@@ -394,10 +389,8 @@ def directory_muscle_aln(in_dir):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         
-    f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
-            muscle_align(fasta)
+    for fasta in flist:
+        muscle_align(fasta)
         
     output = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
     for o in output:
@@ -412,10 +405,8 @@ def directory_muscle_aln(in_dir):
             for record in fasta_dict:
                 newseq = fasta_dict[record].seq.upper()
                 fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
-                    
-    temp = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
-    for t in temp:
-        os.remove(t)
+    for f in out_list:
+        os.remove(f)
             
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tFinished MUSCLE alignments"
@@ -426,10 +417,10 @@ def muscle_align(fasta_file):
     names = fasta_file.split('.')
     
     call_string = "muscle -in {0} -out {1}_muscle_temp.fasta".format(fasta_file, names[0])
-    print call_string
+    print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
-def directory_clustalo_aln(in_dir, acc, threads):
+def directory_clustalo_aln(in_dir, acc, threads, flist):
     '''
     Iterates over files in a directory to locate those with
     extension '.fasta' and executes the clustalo_align function
@@ -445,10 +436,8 @@ def directory_clustalo_aln(in_dir, acc, threads):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
         
-    f_list = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    for fasta in f_list:
-        if not fasta.endswith("clustalo_temp.fasta") and not fasta.endswith("mafft_temp.fasta") and not fasta.endswith("muscle_temp.fasta") and not fasta.endswith("MAFFT_Aligned.fasta") and not fasta.endswith("MUSCLE_Aligned.fasta") and not fasta.endswith("CLUSTALO_Aligned.fasta"):
-            clustalo_align(fasta, acc, threads)
+    for fasta in flist:
+        clustalo_align(fasta, acc, threads)
         
     output = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
     for o in output:
@@ -463,10 +452,8 @@ def directory_clustalo_aln(in_dir, acc, threads):
             for record in fasta_dict:
                 newseq = fasta_dict[record].seq.upper()
                 fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
-                    
-    temp = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
-    for t in temp:
-        os.remove(t)
+    for f in out_list:
+        os.remove(f)
             
     print "\n\n--------------------------------------------------------------------------------------"
     print "\t\t\tFinished Clustal-Omega alignments"
@@ -477,12 +464,11 @@ def clustalo_align(fasta_file, acc, threads):
     names = fasta_file.split('.')
     if threads is None:
         threads = 1
-    
     if acc is False:
         call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --auto -v --threads={2} --output-order=tree-order --force".format(fasta_file, names[0], threads)
     else:
         call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads={2} --cluster-size=500 --output-order=tree-order --force".format(fasta_file, names[0], threads)
-    print call_string
+    print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
 #-----------------------------------------------------------------------------------------
@@ -490,9 +476,13 @@ def clustalo_align(fasta_file, acc, threads):
 def main():
     args = get_args()
     
+    os.chdir(args.in_dir)
+    finitial = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
+    flist = sorted([f for f in finitial if not f.endswith("clustalo_temp.fasta") and not f.endswith("mafft_temp.fasta") and not f.endswith("muscle_temp.fasta") and not f.endswith("MAFFT_Aligned.fasta") and not f.endswith("MUSCLE_Aligned.fasta") and not f.endswith("CLUSTALO_Aligned.fasta")])
+    
     if args.aln == "mafft":
         tb = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate, args.threads)
+        directory_mafft_aln(args.in_dir, args.accurate, args.threads, flist)
         tf = datetime.now()
         te = tf - tb
         print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
@@ -507,21 +497,21 @@ def main():
             
         elif args.pass_fail is False:
             tb = datetime.now()
-            directory_macse_aln(args.in_dir, args.mpath, args.mem, args.table, args.accurate)
+            directory_macse_aln(args.in_dir, args.mpath, args.mem, args.table, args.accurate, flist)
             tf = datetime.now()
             te = tf - tb
             print "Total time for all translation alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
             
     elif args.aln == "muscle":
         tb = datetime.now()
-        directory_muscle_aln(args.in_dir)
+        directory_muscle_aln(args.in_dir, flist)
         tf = datetime.now()
         te = tf - tb
         print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
         
     elif args.aln == "clustalo":
         tb = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate, args.threads)
+        directory_clustalo_aln(args.in_dir, args.accurate, args.threads, flist)
         tf = datetime.now()
         te = tf - tb
         print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
@@ -530,17 +520,17 @@ def main():
         tb = datetime.now()
 
         tbmaf = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate, args.threads)
+        directory_mafft_aln(args.in_dir, args.accurate, args.threads, flist)
         tfmaf = datetime.now()
         temaf = tfmaf - tbmaf
 
         tbclu = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate, args.threads)
+        directory_clustalo_aln(args.in_dir, args.accurate, args.threads, flist)
         tfclu = datetime.now()
         teclu = tfclu - tbclu
         
         tbmus = datetime.now()
-        directory_muscle_aln(args.in_dir)
+        directory_muscle_aln(args.in_dir, flist)
         tfmus = datetime.now()
         temus = tfmus - tbmus
         
