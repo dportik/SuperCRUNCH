@@ -197,7 +197,7 @@ def directory_macse_aln(in_dir, mpath, mem, incode, acc, flist):
     for fasta in flist:
         macse_align(fasta, mpath, mem, tcode, acc)
         
-    output = [f for f in os.listdir('.') if f.endswith('_AA.fasta') or f.endswith('_NT.fasta')]
+    output = [f for f in os.listdir('.') if f.endswith(('_AA.fasta', '_NT.fasta'))]
     for o in output:
         shutil.move(o, out_dir)
                     
@@ -283,7 +283,7 @@ def directory_macse_aln_pass_fail(in_dir, mpath, mem, incode, acc):
         f2 = "{}_Failed.fasta".format(p)
         macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc)
         
-    output = [f for f in os.listdir('.') if f.endswith("_AA.fasta") or f.endswith("_NT.fasta")]
+    output = [f for f in os.listdir('.') if f.endswith(("_AA.fasta", "_NT.fasta"))]
     for o in output:
         shutil.move(o, out_dir)
                     
@@ -342,6 +342,7 @@ def directory_mafft_aln(in_dir, acc, threads, flist):
         
     for fasta in flist:
         mafft_align(fasta, acc, threads)
+        
     output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
     for o in output:
         try:
@@ -356,12 +357,14 @@ def directory_mafft_aln(in_dir, acc, threads, flist):
 def mafft_align(fasta_file, acc, threads):
     print "\n\nPerforming MAFFT alignment for {}\n\n".format(fasta_file)
     names = fasta_file.split('.')
+    
     if threads is None:
         threads = 1
     if acc is False:
     	call_string = "mafft --thread {2} --auto {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
     else:
     	call_string = "mafft --thread {2} --retree 2 --maxiterate 1000 {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
+        
     print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
@@ -417,6 +420,7 @@ def muscle_align(fasta_file):
     names = fasta_file.split('.')
     
     call_string = "muscle -in {0} -out {1}_muscle_temp.fasta".format(fasta_file, names[0])
+    
     print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
@@ -462,12 +466,14 @@ def directory_clustalo_aln(in_dir, acc, threads, flist):
 def clustalo_align(fasta_file, acc, threads):
     print "\n\nPerforming Clustal-Omega alignment for {}\n\n".format(fasta_file)
     names = fasta_file.split('.')
+    
     if threads is None:
         threads = 1
     if acc is False:
         call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --auto -v --threads={2} --output-order=tree-order --force".format(fasta_file, names[0], threads)
     else:
         call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads={2} --cluster-size=500 --output-order=tree-order --force".format(fasta_file, names[0], threads)
+        
     print call_string, '\n'
     proc = sp.call(call_string, shell=True)
 
@@ -477,8 +483,8 @@ def main():
     args = get_args()
     
     os.chdir(args.in_dir)
-    finitial = sorted([f for f in os.listdir('.') if f.endswith(".fasta") or f.endswith(".fa")])
-    flist = sorted([f for f in finitial if not f.endswith("clustalo_temp.fasta") and not f.endswith("mafft_temp.fasta") and not f.endswith("muscle_temp.fasta") and not f.endswith("MAFFT_Aligned.fasta") and not f.endswith("MUSCLE_Aligned.fasta") and not f.endswith("CLUSTALO_Aligned.fasta")])
+    finitial = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
+    flist = sorted([f for f in finitial if not f.endswith(("clustalo_temp.fasta","mafft_temp.fasta","muscle_temp.fasta", "MAFFT_Aligned.fasta", "MUSCLE_Aligned.fasta", "CLUSTALO_Aligned.fasta"))])
     
     if args.aln == "mafft":
         tb = datetime.now()
