@@ -257,7 +257,7 @@ def relabel_species_acc(f,out_dir,subspecies):
 def write_label_key(label_key,f,out_dir):
     out_f = "{}_label_key.txt".format(f.split('.')[0])
     with open(out_f, 'a') as fh_out:
-        fh_out.write("{}\t{}\t{}\n".format("Taxon", "Accession", "Description"))
+        fh_out.write("{}\t{}\t{}\n".format("Accession", "Taxon", "Description"))
     label_key.sort(key=operator.itemgetter(1))
     with open(out_f, 'a') as fh_out:
         for l in label_key:
