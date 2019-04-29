@@ -30,6 +30,7 @@ The current release of **SuperCRUNCH** is v1.0.
 + [trimAl](http://trimal.cgenomics.org/)
 
 Helpful installation instructions for these dependencies can be found on the [wiki installation page](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions).
+SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows if using Cygwin. 
 
 
 ## Complete Instructions for Analyses
