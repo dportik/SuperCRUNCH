@@ -66,12 +66,8 @@ Usage: python Cluster_Blast_Extract.py  -i [directory containing fasta files] RE
     7. Create a new filtered fasta file for each sequence with results. The query sequence is
        extracted based on the resulting blast interval(s) retained after the secondary merge
        strategy, and written to a new output fasta file. Sequences that did not result in
-       significant blast hits did not pass the paralogy filter and are excluded. Checking 
-       these I have found they are often paralogous, mislabeled, contaminated (ie wrong 
-       organism), or the wrong type (ex. mtDNA or mRNA). Clusters that failed to blast 
-       to the database will have a [fasta name]_Out_Cluster_#_blastn_results.txt output 
-       file with zero size (empty file).  You can examine these clusters and perform a 
-       blast search to a global GenBank database to validate these observations.
+       significant blast hits did not pass the paralogy filter and are excluded. These
+       sequences will be placed in a separate file and can be inspected further.
 
     Several output directories are created in the main directory which contain different output files.
 
@@ -157,7 +153,7 @@ def get_args():
     Fasta files should contain putative sequences for a SINGLE locus. Each fasta file therefore
     represents a different gene/locus of interest.
     To be recognized, a fasta file must be labeled as "NAME.fasta". The NAME portion 
-    should not contain any periods or spaces, but can contain underscores. 
+    should not contain any periods, spaces, or underscores, but can contain dashes.
 
 										
     Major steps performed for each fasta file found:
@@ -186,11 +182,8 @@ def get_args():
     6. Merge all blast results, and for every accession/record with blast results merge all
        overlapping coordinates (excluding self hits). If multiple non-overlapping intervals
        are found (ex. 10-40, 45-80), a secondary merging strategy is employed because multiple
-       intervals (non-overlapping coordinates) can result from two main reasons, including a
-       large stretch or stretches of N's in sequence, or paralogy. If paralogy, we want to
-       exclude paralogous intervals, but if N's, we could try to bridge those intervals if
-       the number of N's is reasonably low and will allow for good sequence alignments
-       downstream. There are three strategies for dealing with multiple intervals:
+       intervals (non-overlapping coordinates) can result from different scenarios.
+       There are three strategies for dealing with multiple intervals:
     
         A) Default option (-m span). Merge intervals if they are <100 bp apart. If this still
         results in multiple non-overlapping intervals (separated by too many N's or from
@@ -207,10 +200,11 @@ def get_args():
         Since there is no easy way to objectively check, this is risky and can result in
         spurious sequences.
    
-    7. Create a new filtered fasta file for each sequence with results. The query sequence is
-       extracted based on the resulting blast interval(s) retained after the secondary merge
+    7. Create a new filtered fasta file for each sequence with blast results. The query sequence is
+       extracted based on the resulting blast interval(s) retained after the merge
        strategy, and written to a new output fasta file. Sequences that did not result in
-       significant blast hits did not pass the paralogy filter and are thus excluded.
+       significant blast hits did not pass the paralogy filter and are written to a separate
+       file.
 
     DEPENDENCIES: Python: BioPython; Executables in path: blast tools (makeblastdb, blastn), 
     cd-hit-est (***NOT openmp compiled version). The clustering results were unable to be 

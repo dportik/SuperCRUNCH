@@ -37,7 +37,7 @@ def get_args():
     function used here makes it efficient to run this for massively large files. 
     DEPENDENCIES: Python: BioPython.
 	------------------------------------------------------------------------------""")
-    parser.add_argument("-i", "--input", required=True, help="REQUIRED: The full path to a fasta file of GenBank sequence data to filter")
+    parser.add_argument("-i", "--input", required=True, help="REQUIRED: The full path to a fasta file of sequence data to filter.")
     parser.add_argument("-o", "--out_dir", required=True, help="REQUIRED: The full path to an existing directory to write output fasta file.")
     return parser.parse_args()
 
