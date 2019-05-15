@@ -34,7 +34,7 @@ The current release of **SuperCRUNCH** is [v1.1](https://github.com/dportik/Supe
 + [trimAl](http://trimal.cgenomics.org/)
 
 Helpful installation instructions for these dependencies can be found on the [wiki installation page](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions).
-Please note that some modules do not require any dependencies. If you plan to use only a subset of modules you can quickly check which modules require dependencies [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions). 
+Please note that some modules do not require any dependencies. If you plan to use only a subset of modules you can quickly check which modules require dependencies [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions#module-dependencies-list). 
 
 SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows if using Cygwin. 
 
