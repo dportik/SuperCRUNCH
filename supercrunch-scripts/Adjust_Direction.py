@@ -177,7 +177,7 @@ def mafft_adjust(f, accurate, threads):
                 adjusted+=1
                 with open(name_log, 'a') as fh_log:
                     fh_log.write("{}\n".format(fasta_dict[record].description))
-                new_description = fasta_dict[record].description.strip('_R_')
+                new_description = fasta_dict[record].description.replace('_R_', '')
                 newseq = fasta_dict[record].seq.upper().ungap("-")
                 fh_out.write( ">{}\n{}\n".format(new_description, newseq))
             else:
