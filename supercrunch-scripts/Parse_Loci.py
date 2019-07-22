@@ -1,3 +1,37 @@
+''''
+SuperCRUNCH: Parse_Loci module
+
+    Parse_Loci: This module can be used to find sequences in a fasta file based on a 
+    list of taxon names (-t) and a list of locus search terms (-l), and write those sequences
+    to locus-specific fasta files. For a sequence to be written to a locus-specific fasta 
+    file, it must match either the gene abbreviation or description for that locus AND have 
+    a taxon label that is present in the taxon names list. The taxon names list can contain 
+    a mix of species (binomial name) and subspecies (trinomial name) labels. The 
+    --no_subspecies flag can be used to only include binomial names in searches. In this case, 
+    only the binomial component will be considered for records that have valid subspecies names. 
+
+    All searching occurs using SQL, and an SQL database is constructed from the input file (-i) 
+    in the output directory specified (-o). If the database for the input file has already been 
+    made, the full path to it can be specified using the --sql_db flag, which will save time for
+    multiple runs on very large fasta files. All output fasta files and a summary file are 
+    written to their relevant directories within the output directory specified (-o). 
+
+-------------------------
+Compatible with Python 2.7 & 3.7
+Python packages required:
+	-BioPython
+    -sqlite3
+-------------------------
+
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
+daniel.portik@gmail.com
+July 2019
+Distributed under the 
+GNU General Public Lincense
+'''
+
 import sqlite3
 import sys
 import os
@@ -12,7 +46,21 @@ def get_args():
     """
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------    
-    DEPENDENCIES: Python: BioPython, NumPy.
+    Parse_Loci: This module can be used to find sequences in a fasta file based on a 
+    list of taxon names (-t) and a list of locus search terms (-l), and write those sequences
+    to locus-specific fasta files. For a sequence to be written to a locus-specific fasta 
+    file, it must match either the gene abbreviation or description for that locus AND have 
+    a taxon label that is present in the taxon names list. The taxon names list can contain 
+    a mix of species (binomial name) and subspecies (trinomial name) labels. The 
+    --no_subspecies flag can be used to only include binomial names in searches. In this case, 
+    only the binomial component will be considered for records that have valid subspecies names. 
+
+    All searching occurs using SQL, and an SQL database is constructed from the input file (-i) 
+    in the output directory specified (-o). If the database for the input file has already been 
+    made, the full path to it can be specified using the --sql_db flag, which will save time for
+    multiple runs on very large fasta files. All output fasta files and a summary file are 
+    written to their relevant directories within the output directory specified (-o). 
+    DEPENDENCIES: Python: BioPython, sqlite3
 	---------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--input",
