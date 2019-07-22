@@ -17,7 +17,18 @@ A full overview of **SuperCRUNCH** is described in the following pre-print artic
 
 ## Version
 
-The current release of **SuperCRUNCH** is [v1.1](https://github.com/dportik/SuperCRUNCH/releases). For version history please see the [change log file](https://github.com/dportik/SuperCRUNCH/tree/master/CHANGELOG.md).
+The current release of **SuperCRUNCH** is [v1.2](https://github.com/dportik/SuperCRUNCH/releases). 
+
+### Major changes in v1.2:
+  - **Made all modules compatible with Python 2.7 and Python 3.7.**
+  - **SQL now implemented in `Parse_Loci.py` (up to 30x speedup), `Filter_Seqs_and_Species.py` (3x speedup), and `Taxon_Assessment.py` (3x speedup).**
+  - **Added output directory specification to all modules.**
+  - Two trimming modules now included: `Trim_Alignments_Trimal.py` and `Trim_Alignments_Custom.py`. The `Trim_Alignments_Custom.py` module allows finding start and stop block positions, and row-wise (internal) sliding window trimming based on divergence.
+  - Added new module `Filter_Fasta_by_Min_Seqs.py` to filter fasta files using a minimum number of sequences.
+  - Complete code re-write for `Align.py`, `Cluster_Blast_Extract.py`, `Filter_Seqs_and_Species.py`, `Parse_Loci.py`, `Taxon_Assessment.py`.
+  - Module `Relabel_Fasta.py` is now `Fasta_Relabel_Seqs.py`.
+
+For complete version history please see the [change log file](https://github.com/dportik/SuperCRUNCH/tree/master/CHANGELOG.md).
 
 
 ## Installation
@@ -45,18 +56,7 @@ An overview of the components of **SuperCRUNCH** can be found on the [wiki overv
 
 ## Tutorials and Examples
 
-Several example analyses associated with the pre-print are available on the [**SuperCRUNCH** project page](https://osf.io/bpt94/) on the Open Science Framework, including all input files, output files, and complete wiki tutorials. These analyses include:
-
-+ **Iguania Supermatrix:** SuperCRUNCH analysis of Iguania using sequence data downloaded directly from NCBI. [Direct link](https://osf.io/vsu5k/).
-+ **UCE Supermatrix:** SuperCRUNCH analysis of UCE loci available for the frog genus *Kaloula*, using sequence data downloaded directly from NCBI. [Direct link](https://osf.io/5rey2/).
-+ **Population Dataset (*Uma*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Uma*, using sequence data downloaded directly from NCBI. [Direct link](https://osf.io/49wz3/).
-+ **Population Dataset (*Callisaurus*):** SuperCRUNCH analysis to retrieve population-level data for the lizard genus *Callisaurus*, using sequence data downloaded directly from NCBI. [Direct link](https://osf.io/6bwhf/).
-
-On the OSF project page, there are also several analyses that compare the performance of **SuperCRUNCH** to other programs. 
-
-The analyses available on the OSF page will have examples of all the input files required to run various steps. Additionally, several example input files are also provided in the [data folder](https://github.com/dportik/SuperCRUNCH/tree/master/data). These include several locus search terms files (including the 5k UCE set) and multiple reference sequence sets. 
-
-**SuperCRUNCH** was presented at the [**Trees in the Desert workshop**](http://db.herbarium.arizona.edu/phlora/TID/WorkshopPage.html), which was held to discuss challenges related to ultra-large phylogenetic trees. Several materials from the workshop, including a [presentation](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/Portik_SuperCRUNCH_presentation.pdf) and short tutorial (with input data) are available [here](https://github.com/dportik/SuperCRUNCH/tree/master/docs/Trees-in-the-desert-workshop/). 
+New tutorials that use **SuperCRUNCH v1.2** are under construction, please check back soon! 
 
 ## Citation
 

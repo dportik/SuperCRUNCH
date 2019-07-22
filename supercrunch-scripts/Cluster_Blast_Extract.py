@@ -1,130 +1,57 @@
-'''
+''''
 SuperCRUNCH: Cluster_Blast_Extract module
 
-Usage: python Cluster_Blast_Extract.py  -i [directory containing fasta files] REQUIRED
-                                        -b ["blastn", "blastn-short", "dc-megablast", "megablast"] REQUIRED
-                                        -m ["span", "nospan", "all"] (OPTIONAL; DEFAULT = span)
-                                        --max_hits [integer] (OPTIONAL)
-									
-    Cluster_Blast_Extract: A stringent paralogy filter for sorting GenBank data of a putative locus.
+    Cluster_Blast_Extract: A stringent similarity filter for filtering sequences.
+    Each fasta file should contain putative sequences for a SINGLE locus. For
+    each fasta file, the sequences are first clustered using cd-hit-est. A blast
+    database is constructed from the largest sequence cluster (which is assumed
+    to contain the true sequences for that locus), and all clusters are blasted
+    to the sequence database (including the cluster used to generate the database).
+    The type of blast search is defined by the user, the most popular being 
+    "dc-megablast", "blastn",and "megablast". Note that blastn searches include a 
+    word size of 11, whereas megablast searches include a word size of 28, making 
+    blastn more appropriate for inter-species searches and megablast more appropriate 
+    for closely related or intraspecific searches. The discontiguous megablast is 
+    better at producing non-fragmented hits for divergent sequences using similar 
+    word sizes as blastn, and is preferable to blastn. The number of threads to use
+    for blast searches can be specified using the --threads flag. For all hits of a 
+    particular sequence (exlcuding self-hits), the blast coordinates are collected 
+    and merged. If multiple non-overlapping intervals are found (ex. 10-40, 45-80), 
+    the merging strategy selected by the user (-m) is used (see documentation for 
+    details, including explanation of --bp_brige argument). Finally, the query 
+    sequence is extracted based on the blast coordinates and written to a new 
+    filtered fasta file. Sequences that do not produce blast hits fail the 
+    similarity filter and are written to a separate fasta file. The output files
+    from each step are written to separate directories which will appear in the
+    main output directory specified.
+
+    Main Output Files:
     
-    Fasta files should contain putative sequences for a SINGLE locus. Each fasta file therefore
-    represents a different gene/locus of interest.
-    To be recognized, a fasta file must be labeled as "NAME.fasta". The NAME portion 
-    should not contain any periods or spaces, but can contain underscores. 
-
-										
-    Major steps performed for each fasta file found:
-
-    1. Perform cd-hit-est to create sequence clusters based on similarity.
-
-    2. Create a fasta file for each cluster recovered.
-
-    3. Sort fasta clusters by number of records contained (high to low).
-
-    4. Create a blast database from the cluster containing the most records (which presumably
-       contains homologous sequences for that locus).
-   
-    5. Perform blast searches of all clusters to this database. This includes the cluster used 
-       to create the blast database, but self-hits are ignored. The max number of hits
-       to the reference allowed is optionally user defined, with the default set to no limit.
-   
-       The type of blast search is defined by the user, the most popular being "dc-megablast",
-       "blastn",and "megablast". Note that blastn searches include word size of 11, whereas 
-       megablast searches include a word size of 28, making blastn more appropriate for inter-
-       species searches and megablast more appropriate for closely related or intraspecific 
-       searches. The discontiguous megablast is better at producing non-fragmented hits for 
-       divergent sequences using similar word sizes as blastn, and is preferable to blastn.
-       This should ideally be used for inter- specific searches, replacing blastn.
-   
-    6. Merge all blast results, and for every accession/record with blast results merge all
-       overlapping coordinates (excluding self hits). If multiple non-overlapping intervals
-       are found (ex. 10-40, 45-80), a secondary merging strategy is employed because multiple
-       intervals (non-overlapping coordinates) can result from two main reasons, including a
-       large stretch or stretches of N's in sequence, or paralogy. If paralogy, we want to
-       exclude paralogous intervals, but if N's, we could try to bridge those intervals if
-       the number of N's is reasonably low and will allow for good sequence alignments
-       downstream. There are three strategies for dealing with multiple intervals:
+    [NAME]_blast_output.txt - Contains blast search results in output format 6
     
-        A) Default option (-m span). Merge intervals if they are <100 bp apart. If this still
-        results in multiple non-overlapping intervals (separated by too many N's or from
-        paralogous hits), then take the longest interval as the target sequence.
-        
-        B) 'Single' option (-m nospan). For multiple non-overlapping intervals (separated by
-        too many N's or from paralogous hits), then simply take the longest interval as the
-        sequence. This ensures that all final sequences are free of N's.
-        
-        C) 'All' option (-m all). Keeps all intervals and writes the final sequence from these.
-        If the non-overlapping intervals result just from stretches of N's, this will
-        essentially strip the sequence of N's. However, if it results from paralogous hits,
-        then the final sequence will be a composite sequence of target and paralogous sequence.
-        Since there is no easy way to objectively check, this is risky and can result in
-        spurious sequences. It will be visible in the log file, which lists all coordinates
-        used to write a give sequence, and could be useful for finding duplicates or
-        paralogy, which often results in sequences much longer than the references.
-   
-    7. Create a new filtered fasta file for each sequence with results. The query sequence is
-       extracted based on the resulting blast interval(s) retained after the secondary merge
-       strategy, and written to a new output fasta file. Sequences that did not result in
-       significant blast hits did not pass the paralogy filter and are excluded. These
-       sequences will be placed in a separate file and can be inspected further.
+    [NAME]_extracted.fasta - The output fasta file containing the extracted sequences.
+    
+    Log_File_[NAME].txt - A tab delimited text file containing the following columns:
+    
+    			Accn	Original_Length	Retained_Length	Start_Coordinate	End_Coordinate
+                
+                The file is populated with data for every record with blast results, such that
+                the starting and final sequence lengths are provided along with the interval(s)
+                used to extract the final sequence.
 
-    Several output directories are created in the main directory which contain different output files.
-
-
-    01_Clustering_Results:
-
-    	[fasta name].clstr - The messy output file from cd-hit-est that contains cluster information.
-
-
-
-    02_Parsed_Results:
-
-    	[fasta name]_Out_Cluster_# - Fasta files representing each numbered cluster. These are 
-                                     used for blast searches, and the largest fasta is used to
-                                     create the blast database.
-								
-
-    03_Blast_Results:
-
-	    [fasta name]_blast_results_merged.txt - The complete, merged blastn results for all the
-                                                clusters found for that locus.
-								
-	    [fasta name]_Out_Cluster_#_blast_results.txt - The blastn results for all the numbered
-                                                      cluster fasta files found for that locus.
-
-
-    04_Trimmed_Results:
-
-	    [fasta name]_extracted.fasta - A new fasta file that is created from the sequences extracted
-                                     based on the blastn coordinates found. Only sequences with 
-                                     significant blast results will be included, and depending
-                                     on the blast coordinates found, sequences may or may not 
-                                     have been trimmed from their original length (see file below).
-								
-    	Log_File_[fasta name].txt - A summary file that shows all records included in the filtered
-                                     fasta file. Includes accession number, the original length
-                                     of the unfiltered sequence, the final length of the extracted
-                                     sequence, and the bp coordinates used to extract the sequence
-                                     (which come directly from the merged blast hits for that 
-                                     record). The headers of this file include:
-                                     Accn	Original_Length		Retained_Length		Coordinates_Used
-
-        Log_BadSeqs_[fasta name].fasta - If any sequences did not pass the orthology filters, they
-                                         will be written to this file. If all sequences pass the 
-                                         orthology filter, this file will not be created. You can
-                                         inspect the sequences within this file to understand if
-                                         they contain errors (mislabeled, wrong organism) and try
-                                         to determine what caused them to fail the orthology filters.
+    DEPENDENCIES: Python: BioPython; Executables in path: blast+ tools 
+    (makeblastdb, blastn), cd-hit-est. ***Note the regular version of cd-hit-est
+    produced the same results across multiple runs, but the openmp version
+    compiled from source gave inconsistent results. It should probably be avoided
+    until it is fixed (e.g., compile using 'make openmp=no'). 
 
 -------------------------
-For Python 2.7
-Python modules required:
-	-BioPython (using SeqIO module)
-Other dependencies:
-	-cd-hit-est (installed in path)
-	-blastn (installed in path)
-	    -must be able to call makeblastdb from command line
+Compatible with Python 2.7 & 3.7
+Python packages required:
+	-BioPython
+Dependencies:
+    -blast+ (installed in path)
+    -cd-hit-est (installed in path)
 -------------------------
 
 SuperCRUNCH project
@@ -135,6 +62,7 @@ January 2019
 Distributed under the 
 GNU General Public Lincense
 '''
+
 import argparse
 import os
 import subprocess as sp
@@ -145,238 +73,216 @@ from datetime import datetime
 from Bio import SeqIO
 
 def get_args():
-    """Get arguments from CLI"""
+    """
+    Get arguments from command line.
+    """
     parser = argparse.ArgumentParser(
             description="""-----------------------------------------------------------------------------
-    Cluster_Blast_Extract: A stringent paralogy filter for sorting GenBank data of a putative locus.
-    
-    Fasta files should contain putative sequences for a SINGLE locus. Each fasta file therefore
-    represents a different gene/locus of interest.
-    To be recognized, a fasta file must be labeled as "NAME.fasta". The NAME portion 
-    should not contain any periods, spaces, or underscores, but can contain dashes.
+    Cluster_Blast_Extract: A stringent similarity filter for filtering sequences.
+    Each fasta file should contain putative sequences for a SINGLE locus. For
+    each fasta file, the sequences are first clustered using cd-hit-est. A blast
+    database is constructed from the largest sequence cluster (which is assumed
+    to contain the true sequences for that locus), and all clusters are blasted
+    to the sequence database (including the cluster used to generate the database).
+    The type of blast search is defined by the user, the most popular being 
+    "dc-megablast", "blastn",and "megablast". Note that blastn searches include a 
+    word size of 11, whereas megablast searches include a word size of 28, making 
+    blastn more appropriate for inter-species searches and megablast more appropriate 
+    for closely related or intraspecific searches. The discontiguous megablast is 
+    better at producing non-fragmented hits for divergent sequences using similar 
+    word sizes as blastn, and is preferable to blastn. The number of threads to use
+    for blast searches can be specified using the --threads flag. For all hits of a 
+    particular sequence (excluding self-hits), the blast coordinates are collected 
+    and merged. If multiple non-overlapping intervals are found (ex. 10-40, 45-80), 
+    the merging strategy selected by the user (-m) is used (see documentation for 
+    details, including explanation of --bp_brige argument). Finally, the query 
+    sequence is extracted based on the blast coordinates and written to a new 
+    filtered fasta file. Sequences that do not produce blast hits fail the 
+    similarity filter and are written to a separate fasta file. The output files
+    from each step are written to separate directories which will appear in the
+    main output directory specified.
 
-										
-    Major steps performed for each fasta file found:
-
-    1. Perform cd-hit-est to create sequence clusters based on similarity.
-
-    2. Create a fasta file for each cluster recovered.
-
-    3. Sort fasta clusters by number of records contained (high to low).
-
-    4. Create a blast database from the cluster containing the most records (which presumably
-       contains homologous sequences for that locus).
-   
-    5. Perform blast searches of all clusters to this database. This includes the cluster used 
-       to create the blast database, but self-hits are ignored. The max number of hits
-       to the reference allowed is optionally user defined, with the default set to no limit.
-   
-       The type of blast search is defined by the user, the most popular being "dc-megablast",
-       "blastn",and "megablast". Note that blastn searches include word size of 11, whereas 
-       megablast searches include a word size of 28, making blastn more appropriate for inter-
-       species searches and megablast more appropriate for closely related or intraspecific 
-       searches. The discontiguous megablast is better at producing non-fragmented hits for 
-       divergent sequences using similar word sizes as blastn, and is preferable to blastn.
-       This should ideally be used for inter- specific searches, replacing blastn.
-   
-    6. Merge all blast results, and for every accession/record with blast results merge all
-       overlapping coordinates (excluding self hits). If multiple non-overlapping intervals
-       are found (ex. 10-40, 45-80), a secondary merging strategy is employed because multiple
-       intervals (non-overlapping coordinates) can result from different scenarios.
-       There are three strategies for dealing with multiple intervals:
-    
-        A) Default option (-m span). Merge intervals if they are <100 bp apart. If this still
-        results in multiple non-overlapping intervals (separated by too many N's or from
-        paralogous hits), then take the longest interval as the target sequence.
-        
-        B) 'Single' option (-m nospan). For multiple non-overlapping intervals (separated by
-        too many N's or from paralogous hits), then simply take the longest interval as the
-        sequence. This ensures that all final sequences are free of N's.
-        
-        C) 'All' option (-m all). Keeps all intervals and writes the final sequence from these.
-        If the non-overlapping intervals result just from stretches of N's, this will
-        essentially strip the sequence of N's. However, if it results from paralogous hits,
-        then the final sequence will be a composite sequence of target and paralogous sequence.
-        Since there is no easy way to objectively check, this is risky and can result in
-        spurious sequences.
-   
-    7. Create a new filtered fasta file for each sequence with blast results. The query sequence is
-       extracted based on the resulting blast interval(s) retained after the merge
-       strategy, and written to a new output fasta file. Sequences that did not result in
-       significant blast hits did not pass the paralogy filter and are written to a separate
-       file.
-
-    DEPENDENCIES: Python: BioPython; Executables in path: blast tools (makeblastdb, blastn), 
-    cd-hit-est (***NOT openmp compiled version). The clustering results were unable to be 
-    replicated with the openmp version of cd-hit-est, but were consistent and replicable using
-    the regular version (compiled using 'make openmp=no').
+    DEPENDENCIES: Python: BioPython; Executables in path: blast+ tools 
+    (makeblastdb, blastn), cd-hit-est. ***Note the regular version of cd-hit-est
+    produced the same results across multiple runs, but the openmp version
+    compiled from source gave inconsistent results. It should probably be avoided
+    until it is fixed (e.g., compile using 'make openmp=no'). 
 	-----------------------------------------------------------------------------""")
-    parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the parsed, locus-specific fasta files.")
-    parser.add_argument("-b", "--blast_task", required=True, choices=["blastn", "blastn-short", "dc-megablast", "megablast"], help="REQUIRED: The type of blast search to conduct.")
-    parser.add_argument("--max_hits", type=int, default=None, help="OPTIONAL: The maximum number of blast matches allowed per input sequence. (May want to set < 300)")
-    parser.add_argument("-m", "--merge_strategy", required=False, default="span", choices=["span", "nospan", "all"], help="DEFAULT = 'span'. The strategy for dealing with multiple non-overlapping blast coordinates. See documentation for details.")
+    
+    parser.add_argument("-i", "--in_dir",
+                            required=True,
+                            help="REQUIRED: The full path to a directory which contains "
+                            "the parsed, locus-specific fasta files.")
+    
+    parser.add_argument("-o", "--outdir",
+                            required=True,
+                            help="OPTIONAL: The full path to an existing directory to write "
+                            "output files.")
+    
+    parser.add_argument("-b", "--blast_task",
+                            required=True,
+                            choices=["blastn", "blastn-short", "dc-megablast", "megablast"],
+                            help="REQUIRED: The type of blast search to conduct.")
+    
+    parser.add_argument("--max_hits",
+                            type=int,
+                            default=None,
+                            help="OPTIONAL: The maximum number of blast matches allowed "
+                            "per input sequence. (May want to set < 300)")
+    
+    parser.add_argument("-m", "--merge_strategy",
+                            required=False,
+                            default="span", choices=["span", "nospan", "all"],
+                            help="DEFAULT = 'span'. The strategy for dealing with multiple "
+                            "non-overlapping blast coordinates. See documentation for details.")
+    
+    parser.add_argument("--bp_bridge",
+                            required=False,
+                            default="100",
+                            type=int,
+                            help="OPTIONAL: The base pair distance used to merge non-overlapping "
+                            "blast coordinates for -m span (default = 100).")
+    
+    parser.add_argument("--threads",
+                            default=None,
+                            help="OPTIONAL: Specifies number of threads to use for blastn "
+                            "(recommended: 4).")
 
     return parser.parse_args()
 
-def delimit(iterable,splitstring):
-    '''
+def cluster(f):
+    """
+    Generates call string for cd-hit-est and then
+    runs using sp.call() with shell option. Returns
+    name of the output file generated by the program.
+    """
+    name = f.split('.')[0]
+    
+    call_string = "cd-hit-est -i {0}.fasta -o {0}_clustering_out -c 0.8 -n 4 -M 16000 -d 0".format(name)
+    proc = sp.call(call_string, shell=True)
+
+    #produces file called [name]_clustering_out.clstr
+    cluster_file = "{0}_clustering_out.clstr".format(name)
+    
+    return cluster_file
+
+def delimit(iterable, splitstring):
+    """
     Function to split cd-hit-est cluster files in a sensible way.
-    '''
+    Groups the items in the list using a keyword, and creates a 
+    list of sublists that are grouped accordingly. Returns the
+    list of sublists.
+    """
     return [list(g) for k,g in itertools.groupby(iterable,lambda x:x in splitstring) if not k]
 
-def make_nested_dir(in_dir, string):
-    dirname = in_dir+'/'+string
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
-    return dirname
-
-def find_files_diff_dir(main_dir, search_dir, string):
-    os.chdir(search_dir)
-    f_list = sorted([f for f in os.listdir('.') if f.endswith(string)])
-    os.chdir(main_dir)
-    return f_list
-
-def split_name(string, index, delimiter):
-    index = int(index)
-    name = string.split(delimiter)[index]
-    return name
-
-def get_seq_dict(search_dir, end_dir, string):
-    os.chdir(search_dir)
-    for f in os.listdir('.'):
-        if f.split('.')[0] == string:
-            record_dict = SeqIO.index(f, "fasta")
-    os.chdir(end_dir)
-    return record_dict
-    
-def Cluster(fasta, out_dir):
-    '''
-    System call structure for cd-hit-est. Moves
-    output to directory 'out_dir'.
-    '''
-    names = fasta.split('.')
-    call_string = "cd-hit-est -i {0}.fasta -o {0}_Out -c 0.8 -n 4 -M 16000 -d 0".format(names[0])
-    proc = sp.call(call_string, shell=True)
-    print '\n\n\n'
-
-    for f in os.listdir('.'):
-        if f.startswith("{}_Out".format(names[0])):
-            shutil.move(f, out_dir)
-        
-def Parse_Clusters(cluster_dir, cluster_file, out_dir, main_dir):
-    os.chdir(cluster_dir)
-    #get name of gene from file
-    target = cluster_file.split('.')[0]
+def parse_clusters(f, cluster_file, fdict):
+    """
+    Reads a cluster file and generates a list of the contents, where
+    the string Cluster denotes the beginning of a new sequence cluster.
+    The delimit() function is used to create a list of sublists based on the 
+    appearance of the string Cluster in the original list. The list of sublists
+    is reverse sorted by length to identify the largest cluster. A fasta file
+    for this cluster is then generated by finding the accessions of the contained
+    sequences and using the fasta dictionary (fdict) to write the sequences
+    with biopython. The name of the cluster fasta file is returned.    
+    """
+    print("\n--------------------------------------------------------------------------------------\n")
+    print('Parsing clusters for {}.'.format(cluster_file))
     lines = []
-    print 'Parsing clusters for {}.\n'.format(cluster_file)
+
     #A clstr file delimits clusters with a >, then numbers all included accession numbers
     #>Cluster 0
     #0	616nt, >JN881132.1... at +/86.20%
     #1	561nt, >KU765220.1... at +/96.08%
     #2	558nt, >KU765300.1... at +/96.59%
     #3	522nt, >JF818216.1... at *
-    #4	407nt, >JN881153.1... at +/84.52%
     #Collect the file contents then delimit lists based on presence of 'Cluster' in text
-    with open(cluster_file, 'r') as fh_c:
-        for line in fh_c:
-            line = line.strip()
+    with open(cluster_file, 'r') as fh:
+        for line in fh:
             if line.startswith('>'):
                 lines.append("Cluster")
             else:
-                lines.append(line)
+                lines.append(line.strip())
     #use delimit function to parse clusters into a list of lists
     sublists = delimit(lines,("Cluster",))
+
+    #retrieve the largest cluster which will be used as
+    #blast databse
+    sublists.sort(key=len, reverse=True)
+    print('\tFound {} cluster(s).'.format(len(sublists)))
+    print('\tLargest cluster contains {:,} sequences.\n'.format(len(sublists[0])))
+
+    #write largest cluster to new fasta file
+    cluster_db = "{0}_clusterDB.fasta".format(f.split('.')[0])
     
-    #get seq recs from full fasta file in dictionary format
-    gene_name = cluster_file.split('_')[0]
-    gene_dict = get_seq_dict(main_dir, cluster_dir, gene_name)
-    
-    #Now parse through the cd-hit format lines to find accession numbers, write to new fasta
-    cluster_number = int(0)
-    for cluster in sublists:
-        outfile = "{0}_Cluster_{1}.fasta".format(target,cluster_number)
-        with open(outfile, 'a') as fh_out:
-            #pull accession records from strings looking like this:
-            #0	616nt, >JN881132.1... at +/86.20%
-            #However sometimes gives odd or incomplete results like this:
-            #0	10
-            #So test if cluster has actual information before parsing info
-            for string in cluster:
-                if '>' in string and '...' in string:
-                    string1 = string.split('>')
-                    string2 = string1[1].split('...')
-                    accession = string2[0]
-                    #use SeqIO indexed fasta file to pull record and write to
-                    #cluter-number-labeled fasta file
-                    fh_out.write((gene_dict[accession]).format("fasta"))
-        shutil.move(outfile, out_dir)
-        cluster_number += 1
-        
-    #Now grab last sequences in the other outfile from cd-hit-est, write to final cluster file
-    #These should always appear in the .clstr file but there may be possible exceptions
-    #These should always be duplicates of seqs in the parsed clusters, but this is handled downstream
-    records = list(SeqIO.parse(target,'fasta'))
-    outfile = "{0}_Cluster_{1}.fasta".format(target,cluster_number)
-    with open(outfile, 'a') as fh_out:
-        for rec in records:
-            fh_out.write(">{}\n{}\n".format(rec.description, str(rec.seq)))
-    shutil.move(outfile, out_dir)
+    with open(cluster_db, 'a') as fh:
+        #access the biggest cluster, get all seqs
+        for string in sublists[0]:
+            if '>' in string and '...' in string:
+                accession = string.split('>')[1].split('...')[0]
+                #use fdict to look up accession and write record
+                fh.write((fdict[accession]).format("fasta"))
                 
-def Identify_Clusters(in_dir, main_dir):
-    '''
-    Find the total number of clusters and 
-    number of records within each cluster
-    for all loci included. Returns a list 
-    of lists, where sublists contain:
-    [cluster file name, record count]
-    '''
-    print "Gathering cluster info for all loci (this may take a while)..."
-    os.chdir(in_dir)
-    gene_set = set()
-    for f in os.listdir('.'):
-        gene_set.add(f.split('_')[0])
-    gene_list = list(gene_set)
-    gene_list.sort()
+    return cluster_db
+            
+def make_bdb(blast_db):
+    """
+    Generates call string for makeblastd and then
+    runs using sp.call() with shell option. 
+    """
+    print("\n--------------------------------------------------------------------------------------\n")
     
-    cluster_info = []
-    for gene in gene_list:
-        gene_files = []
-        for f in os.listdir('.'):
-            if f.split('_')[0] == gene:
-                with open(f, 'r') as fh_temp:
-                    rec_count = int(0)
-                    for line in fh_temp:
-                        if line.startswith('>'):
-                            rec_count += 1
-                    gene_files.append([f, rec_count])
-        gene_files.sort(key=operator.itemgetter(1), reverse=True)
-        cluster_info.append(gene_files)
-    os.chdir(main_dir)
-    return cluster_info
-
-def make_db(blast_db):
-    '''
-    Function to make a blast database from file 'blast_db'.
-    '''
     mdb_str =  "makeblastdb -in {} -dbtype nucl".format(blast_db)
-    print '\n\n', mdb_str
+    
+    print(mdb_str)
     proc = sp.call(mdb_str, shell=True)
-
-def blastn_to_db(task, blast_db, emp_fasta, outname, max_hits):
-    '''
-    Function blast a fasta file (emp_fast) to a database (blast_db) using a
-    particular blast algorithm (task) with or without a maximum number of hits (max_hits).
-    '''    
+    
+def blastn_to_db(f, blast_db, task, max_hits, threads):
+    """
+    Generates call string for blastn for file (f) using the 
+    supplied arguments. Runs using sp.call() with shell 
+    option. Returns the name of the output file generated by 
+    the program.
+    """
+    outname = "{}_blast_results.txt".format(f.split('.')[0])
+    
+    if threads is None:
+        threads = 1
+        
     if max_hits is None:
-    	blast_str = "blastn -task {0} -db {1} -query {2} -outfmt 6 > {3}".format(task, blast_db, emp_fasta, outname)
-    	print blast_str
+    	blast_str = ("blastn -task {0} -db {1} -query {2} -outfmt 6 -num_threads {3} > {4}"
+                         .format(task, blast_db, f, threads, outname))
     else:
-    	blast_str = "blastn -task {0} -db {1} -query {2} -outfmt 6 -max_target_seqs {3} > {4}".format(task, blast_db, emp_fasta, max_hits, outname)
-    	print blast_str
+    	blast_str = ("blastn -task {0} -db {1} -query {2} -outfmt 6 -max_target_seqs {3} -num_threads {4} > {5}"
+                         .format(task, blast_db, f, max_hits, threads, outname))
+        
+    print("\n\n{}\n".format(blast_str))
     proc = sp.call(blast_str, shell=True)
+    
+    return outname
+
+def get_accs_and_contents(f):
+    """
+    Extract information from blast output file (f),
+    including a list of split lines and a list of 
+    accession numbers. Returns both lists.
+    """
+    print("Parsing contents in {}...".format(f))
+    accn_set = set()
+    file_contents = []
+    
+    with open(f, 'r') as fh_in:
+        for line in fh_in:
+            parts = [l.strip() for l in line.split('\t')]
+            accn_set.add(parts[0])
+            file_contents.append(parts)
+            
+    accn_list = sorted(accn_set)
+    
+    return file_contents, accn_list
 
 def merge_coords(interval_list):
-    '''
+    """
     Takes a list of sublists where each sublist is composed of an
     interval [start integer, stop integer]. Assumes that for
     intervals the first number is lower than the second number.
@@ -397,12 +303,14 @@ def merge_coords(interval_list):
 
     Which is cleaned to create the final list:
     [ [1, 15], [20, 40] ]
-    '''
+    """
     interval_list.sort(key=lambda x: x[0])
     merged = []
+    
     for interval in interval_list:
         if not merged or merged[-1][-1] < interval[0]:
             merged.append(interval)
+            
         else:
             int_end = max(merged[-1][-1], interval[-1])
             merged[-1].append(int_end)
@@ -410,112 +318,108 @@ def merge_coords(interval_list):
     cleaned = []
     for m in merged:
         cleaned.append([m[0], m[-1]])
-
+        
     return cleaned
 
-def span_coords(coords):
-    '''
-    Check if multiple bp intervals are within 100bp of each
+def span_coords(coords, bp_bridge):
+    """
+    Check if multiple bp intervals are within X bp of each
     other, and if so, merge them and return a new list
-    of updated coordinates.
-    '''
+    of updated coordinates. X is determined by argument
+    bp_bridge, which defaults to 100 unless supplied by user.
+    """
     new_coords = []
     for i in range(0, (len(coords) - 1)):
-        if (int(coords[i+1][0]) - int(coords[i][1])) <= int(100):
+        #check if the end coordinate of the first entry is within X bp
+        #of the start coordinate of the subsequent entry
+        #if so, merge. X can be set by user (arg --bp_bridge) or default is 100.
+        if (int(coords[i+1][0]) - int(coords[i][1])) <= int(bp_bridge):
             updated = [coords[i][0],coords[i+1][1]]
             new_coords.append(updated)
+            
         else:
             new_coords.append(coords[i])
-            new_coords.append(coords[i+1])           
+            new_coords.append(coords[i+1])
+            
     new_coords.sort(key=lambda x: x[0])
     
     return new_coords
 
 def choose_coord(coords):
-    '''
+    """
     If a coordinate list has multiple non-overlapping intervals,
     find the longest interval and return the single coordinate
     set as a list.
-    '''
+    """
     diff_index = []
+    
     for i, j in enumerate(coords):
         diff = j[-1]-j[0]
-        diff_index.append([i,diff])
+        diff_index.append([i, diff])
         
     diff_index.sort(key=lambda x: x[1], reverse=True)
     selected = coords[(diff_index[0][0])]
-
+    
     return selected
 
-def one_coord_span(merged_coords):
-    '''
-    Function for finding the most sensible blast hit to use.
+def one_coord_span(merged_coords, bp_bridge):
+    """
+    Function for finding the most sensible blast coordinates to use.
     If multiple non-overlapping coordinates are present,
     will first attempt to connect intervals that are separated
-    by less than 100bp. If multiple non-overlapping coordinates
-    persist, then a long stretch (or stretches) of N's is present in the
+    by less than X bp (default 100). If multiple intervals
+    persist, then a long stretch of N's is present in the
     sequence (making it low-quality) or it resulted from
-    paralogous hits. In this case, the longest interval is
-    retained (which should represent the target locus).
-    '''
+    distinct hits from one sequence. In this case, the longest 
+    interval is retained (which should represent the target locus).
+    """
     if len(merged_coords) >= int(2):
-        spanned = span_coords(merged_coords)
+        spanned = span_coords(merged_coords, bp_bridge)
+        
         if len(spanned) >= int(2):
             spanned = merge_coords(spanned)
                            
         if len(spanned) >= int(2):
             final_coord = choose_coord(spanned)
+            
         else:
             final_coord = spanned[0]
+            
     else:
         final_coord = merged_coords[0]
         
     return final_coord
 
 def one_coord_nospan(merged_coords):
-    '''
-    Function for finding the most sensible blast hit to use.
+    """
+    Function for finding the most sensible blast coordinates to use.
     If multiple non-overlapping coordinates are present,
     then a long stretch (or stretches) of N's is present in the
     sequence (making it low-quality) or it resulted from
     paralogous hits. In this case, the longest interval is
     retained (which should represent the target locus). Skips the
     attempt to span sequences (could result in N's in final seq).
-    '''
+    """
     if len(merged_coords) >= int(2):
         final_coord = choose_coord(merged_coords)
+        
     else:
         final_coord = merged_coords[0]
-
+        
     return final_coord
 
-def get_accs_and_contents(f):
-    '''
-    Extract information from blast output file (f).
-    '''
-    print "Parsing contents in {}...\n".format(f)
-    accn_set = set()
-    file_contents = []
-    with open(f, 'r') as fh_in:
-        for line in fh_in:
-            parts = [l.strip() for l in line.split('\t')]
-            accn_set.add(parts[0])
-            file_contents.append(parts)
-    accn_list = list(accn_set)
-    accn_list.sort()
-
-    return file_contents, accn_list
-
-def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
-    '''
-    Get information from blast output file (outname).
-    '''
-    print "\n---------------------------------------------------------------------------\n"
+def parse_blastn_output6_NoSelfHits(blast_output, merge_strategy, bp_bridge):
+    """
+    Get information from blast output file based on merge_strategy
+    selected. See annotations below.
+    """
+    print("\n--------------------------------------------------------------------------------------\n")
     #extract file lines and sorted list of accession numbers from blast output file
-    file_contents, accn_list = get_accs_and_contents(outname)
+    file_contents, accn_list = get_accs_and_contents(blast_output)
     
     #create a list containing only the important info: [accn, [start1 bp, stop1 bp]]
-    #if multiple sections blasted to reference then list will look like this: [accn, [start1 bp, stop1 bp], [start2 bp, stop2 bp] ...]
+    #if multiple sections blasted to reference then list will look like this:
+    #[accn, [start1 bp, stop1 bp], [start2 bp, stop2 bp] ...]
     parsing_list = []
     #initiate counter for accns:
     count = int(0)
@@ -524,7 +428,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
         #test if number of accns processed divisible by 100, if so print number
         #ie an on-screen progress report
         if count != int(0) and count % int(100) == 0:
-        	print "\t\t\tProcessed hits for {} accessions...".format(count)
+        	print("\t\tProcessed hits for {:,} accessions...".format(count))
             
         #initiate list to store all bp coordinates found for this accn 
         coord_list = []
@@ -543,39 +447,10 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
             merged_list = merge_coords(coord_list)
 
             #Initiate list to store information for accession number:
-            #Under -m options span or nospan - [accn number, [coordinate set1]]
-            #Under -m option all - [accn number, [coordinate set1], [coordinateset2], ...]
             summary_list = [a]
-
-            #This can return single intervals like: [1,500]
-            #But can also return multiple intervals like: [[0, 445], [509, 1088]]
-
-            #Multiple intervals (non-overlapping coordinates) can result from two main reasons,
-            #including a large stretch or stretches of N's in sequence, or paralogy.
-            #If paralogy, we want to exclude paralogous intervals, but if N's, we could try
-            #to bridge those intervals if the number of N's is reasonably low and will allow
-            #for good sequence alignments downstream.
-
-            #I've come up with three strategies for dealing with multiple intervals:
-            #1) Default option (-m span) Merge intervals if they are <100 bp apart. If this still results
-            #in multiple non-overlapping intervals (separated by too many N's or from paralogous hits), then
-            #take the longest interval as the target sequence.
-
-            #2) 'Pure' option (-m nospan) For multiple non-overlapping intervals (separated by too many
-            #N's or from paralogous hits), then simply take the longest interval as the sequence. This ensures
-            #that all final sequences are free of N's.
-
-            #3) 'All' option (-m all) Keeps all intervals and writes the final sequence from these.
-            #If the non-overlapping intervals result just from stretches of N's, this will
-            #essentially strip the sequence of N's. However, if it results from paralogous hits,
-            #then the final sequence will be a composite sequence of target and paralogous sequence.
-            #Since there is no easy way to objectively check, this is risky and can result in
-            #spurious sequences. It will be visible in the log file, which lists all coordinates
-            #used to write a give sequence, and could be useful for finding duplicates or
-            #paralogy, which often results in sequences much longer than the references.
-
+            #deal with coordinate merging strategy
             if merge_strategy == "span":
-                final_coord = one_coord_span(merged_list)
+                final_coord = one_coord_span(merged_list, bp_bridge)
                 summary_list.append(final_coord)
 
             elif merge_strategy == "nospan":
@@ -588,30 +463,31 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy):
                     summary_list.append(m)
 
             parsing_list.append(summary_list)
-
-            #add to accn count
             count += 1
-    print "\n\t\tFinished retrieving blast coordinates for {} accessions.\n".format(count)
+            
+    print("\tFinished retrieving blast coordinates for {} accessions.".format(count))
     
     return parsing_list
 
-def pull_records(emp_fasta, parsing_list):
-    print "\n---------------------------------------------------------------------------\n"
-    print "Writing sequences with updated coordinates...\n"
-    #load the fasta file using the indexing function
-    #will create a dictionary with accn as keys
-    record_dict = SeqIO.index(emp_fasta, "fasta")
+def pull_records(f, fdict, parsing_list):
+    """
+    Function to write sequences to new fasta file based 
+    on the blast coordinates retrieved for those sequences.
+    """
+    print("\nWriting sequences with updated coordinates.")
+    
     #create set of accession numbers from empirical fasta
-    emp_accs = set(list(record_dict.keys()))
+    emp_accs = set(list(fdict.keys()))
     #initiate empty set to populate with accession for seqs extracted
     extracted_accs = set()
     #initiate output files
-    autoname = "{}_extracted.fasta".format(emp_fasta.split('.')[0])
-    logname = "Log_File_{}.txt".format(emp_fasta.split('.')[0])
-    badname = "Log_BadSeqs_{}.fasta".format(emp_fasta.split('.')[0])
+    autoname = "{}_extracted.fasta".format(f.split('.')[0])
+    logname = "Log_File_{}.txt".format(f.split('.')[0])
+    badname = "Log_BadSeqs_{}.fasta".format(f.split('.')[0])
     
     with open(logname, 'a') as fh_log:
         fh_log.write("Accn\tOriginal_Length\tRetained_Length\tCoordinates_Used\n")
+        
     with open(autoname, 'a') as fh_out:
         #initiate count for records sliced and written
         count = int(0)
@@ -621,9 +497,9 @@ def pull_records(emp_fasta, parsing_list):
             #test if number of accns processed divisible by 100, if so print number
             #ie an on-screen progress report
             if count != int(0) and count % int(100) == 0:
-                print "\t\t\tFinished writing {} updated records...".format(count)
+                print("\t\t\tFinished writing {:,} updated records...".format(count))
             #look up the sequence using the accn number as the dictionary key
-            fullseq = record_dict[item[0]].seq
+            fullseq = fdict[item[0]].seq
             seq_parts = []
             #iterate over parsing list where coordinate lists would start (index 1)
             #if only one list, fine, but if multiple we need to examine them to
@@ -638,9 +514,10 @@ def pull_records(emp_fasta, parsing_list):
             newseq = "".join(seq_parts)
             #write information to log file
             with open(logname, 'a') as fh_log:
-                fh_log.write("{0}\t{1}\t{2}\t{3}\n".format(item[0], len(fullseq), len(newseq), item[1:]))
+                fh_log.write("{0}\t{1}\t{2}\t{3}\n"
+                                 .format(item[0], len(fullseq), len(newseq), item[1:]))
             #write to updated fasta file
-            fh_out.write(">{}\n{}\n".format(record_dict[item[0]].description, newseq))
+            fh_out.write(">{}\n{}\n".format(fdict[item[0]].description, newseq))
             #add to counter
             count += 1
     #write file of sequences that failed
@@ -648,129 +525,132 @@ def pull_records(emp_fasta, parsing_list):
     if len(badseqs) >= 1:
         with open(badname, 'a') as fh_out:
             for acc in badseqs:
-                fh_out.write(">{}\n{}\n".format(record_dict[acc].description, (record_dict[acc].seq)))
-                                 
-    print "\n\t\tWrote a total of {0} sequences to {1}.".format(count, autoname)
-    if len(badseqs) >= 1:
-        print "\t\t{0} starting sequence(s) did not pass orthology filtering and are written to {1}.".format(len(badseqs), badname)
-    elif len(badseqs) == int(0):
-        print "\t\tAll starting sequences passed orthology filtering!"
+                fh_out.write(">{}\n{}\n".format(fdict[acc].description, (fdict[acc].seq)))
 
+    print("\tWrote a total of {0:,} sequences to {1}.".format(count, autoname))
     
-def Cluster_Blast(in_dir, cluster_info, blast_dir, fasta_list, main_dir, trim_dir, task, max_hits, merge_strategy):
-    '''
-    Function to run blast and extraction for each locus after clusters have been created.
-    '''
-    #move in to parsing directory
-    os.chdir(in_dir)
-    #iterate over gene sublists
-    for gene_group in cluster_info:
-        tb = datetime.now()
-        #get gene name by splitting first cluster file name
-        gene_name = split_name(gene_group[0][0], 0, '_')
-        print '\n\n\n--------------------------------------------------------------'
-        print "Processing clusters for {}".format(gene_name)
-        print '--------------------------------------------------------------'
+    if len(badseqs) >= 1:
+        print("\n{0:,} starting sequence(s) did not pass orthology filtering and are written to {1}."
+                  .format(len(badseqs), badname))
         
-        #make blast database
-        #this will come from the largest size cluster file (presumably with actual gene sequences)
-        reference = gene_group[0][0]
-        make_db(reference)
+    elif len(badseqs) == int(0):
+        print("\nAll starting sequences passed filtering!")
 
-        #iterate over all gene cluster files and blast to ref
-        for cluster_file_list in gene_group:
-            outname = cluster_file_list[0].split('.')[0]+"_blast_results.txt"
-            blastn_to_db(task, reference, cluster_file_list[0], outname, max_hits)
 
-        #combine blast results into single file for easier writing of new fasta
-        merged_blast = "{}_blast_results_merged.txt".format(gene_name)
-        with open(merged_blast, 'a') as fh_blast:
-            for f in os.listdir('.'):
-                if f.startswith(gene_name) and f.endswith("_blast_results.txt"):
-                    with open(f, 'r') as fh_temp:
-                        for line in fh_temp:
-                            fh_blast.write(line)
-
-        #parse blast results
-        parsing_list = parse_blastn_output6_NoSelfHits(merged_blast, merge_strategy)
-
-        #cleanup blast results
-        for f in os.listdir('.'):
-            if f.endswith("_blast_results_merged.txt") or f.endswith("_blast_results.txt") or f.endswith(".nhr") or f.endswith(".nin") or f.endswith(".nsq"):
-                shutil.move(f, blast_dir)
-
-        #locate the name of the original gene fasta file
-        for f in fasta_list:
-            if f.split('.')[0] == gene_name:
-                emp_fasta = f
-                
-        if parsing_list:
-            #move to main directory and write sequences (based on coordinates) to fasta file
-            os.chdir(main_dir)
-            pull_records(emp_fasta, parsing_list)
-
-            #move outputs to trimmed directory
-            for f in os.listdir('.'):
-                if f.endswith("_extracted.fasta") or f.startswith("Log_File_") or f.startswith("Log_BadSeqs_"):
-                    shutil.move(f, trim_dir)
-
-            #move back to parsing directory
-            os.chdir(in_dir)
-
-        #show elapsed time
-        tf = datetime.now()
-        te = tf - tb
-        print "\n---------------------------------------------------------------------------\n"
-        print "Total time to process {0}: {1} (H:M:S)\n\n".format(gene_name,te)
-
+def make_dirs(outdir):
+    """
+    Creates directory path names and makes output directories.
+    Returns directory paths, which are used to move around  
+    output files during cleanup steps.
+    """
+    os.chdir(outdir)
+    #get current path
+    curpath = os.getcwd()
+            
+    #create paths using os.path.join() to avoid any issues
+    clustdir = os.path.join(curpath, "Clustering-Output-Files")
+    if not os.path.exists(clustdir):
+        os.mkdir(clustdir)
         
-#-----------------------------------------------------------------------------------------
+    blastdir = os.path.join(curpath, "Blast-Output-Files")
+    if not os.path.exists(blastdir):
+        os.mkdir(blastdir)
+        
+    logdir = os.path.join(curpath, "Blast-Trimming-Log-Files")
+    if not os.path.exists(logdir):
+        os.mkdir(logdir)
+        
+    fdir = os.path.join(curpath, "Filtered-Fasta-Files")
+    if not os.path.exists(fdir):
+        os.mkdir(fdir)
+
+    return clustdir, blastdir, logdir, fdir
+
+def cleanup(cluster_outs, clustdir, blastdir, logdir, fdir):
+    """
+    Moves relevant output files to their output directories. 
+    """
+    print("\n\nCleaning up output files...")
+
+    [shutil.move(f, clustdir) for f in cluster_outs]
+    [shutil.move(f, logdir) for f in os.listdir('.') if f.startswith(("Log_File", "Log_BadSeqs"))]
+    [shutil.move(f, blastdir) for f in os.listdir('.') if f.endswith("blast_results.txt")]
+    [os.remove(f) for f in os.listdir('.') if os.stat(f).st_size == 0 and f.endswith("_extracted.fasta")]
+    [shutil.move(f, fdir) for f in os.listdir('.') if f.endswith("_extracted.fasta")]
+    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin"))]
+    
+    print("\tDone!\n")
+
+
+def cbe_runner(f, blast_task, max_hits, merge_strategy,
+                   threads, bp_bridge, clustdir, blastdir, logdir, fdir):
+    """
+    Function to run the major steps for a particular file (f).
+    This includes:
+    1) load the sequences to memory in dictionary
+       format using biopython
+    2) cluster sequences using cd-hit-est with
+       the cluster() function
+    3) parse the clusters to identify the largest cluster
+       using the parse_clusters() function
+    4) create a blast database from the largest cluster 
+       using the make_bdb() function
+    5) blast all sequences to the database using the
+       blastn_to_db() function
+    6) obtain blast coordinates for all sequences with hits
+       using the parse_blastn_output6_NoSelfHits() function
+    7) write the filtered sequences to a new fasta (using their coordinates)
+       with the pull_records() function
+    8) clean up temporary files, moving all outputs to relevant
+       output directories using the cleanup() function
+    """
+    b = datetime.now()
+    print("\n\n======================================================================================")
+    print("\nProcessing fasta file: {}\n".format(f))
+    print("======================================================================================\n\n")
+    
+    fdict = SeqIO.index(f, "fasta")
+    
+    cluster_file = cluster(f)
+    
+    cluster_db = parse_clusters(f, cluster_file, fdict)
+    
+    make_bdb(cluster_db)
+    
+    blast_output = blastn_to_db(f, cluster_db, blast_task, max_hits, threads)
+    
+    parsing_list = parse_blastn_output6_NoSelfHits(blast_output, merge_strategy, bp_bridge)
+    
+    if parsing_list:
+        pull_records(f, fdict, parsing_list)
+
+    cluster_outs = [cluster_file, cluster_db, cluster_file.replace(".clstr", "")]
+    
+    cleanup(cluster_outs, clustdir, blastdir, logdir, fdir)
+    
+    f = datetime.now()
+    e = f - b
+    print("\nElapsed time: {0} (H:M:S)\n\n\n".format(e))
+    
 
 def main():
     args = get_args()
     tb = datetime.now()
+
+    clustdir, blastdir, logdir, fdir = make_dirs(args.outdir)
+    
     os.chdir(args.in_dir)
+    fastas = sorted([f for f in os.listdir('.') if f.endswith((".fa", ".fasta"))])
 
-    cluster_dir = make_nested_dir(args.in_dir, '01_Clustering_Results')
-    fasta_list = find_files_diff_dir(args.in_dir, args.in_dir, '.fasta')
-    
-    print '\n\n\n=====================================================\n'
-    print "Performing cd-hit-est to cluster sequences\n"
-    print '=====================================================\n\n'
-    for f in fasta_list:
-        Cluster(f, cluster_dir)
+    for f in fastas:
+        cbe_runner(f, args.blast_task, args.max_hits, args.merge_strategy,
+                       args.threads, args.bp_bridge, clustdir, blastdir, logdir, fdir)
 
-    parse_dir = make_nested_dir(args.in_dir, '02_Parsed_Results')
-    cluster_list = find_files_diff_dir(args.in_dir, cluster_dir, '.clstr')
-    
-    print '\n\n\n======================================================\n'
-    print "Parsing results and writing clustered fasta files\n"
-    print '======================================================\n\n'
-    for f in cluster_list:
-        Parse_Clusters(cluster_dir, f, parse_dir, args.in_dir)
-    os.chdir(args.in_dir)
-
-    cluster_info = Identify_Clusters(parse_dir, args.in_dir)
-    # [Gene1 [cluster file name, record count],[cluster file name, record count] ], [Gene 2 [cluster file name, record count],[cluster file name, record count] ]
-    print '\n\n\n====================================================\n'
-    print "Summary of clusters generated for all loci\n"
-    print '======================================================\n\n'
-
-    for c in cluster_info:
-        print "\n{} Clusters:".format(c[0][0].split('_')[0])
-        for d in c:
-            print "{0} sequences in {1}".format(d[1],d[0])
-    
-    blast_dir = make_nested_dir(args.in_dir, '03_Blast_Results')
-    trim_dir = make_nested_dir(args.in_dir, '04_Trimmed_Results')
-    print '\n\n\n====================================================\n'
-    print "Performing blasting, merging, and sequence extraction\n"
-    print '======================================================\n\n'
-    Cluster_Blast(parse_dir, cluster_info, blast_dir, fasta_list, args.in_dir, trim_dir, args.blast_task,args.max_hits,args.merge_strategy)
-    
     tf = datetime.now()
     te = tf - tb
-    print "\n\nTotal time to completion: {0} (H:M:S)\n\n".format(te)
+    print("\n\n--------------------------------------------------------------------------------------")
+    print("\nFinished. Total elapsed time: {0} (H:M:S)\n".format(te))
+    print("--------------------------------------------------------------------------------------\n\n")
     
 if __name__ == '__main__':
     main()

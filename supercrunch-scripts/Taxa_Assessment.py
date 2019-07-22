@@ -1,28 +1,19 @@
 '''
 SuperCRUNCH: Taxa_Assessment module
 
-Usage: python Taxa_Assessment.py -i [fasta file] REQUIRED
-                                 -t [text file with taxon names to cross-reference] REQUIRED
-                                 -o [path to output directory] REQUIRED
-                                 --no_subspecies (OPTIONAL flag, excludes subspecies names from searches)
-                            
-    Taxa_Assessment: The goal of this script is to examine a large fasta file of sequences downloaded from
-    GenBank and examine taxon names in the decription line of sequence records to see if
-    they match those from a taxonomic database. Taxon names can contain a mix of species (binomial name) 
-    and subspecies (trinomial name) labels. The user supplies a text file containing a
-    list of taxon names to cross-reference. All taxon names are converted to uppercase for
-    searching, as well as the description line of each record that is searched, so taxon
-    names are NOT case-sensitive. If records with valid subspecies names should not be included, 
-    use the --no_subspecies flag. If this flag is used, only the genus and species will be included
-    from the taxon names database, and only the genus and species will be searched in the sequence
-    records, effectively ignoring subspecies labeling while still capturing the record.
-    Two output fasta files are produced, one containing only
-    records with taxon names present in the database, and one containing only records which
-    contain non-matched taxon names. These fasta files are written to the output directory
-    specified. A log file summarizing the matched and unmatched taxon names is also written
-    to the output directory, and are called 'Matched_Taxon_Names.log' and
-    'Unmatched_Taxon_Names.log'. The unmatched file can form the basis of the file needed
-    to rename or correct the taxon ID of these entries in subsequent scripts.
+    Taxa_Assessment: The goal of this script is to examine a large fasta file of 
+    sequences to see if name labels in the decription line of sequence records can be
+    matched those from a taxonomic database. Taxon names can contain a mix of species 
+    (binomial name) and subspecies (trinomial name) labels. Note that 'subspecies' refers 
+    to a three part name, where the third part can be an actual subspecies label or a 
+    unique identifier (such as fied/museum code, or alpha-numerical code). The user supplies 
+    a text file containing a list of taxon names to cross-reference. The taxon names in
+    the supplied database and the description lines are pre-processed before searches and 
+    as a result are NOT case-sensitive. If records with valid 'subspecies' (three part) names 
+    should not be included, use the --no_subspecies flag. If this flag is used, only the 
+    genus and species will be included from the taxon names database, and only the genus 
+    and species will be searched in the sequence records. Output files are written to the 
+    output directory specified.
 
 [-t] The input taxon name file should simply contain a list of taxon names, one each line. 
     For all names the genus and species (and subspecies, if present) should separated by a space.
@@ -57,9 +48,9 @@ Usage: python Taxa_Assessment.py -i [fasta file] REQUIRED
      to a binomial name, so all subspecies would be considered a single species. 
     
  -------------------------
-For Python 2.7
-Python modules required:
-	-BioPython (using SeqIO module)
+Compatible with Python 2.7 & 3.7
+Python packages required:
+	-BioPython
 	-NumPy 
 -------------------------
 
@@ -75,296 +66,373 @@ import sys
 import os
 import argparse
 import time
+import sqlite3
 import numpy as np
 from Bio import SeqIO
 from datetime import datetime
 
 def get_args():
-    """Get arguments from CLI"""
+    """
+    Get arguments from command line.
+    """
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
-    Taxa_Assessment: The goal of this script is to examine a large fasta file of sequences downloaded from
-    GenBank and examine taxon names in the decription line of sequence records to see if
-    they match those from a taxonomic database. Taxon names can contain a mix of species (binomial name) 
-    and subspecies (trinomial name) labels. The user supplies a text file containing a
-    list of taxon names to cross-reference. All taxon names are converted to uppercase for
-    searching, as well as the description line of each record that is searched, so taxon
-    names are NOT case-sensitive. If records with valid subspecies names should not be included, 
-    use the --no_subspecies flag. If this flag is used, only the genus and species will be included
-    from the taxon names database, and only the genus and species will be searched in the sequence
-    records, effectively ignoring subspecies labeling while still capturing the record.
-    Two output fasta files are produced, one containing only
-    records with taxon names present in the database, and one containing only records which
-    contain non-matched taxon names. These fasta files are written to the output directory
-    specified. A log file summarizing the matched and unmatched taxon names is also written
-    to the output directory, and are called 'Matched_Taxon_Names.log' and
-    'Unmatched_Taxon_Names.log'. The unmatched file can form the basis of the file needed
-    to rename or correct the taxon ID of these entries in subsequent scripts.
+    Taxa_Assessment: The goal of this script is to examine a large fasta file of 
+    sequences to see if name labels in the decription line of sequence records can be
+    matched those from a taxonomic database. Taxon names can contain a mix of species 
+    (binomial name) and subspecies (trinomial name) labels. Note that 'subspecies' refers 
+    to a three part name, where the third part can be an actual subspecies label or a 
+    unique identifier (such as fied/museum code, or alpha-numerical code). The user supplies 
+    a text file containing a list of taxon names to cross-reference. The taxon names in
+    the supplied database and the description lines are pre-processed before searches and 
+    as a result are NOT case-sensitive. If records with valid 'subspecies' (three part) names 
+    should not be included, use the --no_subspecies flag. If this flag is used, only the 
+    genus and species will be included from the taxon names database, and only the genus 
+    and species will be searched in the sequence records. Output files are written to the 
+    output directory specified.
 
-    [-t] The input taxon name file should simply contain a list of taxon names, one each line. 
-    For all names the genus and species (and subspecies, if present) should separated by a space.
-    All taxon names are converted to uppercase for searching, so names are NOT case-sensitive.
-
-    DEPENDENCIES: Python: BioPython.
+    DEPENDENCIES: Python: BioPython, sqlite3.
 	---------------------------------------------------------------------------""")
-    parser.add_argument("-i", "--input", required=True, help="REQUIRED: The full path to a fasta file of GenBank sequence data")
-    parser.add_argument("-t", "--taxa", required=True, help="REQUIRED: The full path to a text file containing all taxon names to cross-reference in the fasta file.")
-    parser.add_argument("-o", "--out_dir", required=True, help="REQUIRED: The full path to an existing directory to write output files.")
-    parser.add_argument("--no_subspecies", required=False, action='store_true', help="OPTIONAL: Ignore any subspecies labels in both the name database and record searches (only search binomial names).")
+    
+    parser.add_argument("-i", "--input",
+                            required=True,
+                            help="REQUIRED: The full path to a fasta file of "
+                            " sequence data.")
+    
+    parser.add_argument("-t", "--taxa",
+                            required=True,
+                            help="REQUIRED: The full path to a text file containing "
+                            "all taxon names to cross-reference in the fasta file.")
+    
+    parser.add_argument("-o", "--outdir",
+                            required=True,
+                            help="REQUIRED: The full path to an existing directory to "
+                            "write output files.")
+    
+    parser.add_argument("--no_subspecies",
+                            required=False,
+                            action='store_true',
+                            help="OPTIONAL: Ignore any subspecies labels in both the name "
+                            "database and record searches (only search binomial names).")
+    
+    parser.add_argument("--sql_db",
+                            required=False,
+                            help="OPTIONAL: The full path to the sql database to use "
+                            "for searches. Assumes the database was created with "
+                            "this module for the input fasta file being used.")
+    
     return parser.parse_args()
 
-def index_fasta(f):
-    '''
-    Use SeqIO index function to load fasta file, which
-    is the best option for massive files.
-    '''
-    tb = datetime.now()
-    print "\nIndexing fasta file, this could take some time..."
-    record_index = SeqIO.index(f, "fasta")
-    tf = datetime.now()
-    te = tf - tb
-    print "\tTotal time to index fasta file: {0} (H:M:S)\n\n".format(te)
-
-    return record_index
-
-def parse_taxa(f, no_subspecies):
-    '''
+def parse_taxa(f):
+    """
     Retrieve taxon names from user supplied taxon names file (f).
-    Will load species and subspecies names, and account for 
+    Will find species and subspecies names, and account for 
     species names that are only represented in subspecies labels.
-    Summarizes number of each depending on whether subspecies
-    are included or excluded, and regardless will return separate 
-    lists for species and subspecies, with all names in uppercase.
-    '''
-    print "\nParsing taxon information from {}.".format(f)
-    with open(f, 'r') as fh_f:
-        species_set = set([line.upper().strip() for line in fh_f if len(line.split()) == int(2)])
-    with open(f, 'r') as fh_f:
-        subspecies_set = set([line.upper().strip() for line in fh_f if len(line.split()) == int(3)])
-    #sometimes a species (binomial) isn't present alone and is only in subspecies (trinomial) names
-    #extract the binomial from the trinomials and add to species set
-    nominate_form = set([" ".join(x.split()[0:2]) for x in subspecies_set])
-    species_set.update(nominate_form)
+    Summarizes number of each and will return separate lists 
+    for species and subspecies, with all names in uppercase.
+    """
+    fname = f.split('/')[-1]
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Parsing taxon information from: '{}'".format(fname))
+    
+    with open(f, 'r') as fh:
+        species_set = set([line.upper().strip() for line in fh
+                               if len(line.split()) == int(2)])
+        
+    with open(f, 'r') as fh:
+        subspecies_set = set([line.upper().strip() for line in fh
+                                  if len(line.split()) == int(3)])
+        
+    #Sometimes a species (binomial) isn't actually present
+    #and is only contained in a subspecies (trinomial) name.
+    #Just in case, extract the binomial from the trinomial
+    #name and add to species set.
+    nominates = set([" ".join(x.split()[0:2]) for x in subspecies_set])
+    species_set.update(nominates)
+    
     #convert sets to sorted lists, return
     species = sorted(species_set)
     subspecies = sorted(subspecies_set)
-    if no_subspecies is False:
-        print "\tFound {} species names and {} subspecies names.\n".format(len(species), len(subspecies))
-    elif no_subspecies is True:
-        print "\tFound {} species names.\n".format(len(species))
+    
+    print("\tFound {:,} species names and {:,} subspecies names."
+                  .format(len(species), len(subspecies)))
+        
     return species, subspecies
 
-def taxon_match_sp(taxon_sp,species):
-    '''
-    Simple function to check if the species (binomial) name
-    is present in the species (binomial) list obtained from
-    the taxon file. Both will be supplied as uppercase. 
-    Returns True or False.
-    '''
-    match = False
-    if taxon_sp in species:
-        match = True
-    return match
 
-def taxon_match_ssp(taxon_ssp,subspecies):
-    '''
-    Simple function to check if the subspecies (trinomial) name
-    is present in the subspecies (trinomial) list obtained from
-    the taxon file. Both will be supplied as uppercase.
-    Returns True or False.
-    '''
-    match = False
-    if taxon_ssp in subspecies:
-        match = True
-    return match
+def test_name(name_list, name_parts, test):
+    """
+    Construct a name from a list containing several
+    strings (name_parts), and if option 'test' is desired 
+    check if that constructed name is present in a list (name_list).
+    """
+    if name_parts:
+        joined = " ".join(name_parts)
+        if test is True:
+            if joined in name_list:
+                name = joined
+            else:
+                name = "NA"
+        else:
+            name = joined
+    else:
+        name = "NA"
 
-def get_taxon(line):
-    '''
-    Retrieve the taxon name from '>' line in a fasta file.
-    Will fetch the species (binomial) and subspecies (trinomial)
-    names and return both. Input line was converted to uppercase,
-    so names are also in uppercase.
-    '''
-    parts1 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(3)][1:3]
-    taxon_sp = " ".join(parts1)
-    parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split() if line.split() >= int(4)][1:4]
-    taxon_ssp = " ".join(parts2)
-    return taxon_sp, taxon_ssp
+    return name
 
-def get_accession(line):
-    '''
-    Retrieve the accession number from '>' line in a fasta file.
-    '''
-    acc = [l.strip('>') for l in line.split()][0]
-    return acc
+def parse_fasta_record(line, species, subspecies):
+    """
+    Deconstruct a record line from a fasta file into
+    several elements which will be added to the SQL
+    database. Returns an accession number, species label,
+    and subspecies label.Name labels are constructed 
+    based on several arguments.
+    """
+    #get accession number from line
+    accession = [l.strip('>') for l in line.split()][0]
 
-def search_fasta(f, species, subspecies, no_subspecies):
-    '''
-    Find taxa in the fasta file based on the taxon file supplied,
-    and whether subspecies are desired. Reads line by line through
-    fasta, and when a line starting with '>' is found it obtains
-    the accession number and attempts to construct a species and 
-    subspecies name. If these names match one in the species or 
-    subspecies lists created from the taxon file, then the name
-    is saved as matched and the accession is added to a matched 
-    list. Conversely, if the names do not match the name
-    is saved as unmatched and the accession is added to an 
-    unmatched accession list. The matched and unmatched taxon
-    name lists and accession lists are returned.
-    '''
-    acc_match = set()
-    acc_unmatch = set()
-    tax_match = set()
-    tax_unmatch = set()
+    #convert line to uppercase for other strings
+    line = line.upper()
     
-    tb = datetime.now()
-    with open(f, 'r') as fh_fasta:
-        print "Search progress:"
-        lcnt = int(0)
-        for line in fh_fasta:
-            lcnt += 1
-            if lcnt % 100000 == 0:
-                print "\tLine {}...".format(lcnt)
-            if line.startswith('>'):
-                if '|' in line:
-                    line.replace("|"," ")
-                acc = get_accession(line)
-                uline = line.upper().strip()
-                taxon_sp, taxon_ssp = get_taxon(uline)
-                #Statement for testing if species and subspecies names
-                #occur in the line. This should handle all cases correctly.
-                #First set of statements are when subspecies are desired:
-                if no_subspecies is False:
-                    if taxon_match_sp(taxon_sp,species) is True:
-                        if taxon_match_ssp(taxon_ssp,subspecies) is True:
-                            acc_match.add(acc)
-                            tax_match.add(taxon_ssp.capitalize())
-                            #print "{} found in species and {} found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize()) 
-                        else:
-                            acc_match.add(acc)
-                            tax_match.add(taxon_sp.capitalize())
-                            #print "{} found in species but {} NOT found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize()) 
-                    elif taxon_match_sp(taxon_sp,species) is False:
-                        if taxon_match_ssp(taxon_ssp,subspecies) is True:
-                            acc_match.add(acc)
-                            tax_match.add(taxon_ssp.capitalize())
-                            #print "{} NOT found in species but {} found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize())
-                        else:
-                            acc_unmatch.add(acc)
-                            tax_unmatch.add(taxon_sp.capitalize())
-                            #print "{} NOT found in species and {} NOT found in subspecies".format(taxon_sp.capitalize(),taxon_ssp.capitalize())
-                #Second set of statements are when subspecies are NOT desired
-                if no_subspecies is True:
-                    if taxon_match_sp(taxon_sp,species) is True:
-                        acc_match.add(acc)
-                        tax_match.add(taxon_sp.capitalize())
-                        #print "{} found in species".format(taxon_sp.capitalize()) 
-                    elif taxon_match_sp(taxon_sp,species) is False:
-                        acc_unmatch.add(acc)
-                        tax_unmatch.add(taxon_sp.capitalize())
-                        #print "{} NOT found in species".format(taxon_sp.capitalize())
-    tf = datetime.now()
-    te = tf - tb
-    print "Total time to search taxon names in fasta file: {0} (H:M:S)\n\n".format(te)
-                
-    return acc_match, acc_unmatch, tax_match, tax_unmatch
-                        
-def write_log(in_set,fname):
-    '''
-    Function to write either a list of taxon names or
-    list of accession numbers (in_set) to an appropriately
-    named file (fname).
-    '''
-    print "Writing results to {}\n".format(fname)
-    slist = sorted(in_set)
-    with open(fname, 'a') as fh_out:
-        for i in slist:
-            fh_out.write("{}\n".format(i))
-
-def read_accs(f):
-    '''
-    Function to convert file containing 
-    only pure accession numbers to a set.
-    Returns the set.
-    '''
-    new_set = set()
-    with open(f, 'r') as fh_in:
-        for line in fh_in:
-            if "|" not in line:
-                new_set.add(line.strip())
-    return new_set
+    #get the 'species' name - first two strings following
+    #the accession number
+    sp_parts = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split()
+                  if len(line.split()) >= int(3)][1:3]
+    #construct name and test if it is in the taxon list (species),
+    #generates actual name or "NA"
+    sp_name = test_name(species, sp_parts, False)
+    
+    #get the 'subspecies' name - first three strings following
+    #the accession number
+    ssp_parts = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.split()
+                      if len(line.split()) >= int(4)][1:4]
+    #construct name and test if it is in the taxon list (subspecies),
+    #generates actual name or "NA"
+    ssp_name = test_name(subspecies, ssp_parts, False)
         
-def write_fasta(in_set,prefix,record_index):
-    '''
-    Will write a fasta file (named by 'prefix') with
-    all the accession numbers containing in 'in_set'
-    using an indexed dictionary structure (record_index)
-    from a larger fasta file containing all these accession 
-    numbers and more. Tracks progress.
-    '''
-    fasta = "{}.fasta".format(prefix)
-    print "Writing sequence records to {}".format(fasta)
+    return accession, sp_name, ssp_name
+
+def build_sql_db(f, species, subspecies):
+    """
+    Add the entire contents of this fasta file (f)
+    to the SQL database.
+    """
+    curpath = os.getcwd()
+    db = os.path.join(curpath, "Filter-Seqs.sql.db")
+    b = datetime.now()
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Building SQL database: {}".format(db))
+    if os.path.exists(db):
+        os.remove(db)
+        
+    conn = sqlite3.connect(db)
+    cur = conn.cursor()
+    
+    cur.execute("DROP TABLE IF EXISTS records;")
+    cur.execute("""CREATE TABLE records (
+        accession text NOT NULL,
+        spname text NOT NULL,
+        sspname text NOT NULL)""")
+    #cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    cur = conn.cursor()
+    sql_add_records = "INSERT INTO records VALUES (?, ?, ?)"
+
+    prefix = f.split('.')[0]
+    print("\tAdding {} to SQL database...".format(prefix))
+
+    lcnt = int(0)
+    with open(f, 'r') as fh:
+        for line in fh:
+            if line.startswith('>'):
+                lcnt += 1
+                if lcnt % 5000 == 0:
+                    print("\tAdded {:,} records...".format(lcnt))
+                acc, sp, ssp = parse_fasta_record(line, species, subspecies)
+                cur.execute(sql_add_records, (acc, sp, ssp))
+                
+    f = datetime.now()
+    e = f - b
+    print("\nTotal time to build SQL database: {0} (H:M:S)\n".format(e))
+    
+    conn.commit()
+    conn.close()
+
+    return db
+
+def run_query(cur, whichname, qseq, qlist):
+    
+    acc_set, name_set = set(), set()
+    
+    if whichname == "spname":
+        sql_query = "SELECT * FROM records WHERE spname IN ({0})".format(qseq)
+        cur.execute(sql_query, qlist)
+        results = cur.fetchall()
+        [acc_set.add(r['accession']) for r in results]
+        [name_set.add(r['spname']) for r in results]
+        
+    elif whichname == "sspname":
+        cur.execute("SELECT * FROM records WHERE sspname IN ({0})'".format(qseq))
+        cur.execute(sql_query, qlist)
+        results = cur.fetchall()
+        [acc_set.add(r['accession']) for r in results]
+        [name_set.add(r['sspname']) for r in results]
+
+    return acc_set, name_set
+
+
+def match_taxa(db, species, subspecies, no_subspecies):
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Beginning taxon name matching.")
+    conn = sqlite3.connect(db)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    set_accs, setsp, setssp = set(), set(), set()
+    
+    spseq = ','.join(['?']*len(species))
+    sspseq = ','.join(['?']*len(subspecies))
+
+    print("Starting SQL queries...")
+    namecount = int(0)
+    if no_subspecies:
+        accs, spnames = run_query(cur, "spname", spseq, species)
+        set_accs.update(accs)
+        setsp.update(spnames)
+    
+    else:
+        print("\tSearching for species names...")
+        accs, spnames = run_query(cur, "spname", spseq, species)
+        #print(accs)
+        #print(names)
+        set_accs.update(accs)
+        setsp.update(spnames)
+
+        print("\tSearching for subspecies names...")
+        if subspecies:
+            accs, sspnames = run_query(cur, "sspname", sspseq, subspecies)
+            set_accs.update(accs)
+            setssp.update(sspnames)
+
+    matched_accs = sorted(set_accs)
+    matched_spnames = sorted(setsp)
+    matched_sspnames = sorted(setssp)
+
+    print("\n\n\tFound {:,} sequences with matched taxon names.".format(len(matched_accs)))
+    print("\tFound {:,} matched species (binomial) names.".format(len(matched_spnames)))
+    print("\tFound {:,} matched subspecies (trinomial) names.".format(len(matched_sspnames)))
+    
+    conn.close()
+
+    return matched_accs, matched_spnames, matched_sspnames
+
+def get_unmatched_accs_names(db, matched_accs):
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Gathering records with unmatched names.\n")
+    print("\tStarting SQL query...")
+    conn = sqlite3.connect(db)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    badaccs, badsp, badssp = set(), set(), set()
+    
+    accseq = ','.join(['?']*len(matched_accs))
+    sql_query = ("SELECT * FROM records WHERE accession NOT IN ({0})".format(accseq))
+    cur.execute(sql_query, matched_accs)
+    
+    results = cur.fetchall()
+    [badaccs.add(r['accession']) for r in results]
+    [badsp.add(r['spname']) for r in results]
+    [badssp.add(r['sspname']) for r in results]
+        
+    print("\tFinished query. Gathering sequences...")
+    numerical = True
+    unmatched_accs = sorted(badaccs)
+    unmatched_spnames = sorted(badsp)
+    unmatched_sspnames = sorted(badssp)
+    
+    print("\n\tFound {:,} sequences with an unmatched taxon name.".format(len(unmatched_accs)))
+    print("\tFound {:,} unmatched two-part names.".format(len(unmatched_spnames)))
+    print("\tFound {:,} unmatched three-part names.".format(len(unmatched_sspnames)))
+    print("\n--------------------------------------------------------------------------------------\n")
+    
+    conn.close()
+    
+    return unmatched_accs, unmatched_spnames, unmatched_sspnames
+
+def write_log(inlist, outname, namecase):
+    if namecase:
+        with open(outname, 'a') as fh:
+            for x in inlist:
+                fh.write("{}\n".format(x.capitalize()))
+    else:
+        with open(outname, 'a') as fh:
+            for x in inlist:
+                fh.write("{}\n".format(x))
+
+def index_fasta(f):
+    """
+    Use SeqIO index function to load fasta file, which
+    is the best option for massive files.
+    """
     tb = datetime.now()
-    slist = sorted(in_set)
-    upper = find_upper(len(slist))
-    acnt = int(0)
-    with open(fasta, 'a') as fh_out:
-        for a in slist:
-            acnt += 1
-            interval = upper // 50
-            if acnt % interval == 0:
-                print "\t{} records written...".format(acnt)
-            #reduce line counts with this output format
-            fh_out.write(">{0}\n{1}\n".format(record_index[a].description,record_index[a].seq))
-            #vs this format from SeqIO
-            #fh_out.write((record_index[a]).format("fasta"))
-    print "Wrote {0} records to {1}".format(len(in_set),fasta)
+    print("\nIndexing fasta file: {}".format(f.split('/')[-1]))
+    print("\tThis could take some time...")
+    records = SeqIO.index(f, "fasta")
     tf = datetime.now()
     te = tf - tb
-    print "\tTotal time to write fasta file: {0} (H:M:S)\n\n".format(te)
-    
-def find_upper(count):
-    '''
-    Find where a number fits in a distribution. Will find 
-    when the number is exceeded by a value in the distribution
-    and returns that value. Needed for tracking progress on
-    big lists (file lines, accession numbers, etc).
-    '''
-    vala = np.array([100,1000,10000])
-    valb = np.arange(100000,1000000000,100000)
-    vals = np.append(vala,valb)
-    for i in vals:
-        if count <= i:
-            upper = i
-            break
-    return upper
+    print("\tTotal time to index fasta file: {0} (H:M:S)\n\n".format(te))
 
+    return records
+    
+def write_fasta(records, acclist, outname):
+    tb = datetime.now()
+    print("\tWriting {:,} sequence records to {}...".format(len(acclist), outname))
+    with open(outname, 'a') as fh:
+        for a in acclist:
+            fh.write((records[a]).format("fasta"))
+    tf = datetime.now()
+    te = tf - tb
+    print("\t\tElapsed time: {0} (H:M:S)\n\n".format(te))
+    
 def main():
     args = get_args()
     tb = datetime.now()
-    species, subspecies = parse_taxa(args.taxa, args.no_subspecies)
-    #get list of accession numbers and names for records that match and do not match
-    #a name in the user-supplied taxon file (converted to lists above)
-    acc_match, acc_unmatch, tax_match, tax_unmatch = search_fasta(args.input, species, subspecies, args.no_subspecies)
-    #prepare to write log files
-    results = [[tax_match,"Matched_Records_Taxon_Names.log"],
-               [tax_unmatch,"Unmatched_Records_Taxon_Names.log"],
-               [acc_match,"Matched_Records_Accession_Numbers.log"],
-               [acc_unmatch,"Unmatched_Records_Accession_Numbers.log"]]
-    os.chdir(args.out_dir)
-    for r in results:
-        write_log(r[0],r[1])
-    #read accession numbers from log files
-    filtered_acc_match = read_accs(results[2][1])
-    filtered_acc_unmatch = read_accs(results[3][1])
-    #write new fasta files with matched or unmatched names using above accession lists
-    record_index = index_fasta(args.input)    
-    write_fasta(filtered_acc_unmatch,"Unmatched_Taxa",record_index)
-    write_fasta(filtered_acc_match,"Matched_Taxa",record_index)
+    
+    os.chdir(args.outdir)
+    
+    species, subspecies = parse_taxa(args.taxa)
+    
+    if not args.sql_db:
+        db = build_sql_db(args.input, species, subspecies)
+    else:
+        db = args.sql_db
+        print("\n--------------------------------------------------------------------------------------\n")
+        print("Using SQL database provided: {}\n".format(db.split('/')[-1]))    
+    
+    matched_accs, matched_spnames, matched_sspnames =  match_taxa(db, species, subspecies, args.no_subspecies)
+    allmatchednames = sorted(matched_spnames + matched_sspnames)
+    
+    unmatched_accs, unmatched_spnames, unmatched_sspnames = get_unmatched_accs_names(db, matched_accs)
+    
+    write_log(matched_accs, "Matched_Records_Accession_Numbers.log", False)
+    write_log(unmatched_accs, "Unmatched_Records_Accession_Numbers.log", False)
+    write_log(allmatchednames, "Matched_Records_Taxon_Names.log", True)
+    write_log(unmatched_spnames, "Unmatched_Records_Species_Names.log", True)
+    if args.no_subspecies:
+        pass
+    else:
+        write_log(unmatched_sspnames, "Unmatched_Records_Subspecies_Names.log", True)
+
+    records = index_fasta(args.input)
+    write_fasta(records, matched_accs, "Matched_Taxa.fasta")
+    write_fasta(records, unmatched_accs, "Unmatched_Taxa.fasta")
+    
     tf = datetime.now()
     te = tf - tb
-    print "\n\nFinished. Total elapsed time: {0} (H:M:S)\n\n".format(te)
+    print("\n\n--------------------------------------------------------------------------------------")
+    print("\nFinished. Total elapsed time: {0} (H:M:S)\n".format(te))
+    print("--------------------------------------------------------------------------------------\n\n")    
     
-    
+
 if __name__ == '__main__':
     main()

@@ -1,81 +1,45 @@
 ''''
 SuperCRUNCH: Align module
 
-Usage: python Align.py  -i [directory with all fasta files] (REQUIRED)
-                        -a [mafft, macse, muscle, clustalo] (REQUIRED)
-                        --mpath [Full path to a macse.jar file] (Required for -a macse)
-                        --mem [An integer for how much memory to assign to macse (in GB), default=1] (Optional for -a macse)
-                        --table [Specifies translation table for macse (standard, vmtdna), default=standard] (Optional for -a macse)
-                        --pass_fail (Optional for -a macse)
-                        --accurate (Optional for -a mafft/macse)
-                        --threads [integer] (Optional for mafft and clustalo)
-						
-    Align: Perform alignments for a directory of unaligned fasta files using mafft, macse, 
-    muscle, or clustalo. 
-    
-    Empirical fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where NAME represents the
-    gene/locus. The NAME portion should not contain any periods or spaces, but can contain
-    underscores. Output files are labeled using a prefix identical to NAME. See below for
-    special case with macse.
+    Align: Perform alignments for a directory of unaligned fasta files using 
+    MAFFT, MACSE, MUSCLE, or Clustal-O. 
 
-    Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse option is selected, user must
-    provide the --mpath flag with the full path to a macse.jar file. Optional for macse are assigning
-    a value for memory in GB (--mem, default 1GB) and to specify a different translation table
-    (--table, default = standard code). The current options include: standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23. 
-    The macse alignments can take a long time to complete
-    so the elapsed time is shown after an alignment is produced for a given fasta file. Because
-    macse will insert an ! at corrected bp locations, a cleaned fasta file (in which ! is replaced 
-    by N) is also output.
+    Alignment method is specified using the -a flag (options: mafft, macse, 
+    muscle, clustalo). To run mafft, muscle, and clustalo the executables must
+    be in path with names matching those here. To run macse, the user must provide
+    the full path to a macse.jar file using the --mpath flag. Selecting 'all' 
+    will run mafft, muscle, and clustalo (but not macse) sequentially.
 
-    An additional feature of macse is to include a fasta file of reliable sequences
-    (for example those that passed translation) and a fasta file of less reliable sequences
-    that are suspected to contain errors, and align both simultaneously with different
-    penalty parameters. To use this feature the --pass_fail flag can be used. However, to work
-    the fasta files must follow this naming format:
+    Several of the aligment methods will either run under the default 
+    settings (muscle) or the auto select settings (mafft, clustalo). 
+    The optional flag --accurate can be used for mafft (invokes FFT-NS-i; 
+    e.g., --retree 2 --maxiterate 1000') and clustalo (enables --iter=5, 
+    in which the guide-tree and HMM each undergo 5 iterations, rather
+    than only one).
     
-    'prefix_Passed.fasta' - Reliable sequences fasta file.
-    'prefix_Failed.fasta' - Unreliable sequences fasta file.
-    
-    The prefix portion of the name cannot contain any underscores, and should ideally just be
-    the name of the gene/locus. 
-
-    For other analyses, mafft, muscle, and clustalo must be installed in path (with identical 
-    executable names as just written) for this script to work properly. These analyses will 
-    run under the default settings (muscle) or the auto select settings (mafft,
-    clustalo), but see below for an additional mafft, clustalo, and macse setting. The number of 
-    threads can be specified for mafft and clustalo using the --threads flag.
-    
-    The optional flag --accurate can be used for mafft, clustalo, and macse v2.0+ to change the analysis 
-    settings for increased accuracy. For mafft, this option changes the default from auto select
-    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may  
-    result in higher accuracy (but slower run times). For clustalo, this de-selects the --auto
-    option and enables --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather
-    than only one. For macse, this adds the commands -local_realign_init 0.9
-    -local_realign_dec 0.9 (both defaults = 0.5), which will slow down optimizations but increase
-    alignment accuracy, sometimes considerably. If using macse v2.0+, these search settings will
-    more closely resemble macse v1, for which both defaults = 1.0.
+    The translation alignment method of macse requires a translation table, 
+    which here defaults to standard code unless specified using the --table 
+    flag. Many (but not all) NCBI translation table options are available, and 
+    can be selected using integers or the shortcut terms provided. The --pass_fail
+    can be used to signal that potentially two fasta files should be dual aligned
+    for a given locus (see documentation for details). Additional 
+    memory (in GB) can be assigned to macse using the --mem flag. The 
+    --accurate flag can be used for macse 2.0+, and adds the commands 
+    -local_realign_init 0.9 and -local_realign_dec 0.9, which will increase 
+    alignment time but improve accuracy, sometimes considerably. 
  
-    Output files vary between aligners but will be moved to following output directories
-    created in the main fasta directory:
+    Output files vary between aligners but will be moved to an aligner-specific
+    output directory in the main output directory specified by the user.
 
-    /Output_MACSE_Alignments:
-           [fasta name]_AA.fasta - The amino acid alignment.
-           [fasta name]_NT.fasta - The nucleotide alignment from the translation alignment. 
-           [fasta name]_NT_Cleaned.fasta - Same as above, but the ! characters inserted by macse
-                                           are replaced with Ns instead.
-                                           
-    /Output_MAFFT_Alignments:
-           [fasta name]_MAFFT_Aligned.fasta - The nucleotide alignment produced by mafft.
-           
-    /Output_MUSCLE_Alignments:
-           [fasta name]_MUSCLE_Aligned.fasta - The nucleotide alignment produced by muscle.
-           
-    /Output_CLUSTALO_Alignments:
-           [fasta name]_CLUSTALO_Aligned.fasta - The nucleotide alignment produced by clustalo.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
+    where NAME represents the gene/locus. The NAME portion should not 
+    contain any periods or spaces, but can contain underscores. Output 
+    files are labeled using a prefix identical to NAME.
+
     
 -------------------------
 For Python 2.7
-Python modules required:
+Python packages required:
 	-BioPython
 Dependencies:
 	-mafft (in path)
@@ -92,6 +56,7 @@ January 2019
 Distributed under the 
 GNU General Public Lincense
 '''
+
 import argparse
 import os
 import subprocess as sp
@@ -101,455 +66,487 @@ from Bio.Seq import Seq
 from datetime import datetime
 
 def get_args():
-    '''
+    """
     Get arguments from command line.
-    '''
+    """
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
-    Align: Perform alignments for a directory of unaligned fasta files using mafft, macse, 
-    muscle, or clustalo. 
-    
-    Empirical fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where NAME represents the
-    gene/locus. The NAME portion should not contain any periods or spaces, but can contain
-    underscores. Output files are labeled using a prefix identical to NAME. See below for
-    special case with macse.
+    Align: Perform alignments for a directory of unaligned fasta files using 
+    MAFFT, MACSE, MUSCLE, or Clustal-O. 
 
-    Select analysis type with -a flag (options: mafft, macse, muscle, clustalo). If macse option is selected, user must
-    provide the --mpath flag with the full path to a macse.jar file. Optional for macse are assigning
-    a value for memory in GB (--mem, default 1GB) and to specify a different translation table
-    (--table, default = standard code). The current options include: standard, vertmtdna, invertmtdna, yeastmtdna, plastid, 1-6, 9-16, 21-23. 
-    The macse alignments can take a long time to complete
-    so the elapsed time is shown after an alignment is produced for a given fasta file. Because
-    macse will insert an ! at corrected bp locations, a cleaned fasta file (in which ! is replaced 
-    by N) is also output.
+    Alignment method is specified using the -a flag (options: mafft, macse, 
+    muscle, clustalo). To run mafft, muscle, and clustalo the executables must
+    be in path with names matching those here. To run macse, the user must provide
+    the full path to a macse.jar file using the --mpath flag. Selecting 'all' 
+    will run mafft, muscle, and clustalo (but not macse) sequentially.
 
-    An additional feature of macse is to include a fasta file of reliable sequences
-    (for example those that passed translation) and a fasta file of less reliable sequences
-    that are suspected to contain errors, and align both simultaneously with different
-    penalty parameters. To use this feature the --pass_fail flag can be used. However, to work
-    the fasta files must follow this naming format:
+    Several of the aligment methods will either run under the default 
+    settings (muscle) or the auto select settings (mafft, clustalo). 
+    The optional flag --accurate can be used for mafft (invokes FFT-NS-i; 
+    e.g., --retree 2 --maxiterate 1000') and clustalo (enables --iter=5, 
+    in which the guide-tree and HMM each undergo 5 iterations, rather
+    than only one).
     
-    'prefix_Passed.fasta' - Reliable sequences fasta file.
-    'prefix_Failed.fasta' - Unreliable sequences fasta file.
-    
-    The prefix portion of the name cannot contain any underscores, and should ideally just be
-    the name of the gene/locus. 
+    The translation alignment method of macse requires a translation table, 
+    which here defaults to standard code unless specified using the --table 
+    flag. Many (but not all) NCBI translation table options are available, and 
+    can be selected using integers or the shortcut terms provided. The --pass_fail
+    can be used to signal that potentially two fasta files should be dual aligned
+    for a given locus (see documentation for details). Additional 
+    memory (in GB) can be assigned to macse using the --mem flag. The 
+    --accurate flag can be used for macse 2.0+, and adds the commands 
+    -local_realign_init 0.9 and -local_realign_dec 0.9, which will increase 
+    alignment time but improve accuracy, sometimes considerably. 
+ 
+    Output files vary between aligners but will be moved to an aligner-specific
+    output directory in the main output directory specified by the user.
 
-    For other analyses, mafft, muscle, and clustalo must be installed in path (with identical 
-    executable names as just written) for this script to work properly. These analyses will 
-    run under the default settings (muscle) or the auto select settings (mafft,
-    clustalo), but see below for an additional mafft, clustalo, and macse setting. The number of 
-    threads can be specified for mafft and clustalo using the --threads flag.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
+    where NAME represents the gene/locus. The NAME portion should not 
+    contain any periods or spaces, but can contain underscores. Output 
+    files are labeled using a prefix identical to NAME.
     
-    The optional flag --accurate can be used for mafft, clustalo, and macse v2.0+ to change the analysis 
-    settings for increased accuracy. For mafft, this option changes the default from auto select
-    to use FFT-NS-i ('mafft --retree 2 --maxiterate 1000') iterative search setting which may  
-    result in higher accuracy (but slower run times). For clustalo, this de-selects the --auto
-    option and enables --iter=5, in which the guide-tree and HMM each undergo 5 iterations, rather
-    than only one. For macse, this adds the commands -local_realign_init 0.9
-    -local_realign_dec 0.9 (both defaults = 0.5), which will slow down optimizations but increase
-    alignment accuracy, sometimes considerably. If using macse v2.0+, these search settings will
-    more closely resemble macse v1, for which both defaults = 1.0.
-
-    Output files vary between aligners but will be moved to output directories
-    created in the main fasta directory.
-    
-    DEPENDENCIES: Python: BioPython; Executables in path: mafft, muscle, clustalo (with
-    names identical to those listed here); macse jar file required.
+    DEPENDENCIES: Python: BioPython; Executables in path: mafft, muscle, 
+    clustalo; macse jar file required.
     ---------------------------------------------------------------------------""")
-    parser.add_argument("-i", "--in_dir", required=True, help="REQUIRED: The full path to a directory which contains the input fasta files. Follow labeling format: NAME.fasta")
-    parser.add_argument("-a", "--aln", required=True, choices=["mafft","macse","muscle", "clustalo","all"], help="REQUIRED: Specify whether alignment is by mafft, macse, muscle, or clustalo. If macse must provide flags --mpath with full path to macse jar file and --table with translation table option. Selecting 'all' will run mafft, muscle, and clustalo sequentially.")
-    parser.add_argument("--mpath", default=None, help="MACSE REQUIRED: Full path to a macse.jar file.")
-    parser.add_argument("--table", default="standard", choices=["standard","vertmtdna","invertmtdna","yeastmtdna","plastid","1","2","3","4","5","6","9","10","11","12","13","14","15","16","21","22","23"], help="MACSE REQUIRED: Specifies translation table for macse.")
-    parser.add_argument("--mem", default=None, help="MACSE OPTIONAL: An integer for how much memory to assign to macse (in GB), default=1.")
-    parser.add_argument("--pass_fail", action='store_true', help="MACSE OPTIONAL: Specifies macse to use two fasta files (one with seqs passing translation, and one with those that failed) for dual file alignment. Follow labeling format: NAME_Passed.fasta, NAME_Failed.fasta")
-    parser.add_argument("--accurate", action='store_true', help="MACSE/MAFFT OPTIONAL: Specifies mafft, clustalo, or macse to use more thorough search settings.")
-    parser.add_argument("--threads", default=None, help="OPTIONAL: Specifies number of threads to use in mafft or clustalo.")
+    
+    parser.add_argument("-i", "--indir",
+                            required=True,
+                            help="REQUIRED: The full path to a directory which contains "
+                            "the input fasta files.")
+    
+    parser.add_argument("-o", "--outdir",
+                            required=True,
+                            help="REQUIRED: The full path to an existing directory "
+                            "to write output files.")
+    
+    parser.add_argument("-a", "--aln",
+                            required=True,
+                            choices=["mafft","macse","muscle", "clustalo","all"],
+                            help="REQUIRED: Specify whether alignment is by mafft, macse, "
+                            "muscle, or clustalo. If macse must provide flags --mpath and "
+                            "--table. Selecting 'all' will run mafft, muscle, and clustalo "
+                            "sequentially.")
+    
+    parser.add_argument("--accurate",
+                            action='store_true',
+                            help="OPTIONAL: Specifies mafft, clustalo, or macse to use "
+                            "more thorough search settings.")
+    
+    parser.add_argument("--threads",
+                            default=None,
+                            help="OPTIONAL: Specifies number of threads to use in mafft "
+                            "and/or clustalo.")
+    
+    parser.add_argument("--mpath",
+                            default=None,
+                            help="MACSE REQUIRED: Full path to a macse.jar file.")
+    
+    parser.add_argument("--table",
+                            default="standard",
+                            choices=["standard", "vertmtdna", "invertmtdna", "yeastmtdna",
+                                         "plastid", "1", "2", "3", "4", "5", "6", "9",
+                                         "10", "11", "12", "13", "14", "15", "16", "21",
+                                         "22", "23"],
+                            help="MACSE REQUIRED: Specifies translation table for macse.")
+    
+    parser.add_argument("--mem",
+                            default=None,
+                            help="MACSE OPTIONAL: An integer to assign additional memory "
+                            "to macse (in GB), default=1.")
+    
+    parser.add_argument("--pass_fail",
+                            action='store_true',
+                            help="MACSE OPTIONAL: Specifies macse to use two fasta files "
+                            "for dual file alignment. See documentation for details.")
+    
+    
     return parser.parse_args()
 
 def table_dict(symbol):
-    '''
-    Get MACSE specific translation table value from table choice.
-    '''
-    table_dictv1 = {"standard":"1","vertmtdna":"2","invertmtdna":"5","yeastmtdna":"3","plastid":"11","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","9":"9","10":"10","11":"11","12":"12","13":"13","14":"14","15":"15","16":"16","21":"21","22":"22","23":"23"}
-    table_dictv2 = {"standard":"01_The_Standard_Code", "vertmtdna":"02_The_Vertebrate_Mitochondrial_Code", "invertmtdna":"05_The_Invertebrate_Mitochondrial_Code", "yeastmtdna":"03_The_Yeast_Mitochondrial_Code", "plastid":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "1":"01_The_Standard_Code", "2":"02_The_Vertebrate_Mitochondrial_Code", "3":"03_The_Yeast_Mitochondrial_Code", "4":"04_The_Mold_Protozoan_and_Coelenterate_Mitochondrial_Code_and_the_Mycoplasma_Spiroplasma_Code", "5":"05_The_Invertebrate_Mitochondrial_Code", "6":"06_The_Ciliate_Dasycladacean_and_Hexamita_Nuclear_Code", "9":"09_The_Echinoderm_and_Flatworm_Mitochondrial_Code", "10":"10_The_Euplotid_Nuclear_Code", "11":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code", "12":"12_The_Alternative_Yeast_Nuclear_Code", "13":"13_The_Ascidian_Mitochondrial_Code", "14":"14_The_Alternative_Flatworm_Mitochondrial_Code", "15":"15_Blepharisma_Nuclear_Code", "16":"16_Chlorophycean_Mitochondrial_Code", "21":"21_Trematode_Mitochondrial_Code", "22":"22_Scenedesmus_obliquus_mitochondrial_Code", "23":"23_Thraustochytrium_Mitochondrial_Code"}
+    """
+    Get MACSE translation table value from user choice.
+    Uses dictionaries to look up string that will be
+    used in the macse call.
+    """
+    table_dictv1 = {"standard":"1", "vertmtdna":"2", "invertmtdna":"5", "yeastmtdna":"3",
+                        "plastid":"11", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6",
+                        "9":"9", "10":"10", "11":"11", "12":"12", "13":"13", "14":"14",
+                        "15":"15", "16":"16", "21":"21", "22":"22", "23":"23"}
+        
+    table_dictv2 = {"standard":"01_The_Standard_Code",
+                        "vertmtdna":"02_The_Vertebrate_Mitochondrial_Code",
+                        "invertmtdna":"05_The_Invertebrate_Mitochondrial_Code",
+                        "yeastmtdna":"03_The_Yeast_Mitochondrial_Code",
+                        "plastid":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code",
+                        "1":"01_The_Standard_Code",
+                        "2":"02_The_Vertebrate_Mitochondrial_Code",
+                        "3":"03_The_Yeast_Mitochondrial_Code",
+                        "4":"04_The_Mold_Protozoan_and_Coelenterate_Mitochondrial_Code_and_the_Mycoplasma_Spiroplasma_Code",
+                        "5":"05_The_Invertebrate_Mitochondrial_Code",
+                        "6":"06_The_Ciliate_Dasycladacean_and_Hexamita_Nuclear_Code",
+                        "9":"09_The_Echinoderm_and_Flatworm_Mitochondrial_Code",
+                        "10":"10_The_Euplotid_Nuclear_Code",
+                        "11":"11_The_Bacterial_Archaeal_and_Plant_Plastid_Code",
+                        "12":"12_The_Alternative_Yeast_Nuclear_Code",
+                        "13":"13_The_Ascidian_Mitochondrial_Code",
+                        "14":"14_The_Alternative_Flatworm_Mitochondrial_Code",
+                        "15":"15_Blepharisma_Nuclear_Code",
+                        "16":"16_Chlorophycean_Mitochondrial_Code",
+                        "21":"21_Trematode_Mitochondrial_Code",
+                        "22":"22_Scenedesmus_obliquus_mitochondrial_Code",
+                        "23":"23_Thraustochytrium_Mitochondrial_Code"}
+        
     table_val = table_dictv1[symbol]
+    
     return table_val
 
-def directory_macse_aln(in_dir, mpath, mem, incode, acc, flist):
-    '''
-    Iterates over files in a directory to locate those with
-    extension '.fasta' and executes the macse_align function
-    for each file found. Moves all output files to the output
-    directory: /Output_MACSE_Alignments
-    '''
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tBeginning MACSE alignments"
-    print "--------------------------------------------------------------------------------------"
-    
-    tcode = table_dict(incode)
-    
-    os.chdir(in_dir)
-    out_dir = "Output_MACSE_Alignments"
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
-        
-    for fasta in flist:
-        macse_align(fasta, mpath, mem, tcode, acc)
-        
-    output = [f for f in os.listdir('.') if f.endswith(('_AA.fasta', '_NT.fasta'))]
-    for o in output:
-        shutil.move(o, out_dir)
-                    
-    #clean NT.fasta files (replace !s with Ns)
-    os.chdir(out_dir)
-    out_list = [f for f in os.listdir('.') if f.endswith("_NT.fasta")]
-    for f in out_list:
-        cleanlabel = "{}_NT_Cleaned.fasta".format((f.split('_NT')[0]))
-        with open(cleanlabel, 'a') as fh_out:
-            with open(f, 'r') as fh_in:
-                for line in fh_in:
-                    line = line.replace('!','N')
-                    fh_out.write(line)
-                                        
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tFinished MACSE alignments"
-    print "--------------------------------------------------------------------------------------\n\n"
 
-def macse_align(fasta_file, mpath, mem, tcode, acc):
-    print "\n\nPerforming MACSE alignment for {}\n\n".format(fasta_file)
-    t_begin = datetime.now()
-    #gcdef codes: (1:Standard; 2:Vert mtDNA)
-    #macse can automatically name output files here so no need to define prefix
-    if mem is not None:
-        if acc is True:
-            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, tcode, fasta_file)
-        else:
-            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} ".format(mem, mpath, tcode, fasta_file)
-    else:
-        if acc is True:
-            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, tcode, fasta_file)
-        else:
-            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} ".format(mpath, tcode, fasta_file)
-        
-    print call_string
-    proc = sp.call(call_string, shell=True)
-    t_finish = datetime.now()
-    elapsed = t_finish - t_begin
-    print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
+def pass_fail_finder(flist):
+    """
+    Finds files to use for the paired or unpaired
+    macse alignments. Paired analyses will have two files
+    which end in '_Passed.fasta' and '_Failed.fasta'. The
+    unpaired analyses will only have a '_Passed.fasta' file,
+    and any loci with only failed sequences ('_Failed.fasta')
+    are excluded from alignments. Uses set methods to identify
+    the paired and unpaired file names after searching for
+    the files, then returns two lists of the prefixes for
+    the paired and unpaired analyses.
+    """
+    #first get prefixes from sets of files
+    prefixes1 = set([f.split('_Passed')[0] for f in flist if f.endswith('_Passed.fasta')])
+    prefixes2 = set([f.split('_Failed')[0] for f in flist if f.endswith('_Failed.fasta')])
+
+    #create sorted list of prefixes that only
+    #have a '_Passed.fasta' file present
+    pass_only = sorted(prefixes1 - prefixes2)
+    
+    #create sorted list of prefixes that only
+    #have a both a '_Passed.fasta' and a
+    #'_Failed.fasta' file present
+    pass_fail = sorted(prefixes1 & prefixes2)
+
+    #create sorted list of prefixes that only
+    #have a '_Failed.fasta' file present
+    fail_only = sorted(prefixes2 - prefixes1)
+    
+    if pass_fail:
+        print("\nFound {} loci with pass and fail sequence pairs:".format(len(pass_fail)))
+        for p in pass_fail:
+            print("\t{}".format(p))
+    
+    if pass_only:
+        print("\nFound {} loci with only pass sequences:".format(len(pass_only)))
+        for p in pass_only:
+            print("\t{}".format(p))
+            
+    if fail_only:
+        print("\nFound {} loci with only fail sequences, which will be excluded from alignment:"
+                  .format(len(fail_only)))
+        for f in fail_only:
+            print("\t{}".format(f))
+    
+    return pass_only, pass_fail
 
 
-def split_name(string, index, delimiter):
-    index = int(index)
-    name = string.split(delimiter)[index]
-    return name
-
-def pass_fail_finder(in_dir):
-    prefix_set = set()
-    os.chdir(in_dir)
-    for f in os.listdir('.'):
-    	if f.endswith('_Passed.fasta'):
-        	name = split_name(f, 0, '_Passed')
-        	prefix_set.add(name)
-    prefix_list = list(prefix_set)
-    prefix_list.sort()
-    return prefix_list
-    
-def directory_macse_aln_pass_fail(in_dir, mpath, mem, incode, acc):
-    '''
-    Iterates over files in a directory to locate those with
-    same prefix but different extensions '_Passed.fasta' and
-    '_Failed.fasta' and executes the macse_align function using
-    the -seq and -seqlr options for each file pair found.
-    Moves all output files to the output directory:
-    /Output_MACSE_Alignments
-    '''
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tBeginning paired MACSE alignments"
-    print "--------------------------------------------------------------------------------------"
-
-    tcode = table_dict(incode)
-    
-    prefix_list = pass_fail_finder(in_dir)
-
-    os.chdir(in_dir)
-    
-    out_dir = "Output_MACSE_Alignments"
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
-
-    for p in prefix_list:
-        f1 = "{}_Passed.fasta".format(p)
-        f2 = "{}_Failed.fasta".format(p)
-        macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc)
-        
-    output = [f for f in os.listdir('.') if f.endswith(("_AA.fasta", "_NT.fasta"))]
-    for o in output:
-        shutil.move(o, out_dir)
-                    
-    #clean NT.fasta files (replace !s with Ns)
-    os.chdir(out_dir)
-    out_list = [f for f in os.listdir('.') if f.endswith("_NT.fasta")]
-    for f in out_list:
-        cleanlabel = "{}_NT_Cleaned.fasta".format((f.split('_NT')[0]))
-        with open(cleanlabel, 'a') as fh_out:
-            with open(f, 'r') as fh_in:
-                for line in fh_in:
-                    line = line.replace('!','N')
-                    fh_out.write(line)
-                    
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tFinished paired MACSE alignments"
-    print "--------------------------------------------------------------------------------------\n\n"
-    
-def macse_align_pass_fail(f1, f2, mpath, mem, tcode, acc):
-    print "\n\nPerforming MACSE alignment for {0} and {1}\n\n".format(f1,f2)
-    t_begin = datetime.now()
-    
-    #macse automatically names output files here so no need to define prefix
-    if mem is not None:
-        if acc is True:
-            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mem, mpath, tcode, f1, f2)
-        else:
-            call_string = "java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} ".format(mem, mpath, tcode, f1, f2)
-    else:
-        if acc is True:
-            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -seq_lr {3} -local_realign_init 0.9 -local_realign_dec 0.9 ".format(mpath, tcode, f1, f2)
-        else:
-            call_string = "java -jar -Xmx1g {0} -prog alignSequences -gc_def {1} -seq {2} -seq_lr {3} ".format(mpath, tcode, f1, f2)
-        
-    print call_string
-    proc = sp.call(call_string, shell=True)
-    t_finish = datetime.now()
-    elapsed = t_finish - t_begin
-    print "Total alignment time: {0} (H:M:S)\n\n".format(elapsed)
-    
-def directory_mafft_aln(in_dir, acc, threads, flist):
-    '''
-    Iterates over files in a directory to locate those with
-    extension '.fasta' and executes the mafft_align function
-    for each file found. Moves all output files to the output
-    directory: /Output_MAFFT_Alignments
-    '''
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tBeginning MAFFT alignments"
-    print "--------------------------------------------------------------------------------------"
-    os.chdir(in_dir)
-
-    out_dir = "Output_MAFFT_Alignments"
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
-        
-    for fasta in flist:
-        mafft_align(fasta, acc, threads)
-        
-    output = [f for f in os.listdir('.') if f.endswith("MAFFT_Aligned.fasta")]
-    for o in output:
-        try:
-            shutil.move(o, out_dir)
-        except:
-            print "{} was not moved. It is already in the MAFFT alignment output directory, you may want to check this.".format(o)
-                    
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tFinished MAFFT alignments"
-    print "--------------------------------------------------------------------------------------\n\n"
-
-def mafft_align(fasta_file, acc, threads):
-    print "\n\nPerforming MAFFT alignment for {}\n\n".format(fasta_file)
-    names = fasta_file.split('.')
-    
+def get_cmd(f, aln, accurate, threads, mpath, table, mem):
+    """
+    Generate relevant call string for file f based on
+    arguments supplied. Returns a call string for f. This
+    is used to generate a command for all methods except
+    for the macse --pass_fail method. 
+    """
+    #params used by multiple alignment methods
+    #set threads to 1 if not set
     if threads is None:
         threads = 1
-    if acc is False:
-    	call_string = "mafft --thread {2} --auto {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
+    #get a prefix to label output files
+    #based on input file name (split by period)
+    prefix = f.split('.')[0]
+    
+    if aln == "mafft":
+        outname = "{}_mafft_temp.fasta".format(prefix)
+        if accurate is False:
+            cmd = ("mafft --thread {0} --auto {1} > {2}"
+                               .format(threads, f, outname))
+        elif accurate is True:
+            cmd = ("mafft --thread {0} --retree 2 --maxiterate 1000 {1} > {2}"
+                               .format(threads, f, outname))
+                
+    elif aln == "muscle":
+        outname = "{}_muscle_temp.fasta".format(prefix)
+        cmd = "muscle -in {0} -out {1}".format(f, outname)
+        
+
+    elif aln == "clustalo":
+        outname = "{}_clustalo_temp.fasta".format(prefix)
+        if accurate is False:
+            cmd = ("clustalo -i {0} -o {1} --auto -v --threads={2} --output-order=tree-order --force"
+                       .format(f, outname, threads))
+        elif accurate is True:
+            cmd = ("clustalo -i {0} -o {1} --full --full-iter --iter=5 -v --threads={2} --cluster-size=500 --output-order=tree-order --force"
+                       .format(f, outname, threads))
+
+    elif aln == "macse":
+        #macse specific parameters
+        #assign memory of 1GB if none set
+        if mem is None:
+            mem = 1
+        #get translation table string (default is standard)
+        tcode = table_dict(table)
+        if accurate is False:
+            cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} "
+                               .format(mem, mpath, tcode, f))
+        elif accurate is True:
+            cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -local_realign_init 0.9 -local_realign_dec 0.9 "
+                               .format(mem, mpath, tcode, f))
+
+    return cmd
+                
+def get_cmds_macse_pass_fail(flist, accurate, mpath, table, mem):
+    """
+    Generate a list of commands for macse --pass_fail
+    alignments, based on the file list and arguments
+    supplied. Relies on the pass_fail_finder() function
+    to identify paired and/or unpaired macse files and
+    the produces the proper call strings.
+    """
+    #macse specific parameters
+    #assign memory of 1GB if none set
+    if mem is None:
+        mem = 1
+    #get translation table string (default is standard)
+    tcode = table_dict(table)
+
+    #find out which files have pass fail pairs,
+    #and pass only files (ignores fail only)
+    #returns sorted lists of prefixes
+    pass_only, pass_fail = pass_fail_finder(flist)
+
+    #set up list to populate with commands
+    commands = []
+
+    #files with pass only may not exist, check first
+    if pass_only:
+        for prefix in pass_only:
+            #re-constitute original filename
+            f = '{}_Passed.fasta'.format(prefix)
+
+            if accurate is False:
+                cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} "
+                                   .format(mem, mpath, tcode, f))
+                commands.append(cmd)
+                
+            elif accurate is True:
+                cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -local_realign_init 0.9 -local_realign_dec 0.9 "
+                                   .format(mem, mpath, tcode, f))
+                commands.append(cmd)
+                
+    #files with pass fail pairs may not exist, check first
+    if pass_fail:
+        for prefix in pass_fail:
+            #re-constitute original filenames
+            fpass = '{}_Passed.fasta'.format(prefix)
+            ffail = '{}_Failed.fasta'.format(prefix)
+
+            if accurate is False:
+                cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} "
+                           .format(mem, mpath, tcode, fpass, ffail))
+                commands.append(cmd)
+                
+            elif accurate is True:
+                cmd = ("java -jar -Xmx{0}g {1} -prog alignSequences -gc_def {2} -seq {3} -seq_lr {4} -local_realign_init 0.9 -local_realign_dec 0.9 "
+                           .format(mem, mpath, tcode, fpass, ffail))
+                commands.append(cmd)
+
+    return commands
+        
+def get_all_commands(flist, aln, accurate, threads, mpath, table, mem, pass_fail):
+    """
+    Generates a complete set of commands to run alignments
+    for all files in flist. In all cases, returns a list of 
+    strings which will run the alignment method for a given 
+    file using the sp.call() method with the shell argument.
+    """
+    
+    if aln == "macse" and pass_fail is True:
+        commands = get_cmds_macse_pass_fail(flist, accurate, mpath, table, mem)
+
+    elif aln == "all":
+        commands = []
+        [commands.append(get_cmd(f, "clustalo", accurate, threads, mpath, table, mem)) for f in flist]
+        [commands.append(get_cmd(f, "mafft", accurate, threads, mpath, table, mem)) for f in flist]
+        [commands.append(get_cmd(f, "muscle", accurate, threads, mpath, table, mem)) for f in flist]
+
     else:
-    	call_string = "mafft --thread {2} --retree 2 --maxiterate 1000 {0} > {1}_mafft_temp.fasta".format(fasta_file, names[0], threads)
-        
-    print call_string, '\n'
-    proc = sp.call(call_string, shell=True)
+        commands = [get_cmd(f, aln, accurate, threads, mpath, table, mem) for f in flist]
 
-    fasta_dict = SeqIO.index("{0}_mafft_temp.fasta".format(names[0]), "fasta")
-    out_fasta = "{0}_MAFFT_Aligned.fasta".format(names[0])
-    with open(out_fasta, 'a') as fh_out_fasta:
-        for record in fasta_dict:
-            newseq = fasta_dict[record].seq.upper()
-            fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
-    os.remove("{0}_mafft_temp.fasta".format(names[0]))
+    return commands
+        
+def make_dirs(outdir, aln):
+    """
+    Creates path names for directories for all alignment
+    methods, but only creates the relevant directories
+    based on the aln argument supplied by the user. Returns
+    all directory paths (even those not created) to allow
+    output files to be moved to the proper directories 
+    during cleanup steps.
+    """
+    #get current path
+    os.chdir(outdir)
+    curpath = os.getcwd()
     
-def directory_muscle_aln(in_dir, flist):
-    '''
-    Iterates over files in a directory to locate those with
-    extension '.fasta' and executes the mafft_align function
-    for each file found. Moves all output files to the output
-    directory: /Output_MUSCLE_Alignments
-    '''
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tBeginning MUSCLE alignments"
-    print "--------------------------------------------------------------------------------------"
-    os.chdir(in_dir)
+    #create paths using os.path.join() to avoid any issues
+    mafftdir = os.path.join(curpath, "Alignments-MAFFT")
+    muscledir = os.path.join(curpath, "Alignments-MUSCLE")
+    clustaldir = os.path.join(curpath, "Alignments-CLUSTALO")
+    macsedir = os.path.join(curpath, "Alignments-MACSE")    
+    macsecdir = os.path.join(curpath, "Alignments-MACSE", "Cleaned-Alignments")
+    macseodir = os.path.join(curpath, "Alignments-MACSE", "Additional-Outputs")
 
-    out_dir = "Output_MUSCLE_Alignments"
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
-        
-    for fasta in flist:
-        muscle_align(fasta)
-        
-    output = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
-    for o in output:
-        shutil.move(o, out_dir)
-                    
-    os.chdir(out_dir)
-    out_list = [f for f in os.listdir('.') if f.endswith("muscle_temp.fasta")]
-    for f in out_list:
-        fasta_dict = SeqIO.index(f, "fasta")
-        out_fasta = "{0}_MUSCLE_Aligned.fasta".format(f.split('_muscle_temp')[0])
-        with open(out_fasta, 'a') as fh_out_fasta:
-            for record in fasta_dict:
-                newseq = fasta_dict[record].seq.upper()
-                fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
-    for f in out_list:
-        os.remove(f)
+    #create the directories using the above paths
+    #if the alignment method was selected by user
+    if aln == "mafft":
+        if not os.path.exists(mafftdir):
+            os.mkdir(mafftdir)
+
+    elif aln == "muscle":
+        if not os.path.exists(muscledir):
+            os.mkdir(muscledir)
             
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tFinished MUSCLE alignments"
-    print "--------------------------------------------------------------------------------------\n\n"
-
-def muscle_align(fasta_file):
-    print "\n\nPerforming MUSCLE alignment for {}\n\n".format(fasta_file)
-    names = fasta_file.split('.')
-    
-    call_string = "muscle -in {0} -out {1}_muscle_temp.fasta".format(fasta_file, names[0])
-    
-    print call_string, '\n'
-    proc = sp.call(call_string, shell=True)
-
-def directory_clustalo_aln(in_dir, acc, threads, flist):
-    '''
-    Iterates over files in a directory to locate those with
-    extension '.fasta' and executes the clustalo_align function
-    for each file found. Moves all output files to the output
-    directory: /Output_CLUSTALO_Alignments
-    '''
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tBeginning Clustal-Omega alignments"
-    print "--------------------------------------------------------------------------------------"
-    os.chdir(in_dir)
-
-    out_dir = "Output_CLUSTALO_Alignments"
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
-        
-    for fasta in flist:
-        clustalo_align(fasta, acc, threads)
-        
-    output = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
-    for o in output:
-        shutil.move(o, out_dir)
-                    
-    os.chdir(out_dir)
-    out_list = [f for f in os.listdir('.') if f.endswith("clustalo_temp.fasta")]
-    for f in out_list:
-        fasta_dict = SeqIO.index(f, "fasta")
-        out_fasta = "{0}_CLUSTALO_Aligned.fasta".format(f.split('_clustalo_temp')[0])
-        with open(out_fasta, 'a') as fh_out_fasta:
-            for record in fasta_dict:
-                newseq = fasta_dict[record].seq.upper()
-                fh_out_fasta.write( ">{}\n{}\n".format(fasta_dict[record].description, newseq))
-    for f in out_list:
-        os.remove(f)
+    elif aln == "clustalo":
+        if not os.path.exists(clustaldir):
+            os.mkdir(clustaldir)
             
-    print "\n\n--------------------------------------------------------------------------------------"
-    print "\t\t\tFinished Clustal-Omega alignments"
-    print "--------------------------------------------------------------------------------------\n\n"
+    elif aln == "macse":
+        if not os.path.exists(macsedir):
+            os.mkdir(macsedir)
+        if not os.path.exists(macsecdir):
+            os.mkdir(macsecdir)
+        if not os.path.exists(macseodir):
+            os.mkdir(macseodir)
 
-def clustalo_align(fasta_file, acc, threads):
-    print "\n\nPerforming Clustal-Omega alignment for {}\n\n".format(fasta_file)
-    names = fasta_file.split('.')
-    
-    if threads is None:
-        threads = 1
-    if acc is False:
-        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --auto -v --threads={2} --output-order=tree-order --force".format(fasta_file, names[0], threads)
-    else:
-        call_string = "clustalo -i {0} -o {1}_clustalo_temp.fasta --full --full-iter --iter=5 -v --threads={2} --cluster-size=500 --output-order=tree-order --force".format(fasta_file, names[0], threads)
+    elif aln == "all":
+        if not os.path.exists(mafftdir):
+            os.mkdir(mafftdir)
+        if not os.path.exists(muscledir):
+            os.mkdir(muscledir)
+        if not os.path.exists(clustaldir):
+            os.mkdir(clustaldir)
         
-    print call_string, '\n'
-    proc = sp.call(call_string, shell=True)
+    return mafftdir, muscledir, clustaldir, macsecdir, macseodir
 
-#-----------------------------------------------------------------------------------------
+def reformat(f, aln, outdir):
+    """
+    Many of the output fasta files from the alignment methods
+    are on the messy side. Here, the temporary output alignment
+    file is read using biopython and re-written in a consistent
+    fasta format. The output file is named using the prefix of 
+    the original fasta file and the alignment method chosen. 
+    The new alignment file is moved to the proper output directory
+    and the temporary file is removed.
+    """
+    fdict = SeqIO.index(f, "fasta")
+    
+    prefix = f.split("_{}_".format(aln))[0]
+    outname = "{0}_{1}_Aligned.fasta".format(prefix, aln.upper())
+    
+    with open(outname, 'a') as fh:
+        for record in fdict:
+            newseq = fdict[record].seq.upper()
+            fh.write( ">{}\n{}\n".format(fdict[record].description, newseq))
+            
+    os.remove(f)
+    
+    try:
+        shutil.move(outname, outdir)
+    except:
+        os.remove(outname)
+        print("****ERROR: File {} already exists in {}".format(outname, outdir))
+        print("****ERROR: Please check directory!")
 
+def macse_reformat(f, outdir):
+    """
+    In cases of orf errors, macse inserts a ! character
+    which is 'illegal' in most downstream analyses. This
+    function opens the temporary output alignment file and
+    replaces any ! characters with an N instead, then writes
+    the contents to a new alignment file named using the 
+    prefix of the original fasta file and the alignment method.
+    The new alignment file is moved to the proper output directory
+    and the original alignment files (amino-acid translated and
+    nucleotid) are moved to their own output directory.
+    """
+    with open(f, 'r') as fh:
+        cleaned_lines = [line.replace('!','N') for line in fh]
+        
+    prefix = f.split('_Passed_NT')[0]
+    outname = "{}_MACSE_Aligned.fasta".format(prefix)
+    
+    with open(outname, 'a') as fh:
+        for l in cleaned_lines:
+            fh.write(l)
+            
+    shutil.move(outname, outdir)
+    
+
+def cleanup(aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir):
+    """
+    Based on alignment method selected by user (aln), find the temporary
+    output alignment file and produce the final output file using either
+    the reformat() or macse_reformat() functions. 
+    """
+    if aln == "mafft":
+        [reformat(f, aln, mafftdir) for f in os.listdir('.') if f.endswith("_mafft_temp.fasta")]
+        
+    elif aln == "muscle":
+        [reformat(f, aln, muscledir) for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
+        
+    elif aln == "clustalo":
+        [reformat(f, aln, clustaldir) for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+        
+    elif aln == "macse":
+        [macse_reformat(f, macsecdir) for f in os.listdir('.') if f.endswith("_NT.fasta")]
+        [shutil.move(f, macseodir) for f in os.listdir('.') if f.endswith(("_AA.fasta", "_NT.fasta"))]
+        
+    elif aln == "all":
+        [reformat(f, "mafft", mafftdir) for f in os.listdir('.') if f.endswith("_mafft_temp.fasta")]
+        [reformat(f, "muscle", muscledir) for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
+        [reformat(f, "clustalo", clustaldir) for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+       
 def main():
     args = get_args()
+    tb = datetime.now()
     
-    os.chdir(args.in_dir)
+    mafftdir, muscledir, clustaldir, macsecdir, macseodir = make_dirs(args.outdir, args.aln)
+    
+    os.chdir(args.indir)
+    
     finitial = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
-    flist = sorted([f for f in finitial if not f.endswith(("clustalo_temp.fasta","mafft_temp.fasta","muscle_temp.fasta", "MAFFT_Aligned.fasta", "MUSCLE_Aligned.fasta", "CLUSTALO_Aligned.fasta"))])
+    flist = sorted([f for f in finitial
+                        if not f.endswith(("clustalo_temp.fasta",
+                                               "mafft_temp.fasta",
+                                               "muscle_temp.fasta",
+                                               "MAFFT_Aligned.fasta",
+                                               "MUSCLE_Aligned.fasta",
+                                               "CLUSTALO_Aligned.fasta",
+                                               "_AA.fasta",
+                                               "_NT.fasta"))])
+        
+    commands = get_all_commands(flist, args.aln, args.accurate, args.threads, args.mpath, args.table, args.mem, args.pass_fail)
     
-    if args.aln == "mafft":
-        tb = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate, args.threads, flist)
-        tf = datetime.now()
-        te = tf - tb
-        print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
+    for c in commands:
+        print("\n\n{}".format(c))
+        sp.call(c, shell=True)
+        cleanup(args.aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir)
+    
+    tf = datetime.now()
+    te = tf - tb
+    print("\n\n--------------------------------------------------------------------------------------")
+    print("\nTotal time to create {2} aligments using {1}: {0} (H:M:S)\n".format(te, args.aln, len(flist)))
+    print("--------------------------------------------------------------------------------------\n\n")
         
-    elif args.aln == "macse":
-        if args.pass_fail is True:
-            tb = datetime.now()
-            directory_macse_aln_pass_fail(args.in_dir, args.mpath, args.mem, args.table, args.accurate)
-            tf = datetime.now()
-            te = tf - tb
-            print "Total time for all paired translation alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
-            
-        elif args.pass_fail is False:
-            tb = datetime.now()
-            directory_macse_aln(args.in_dir, args.mpath, args.mem, args.table, args.accurate, flist)
-            tf = datetime.now()
-            te = tf - tb
-            print "Total time for all translation alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
-            
-    elif args.aln == "muscle":
-        tb = datetime.now()
-        directory_muscle_aln(args.in_dir, flist)
-        tf = datetime.now()
-        te = tf - tb
-        print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
-        
-    elif args.aln == "clustalo":
-        tb = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate, args.threads, flist)
-        tf = datetime.now()
-        te = tf - tb
-        print "Total time for all alignments using {0}: {1} (H:M:S)\n\n".format(args.aln,te)
-        
-    elif args.aln == "all":
-        tb = datetime.now()
-
-        tbmaf = datetime.now()
-        directory_mafft_aln(args.in_dir, args.accurate, args.threads, flist)
-        tfmaf = datetime.now()
-        temaf = tfmaf - tbmaf
-
-        tbclu = datetime.now()
-        directory_clustalo_aln(args.in_dir, args.accurate, args.threads, flist)
-        tfclu = datetime.now()
-        teclu = tfclu - tbclu
-        
-        tbmus = datetime.now()
-        directory_muscle_aln(args.in_dir, flist)
-        tfmus = datetime.now()
-        temus = tfmus - tbmus
-        
-        tf = datetime.now()
-        te = tf - tb
-        
-        print "Total time for all alignments using MAFFT: {0} (H:M:S)\n\n".format(temaf)
-        print "Total time for all alignments using CLUSTAL-O: {0} (H:M:S)\n\n".format(teclu)
-        print "Total time for all alignments using MUSCLE: {0} (H:M:S)\n\n".format(temus)      
-        print "Total time to run all aligners: {0} (H:M:S)\n\n".format(te)
-        
-    else:
-        print "Something went wrong!"
 
 if __name__ == '__main__':
     main()
