@@ -20,9 +20,9 @@ A full overview of **SuperCRUNCH** is described in the following pre-print artic
 The current release of **SuperCRUNCH** is [v1.2](https://github.com/dportik/SuperCRUNCH/releases). 
 
 ### Major changes in v1.2:
-  - **Made all modules compatible with Python 2.7 and Python 3.7.**
-  - **SQL now implemented in `Parse_Loci.py` (up to 30x speedup), `Filter_Seqs_and_Species.py` (3x speedup), and `Taxon_Assessment.py` (3x speedup).**
-  - **Added output directory specification to all modules.**
+  - **All modules are now compatible with Python 2.7 and Python 3.7.**
+  - **SQL now implemented** in `Parse_Loci.py` (up to 30x speedup), `Filter_Seqs_and_Species.py` (3x speedup), and `Taxon_Assessment.py` (3x speedup).
+  - Added output directory specification to all modules.
   - Two trimming modules now included: `Trim_Alignments_Trimal.py` and `Trim_Alignments_Custom.py`. The `Trim_Alignments_Custom.py` module allows finding start and stop block positions, and row-wise (internal) sliding window trimming based on divergence.
   - Added new module `Filter_Fasta_by_Min_Seqs.py` to filter fasta files using a minimum number of sequences.
   - Complete code re-write for `Align.py`, `Cluster_Blast_Extract.py`, `Filter_Seqs_and_Species.py`, `Parse_Loci.py`, `Taxon_Assessment.py`.
