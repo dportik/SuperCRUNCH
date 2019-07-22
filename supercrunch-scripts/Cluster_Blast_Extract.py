@@ -5,8 +5,8 @@ SuperCRUNCH: Cluster_Blast_Extract module
     Each fasta file should contain putative sequences for a SINGLE locus. For
     each fasta file, the sequences are first clustered using cd-hit-est. A blast
     database is constructed from the largest sequence cluster (which is assumed
-    to contain the true sequences for that locus), and all clusters are blasted
-    to the sequence database (including the cluster used to generate the database).
+    to contain the true sequences for that locus), and all sequences are blasted
+    to the sequence database (including those in the cluster used to generate the database).
     The type of blast search is defined by the user, the most popular being 
     "dc-megablast", "blastn",and "megablast". Note that blastn searches include a 
     word size of 11, whereas megablast searches include a word size of 28, making 
@@ -82,8 +82,8 @@ def get_args():
     Each fasta file should contain putative sequences for a SINGLE locus. For
     each fasta file, the sequences are first clustered using cd-hit-est. A blast
     database is constructed from the largest sequence cluster (which is assumed
-    to contain the true sequences for that locus), and all clusters are blasted
-    to the sequence database (including the cluster used to generate the database).
+    to contain the true sequences for that locus), and all sequences are blasted
+    to the sequence database (including those in the cluster used to generate the database).
     The type of blast search is defined by the user, the most popular being 
     "dc-megablast", "blastn",and "megablast". Note that blastn searches include a 
     word size of 11, whereas megablast searches include a word size of 28, making 
