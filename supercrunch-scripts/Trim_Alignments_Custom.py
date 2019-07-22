@@ -8,9 +8,7 @@ SuperCRUNCH: Trim_Alignments_Custom module
     is guided by the optional arguments (-w, -p, -t, -d, and -l). These arguments
     have default values which can be changed by adding the relevant flags with
     new values. After custom trimming, the alignments are 'cleaned up' using 
-    trimAl. Several functions present in this customizable trimming module are 
-    modified versions of functions included in the PHYLUCE package, specifically 
-    the generic_align.py module.
+    trimAl.
     
     The output format must be specified using the -f argument (choices: fasta, nexus, 
     or phylip). Timmed alignment output files will be moved to following output 
@@ -23,6 +21,10 @@ SuperCRUNCH: Trim_Alignments_Custom module
     too many columns are being removed, you can adjust the optional arguments and
     inspect this output file to see the effect on the number of columns removed, 
     and adjust accordingly.
+
+    Several functions present in this customizable trimming module are 
+    modified versions of functions included in the PHYLUCE package, specifically 
+    the generic_align.py module.
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
     where NAME represents the gene/locus. The NAME portion should not 
@@ -71,9 +73,7 @@ def get_args():
     is guided by the optional arguments (-w, -p, -t, -d, and -l). These arguments
     have default values which can be changed by adding the relevant flags with
     new values. After custom trimming, the alignments are 'cleaned up' using 
-    trimAl. Several functions present in this customizable trimming module are 
-    modified versions of functions included in the PHYLUCE package, specifically 
-    the generic_align.py module.
+    trimAl.
     
     The output format must be specified using the -f argument (choices: fasta, nexus, 
     or phylip). Timmed alignment output files will be moved to following output 
@@ -86,6 +86,10 @@ def get_args():
     too many columns are being removed, you can adjust the optional arguments and
     inspect this output file to see the effect on the number of columns removed, 
     and adjust accordingly.
+
+    Several functions present in this customizable trimming module are 
+    modified versions of functions included in the PHYLUCE package, specifically 
+    the generic_align.py module.
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
     where NAME represents the gene/locus. The NAME portion should not 
