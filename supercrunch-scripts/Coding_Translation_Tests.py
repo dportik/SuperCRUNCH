@@ -357,13 +357,13 @@ def make_dirs(outdir):
     return pdir, fdir, adir
 
 def write_log(results, outdir):
+    os.chdir(outdir)
+    
     outlog = "Log_Sequences_Filtered.txt"
     with open(outlog, 'a') as fh:
         fh.write("Locus\tSeqs_Passed\tSeqs_Failed\n")
         for r in results:
             fh.write("{}\t{}\t{}\n".format(r[0], r[1], r[2]))
-            
-    shutil.move(outlog, outdir)
 
 def cleanup(pdir, fdir, adir):
     """
@@ -378,6 +378,10 @@ def cleanup(pdir, fdir, adir):
 def main():
     args = get_args()
     tb = datetime.now()
+    if args.outdir == '.':
+        raise ValueError('\n\n***Please provide full path to output directory!\n')
+    if args.indir == '.':
+        raise ValueError('\n\n***Please provide full path to input directory!\n')
     
     pdir, fdir, adir = make_dirs(args.outdir)
     
