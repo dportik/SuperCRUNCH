@@ -3,16 +3,16 @@ SuperCRUNCH: Concatenation module
 						
     Concatenation: Combine multiple alignments into a single concatenated 
     alignment. The input file format can be non-interleaved fasta or phylip, 
-    and is selected using the -f flag. The input alignment files must be 
+    and is selected using the --informat flag. The input alignment files must be 
     labeled with one of the following extensions to be read: NAME.fasta, 
     NAME.fa, NAME.phylip, or NAME.phy. The complete set of taxa is assessed 
-    across all alignments. All taxon labels must be unique (no duplicate 
-    names) or an error will be thrown. If a taxon is absent from an alignment, 
-    a missing sequence is generated using the symbol selected with the -s flag 
-    (can be an N, dash, or ?). The output format must be specified as fasta 
-    or phylip using the -o flag. 
+    across all alignments. All taxon labels must be unique within each alignment
+    (no duplicate names) or an error will be thrown. If a taxon is absent 
+    from an alignment, a missing sequence is generated using the symbol 
+    selected with the -s flag (can be an N, dash, or ?). The output format 
+    must be specified as fasta or phylip using the --outformat flag. 
 
-    Output files are written to the specified output directory.
+    Output files are written to the specified output directory (-o).
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -42,16 +42,16 @@ def get_args():
             description="""---------------------------------------------------------------------------
     Concatenation: Combine multiple alignments into a single concatenated 
     alignment. The input file format can be non-interleaved fasta or phylip, 
-    and is selected using the -f flag. The input alignment files must be 
+    and is selected using the --informat flag. The input alignment files must be 
     labeled with one of the following extensions to be read: NAME.fasta, 
     NAME.fa, NAME.phylip, or NAME.phy. The complete set of taxa is assessed 
-    across all alignments. All taxon labels must be unique (no duplicate 
-    names) or an error will be thrown. If a taxon is absent from an alignment, 
-    a missing sequence is generated using the symbol selected with the -s flag 
-    (can be an N, dash, or ?). The output format must be specified as fasta 
-    or phylip using the -o flag. 
+    across all alignments. All taxon labels must be unique within each alignment
+    (no duplicate names) or an error will be thrown. If a taxon is absent 
+    from an alignment, a missing sequence is generated using the symbol 
+    selected with the -s flag (can be an N, dash, or ?). The output format 
+    must be specified as fasta or phylip using the --outformat flag. 
 
-    Output files are written to the specified output directory.
+    Output files are written to the specified output directory (-o).
 
     DEPENDENCIES: None.
     ---------------------------------------------------------------------------""")
@@ -184,7 +184,7 @@ def collect_dicts(flist, informat):
         dict_list = [fasta_dict(f) for f in flist]
         
     elif informat == "phylip":
-        dict_list = [fasta_dict(f) for f in flist]
+        dict_list = [phylip_dict(f) for f in flist]
         
     return dict_list
 

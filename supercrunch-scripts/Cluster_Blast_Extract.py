@@ -93,7 +93,7 @@ def get_args():
     word sizes as blastn, and is preferable to blastn. The number of threads to use
     for blast searches can be specified using the --threads flag. For all hits of a 
     particular sequence (excluding self-hits), the blast coordinates are collected 
-    and merged. If multiple non-overlapping intervals are found (ex. 10-40, 45-80), 
+    and merged. If multiple non-overlapping intervals are found (ex. 10-40, 50-80), 
     the merging strategy selected by the user (-m) is used (see documentation for 
     details, including explanation of --bp_brige argument). Finally, the query 
     sequence is extracted based on the blast coordinates and written to a new 
@@ -102,7 +102,7 @@ def get_args():
     from each step are written to separate directories which will appear in the
     main output directory specified.
 
-    DEPENDENCIES: Python: BioPython; Executables in path: blast+ tools 
+    DEPENDENCIES: Python: BioPython; Executables in path: blast+ toolkit 
     (makeblastdb, blastn), cd-hit-est. ***Note the regular version of cd-hit-est
     produced the same results across multiple runs, but the openmp version
     compiled from source gave inconsistent results. It should probably be avoided
@@ -210,7 +210,7 @@ def parse_clusters(f, cluster_file, fdict):
     #blast databse
     sublists.sort(key=len, reverse=True)
     print('\tFound {} cluster(s).'.format(len(sublists)))
-    print('\tLargest cluster contains {:,} sequences.\n'.format(len(sublists[0])))
+    print('\tLargest cluster contains {:,} sequences.'.format(len(sublists[0])))
 
     #write largest cluster to new fasta file
     cluster_db = "{0}_clusterDB.fasta".format(f.split('.')[0])
@@ -465,7 +465,7 @@ def parse_blastn_output6_NoSelfHits(blast_output, merge_strategy, bp_bridge):
             parsing_list.append(summary_list)
             count += 1
             
-    print("\tFinished retrieving blast coordinates for {} accessions.".format(count))
+    print("\tFinished retrieving blast coordinates for {:,} accessions.".format(count))
     
     return parsing_list
 
@@ -474,7 +474,7 @@ def pull_records(f, fdict, parsing_list):
     Function to write sequences to new fasta file based 
     on the blast coordinates retrieved for those sequences.
     """
-    print("\nWriting sequences with updated coordinates.")
+    print("\nWriting sequences with updated coordinates...")
     
     #create set of accession numbers from empirical fasta
     emp_accs = set(list(fdict.keys()))
@@ -497,7 +497,7 @@ def pull_records(f, fdict, parsing_list):
             #test if number of accns processed divisible by 100, if so print number
             #ie an on-screen progress report
             if count != int(0) and count % int(100) == 0:
-                print("\t\t\tFinished writing {:,} updated records...".format(count))
+                print("\t\tFinished writing {:,} updated records...".format(count))
             #look up the sequence using the accn number as the dictionary key
             fullseq = fdict[item[0]].seq
             seq_parts = []
@@ -645,6 +645,12 @@ def main():
     for f in fastas:
         cbe_runner(f, args.blast_task, args.max_hits, args.merge_strategy,
                        args.threads, args.bp_bridge, clustdir, blastdir, logdir, fdir)
+    
+    clean_fastas = sorted([f for f in os.listdir(fdir) if f.endswith('.fasta')])
+    os.chdir(args.outdir)
+    with open("Filtered_Fasta_File_List.txt", 'a') as fh:
+        for f in clean_fastas:
+            fh.write("{}\n".format(f))
 
     tf = datetime.now()
     te = tf - tb

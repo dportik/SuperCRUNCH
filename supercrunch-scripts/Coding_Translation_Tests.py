@@ -23,6 +23,13 @@ SuperCRUNCH: Coding_Translation_Tests module
     written as is (adjusted for length to be divisible by three) to the relevant 
     files, noted by an '*' appended at the end of the sequence description line.
 
+    If your dataset contains a mix of loci that need to be translated 
+    differently (e.g., coding mtDNA vs. coding nucDNA), the 
+    --onlyinclude flag can be used. This requires the full path to a text file 
+    containing the names of the fasta files (one file name per line) to be 
+    processed for a particular run. This allows you to run this module with 
+    particular settings for a subset of the files in the input directory.
+
     Perhaps the most important aspects of this script are the adjusting of sequences 
     to the first codon position and the completion of the final codon. This is 
     required for some alignment programs.
@@ -86,6 +93,13 @@ def get_args():
     written as is (adjusted for length to be divisible by three) to the relevant 
     files, noted by an '*' appended at the end of the sequence description line.
 
+    If your dataset contains a mix of loci that need to be translated 
+    differently (e.g., coding mtDNA vs. coding nucDNA), the 
+    --onlyinclude flag can be used. This requires the full path to a text file 
+    containing the names of the fasta files (one file name per line) to be 
+    processed for a particular run. This allows you to run this module with 
+    particular settings for a subset of the files in the input directory.
+
     Perhaps the most important aspects of this script are the adjusting of sequences 
     to the first codon position and the completion of the final codon. This is 
     required for some alignment programs.
@@ -125,6 +139,11 @@ def get_args():
                             help="OPTIONAL: In addition to forward frames, examine reverse "
                             "complement during translation tests.")
 
+    parser.add_argument("--onlyinclude",
+                            required=False,
+                            help="OPTIONAL: The full path to a text file containing the "
+                            "names of the fasta files to process for this run.")
+    
     parser.add_argument("--quiet",
                             required=False,
                             action='store_true',
@@ -165,7 +184,7 @@ def orf_adjust(f, tcode, rc, quiet):
     tpass, tfail = int(0), int(0)
     
     #labels for output files
-    prefix = f.split('.')[0]
+    prefix = f.split('/')[-1].split('.')[0]
     fasta_all = "{}_All.fasta".format(prefix)
     fasta_pass = "{}_Passed.fasta".format(prefix)
     fasta_fail = "{}_Failed.fasta".format(prefix)
@@ -288,7 +307,8 @@ def orf_adjust(f, tcode, rc, quiet):
                     if sublist[0] == int(1) and '*' in sublist[1][-3:]:
                         tpass+=1
                         if not quiet:
-                            print("\t{0}: Translation {1} with single tailing stop codon".format(fasta_dict[record].id, sublist[2]))
+                            print("\t{0}: Translation {1} with single tailing stop codon"
+                                      .format(fasta_dict[record].id, sublist[2]))
                             for i in frames_list:
                                 print("\t\t\t{} stop codons: {}".format(i[2], i[0]))
                             
@@ -378,21 +398,32 @@ def cleanup(pdir, fdir, adir):
 def main():
     args = get_args()
     tb = datetime.now()
+    
     if args.outdir == '.':
         raise ValueError('\n\n***Please provide full path to output directory!\n')
     if args.indir == '.':
         raise ValueError('\n\n***Please provide full path to input directory!\n')
     
     pdir, fdir, adir = make_dirs(args.outdir)
+            
+    os.chdir(args.indir)
     
+    if not args.onlyinclude:
+        flist = sorted([os.path.abspath(f) for f in os.listdir('.')
+                            if f.endswith(('.fasta', '.fa'))])
+        print("\nFound {:,} fasta files to perform length adjustments and translation tests.".format(len(flist)))
+    elif args.onlyinclude:
+        with open(args.include, 'r') as fh:
+            incl = [l.strip() for l in fh]
+        flist = sorted([os.path.abspath(f) for f in os.listdir('.')
+                            if f.endswith(('.fasta', '.fa')) and f in incl])
+        print("\nFound {:,} fasta files to perform length adjustments and translation tests, based on list of files to include.".format(len(flist)))
+        
     if args.table is None:
         tcode = "Standard"
     else:
         tcode = translation_val(args.table)
-        
-    os.chdir(args.indir)
-    flist = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
-    print("\n\nFound {} fasta files to perform length adjustments and translation tests.".format(len(flist)))
+
     print("\n\nPerforming all translations using table: {}\n\n".format(tcode))
 
     results = []

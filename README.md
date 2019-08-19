@@ -6,7 +6,7 @@
 
 **SuperCRUNCH** is a python toolkit for creating and working with phylogenetic datasets. SuperCRUNCH can be run using any set of sequence data, as long as sequences are in fasta format with standard naming conventions (described [here](https://github.com/dportik/SuperCRUNCH/wiki/2:-Starting-Materials)). 
 
-SuperCRUNCH can be used to process sequences downloaded directly from GenBank/NCBI, local sequence data (e.g. sequences not downloaded from GenBank, such as unpublished data), or a combination of both. The sequence data are first parsed into gene-specific fasta files using targeted searches guided by lists of taxa and locus names. For each resulting gene, sequences can be filtered with similarity searches using automated methods or based on user-supplied reference sequences. SuperCRUNCH offers the option to select a best representative sequence for each taxon, or to retain all filtered sequences for each taxon. These options allow the user to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). SuperCRUNCH offers important pre-alignment steps (adjust sequence directions, adjust reading frames) and several options for multiple sequence alignment (Clustal-O, MAFFT, Muscle, MACSE) and alignment trimming (using trimAl). Finally, SuperCRUNCH can be used for rapid file format conversion and concatenation. 
+SuperCRUNCH can be used to process sequences downloaded directly from GenBank/NCBI, local sequence data (e.g. sequences not downloaded from GenBank, such as unpublished data), or a combination of both. The sequence data are first parsed into gene-specific fasta files using targeted searches guided by lists of taxon and locus names. For each resulting gene, sequences can be filtered with similarity searches using automated methods or based on user-supplied reference sequences. SuperCRUNCH offers the option to select a best representative sequence for each taxon, or to retain all filtered sequences for each taxon. These options allow the user to generate interspecific supermatrix datasets (one sequence per taxon per locus) or population-level datasets (multiple sequences per taxon per locus). SuperCRUNCH offers important pre-alignment steps (adjust sequence directions, adjust reading frames) and several options for multiple sequence alignment (Clustal-O, MAFFT, Muscle, MACSE) and alignment trimming (using trimAl). Finally, SuperCRUNCH can be used for rapid file format conversion and concatenation. 
 
 SuperCRUNCH is scalable and can be used to assemble a variety of datasets, ranging from small population-level datasets (one taxon, one gene) to large phylogenomic datasets with thousands of loci (such as UCEs or other sequence capture datasets). SuperCRUNCH was intended to be transparent, objective and repeatable, and provides meaningful output at every step to help guide user decisions. In addition, it is modular in design and various components of SuperCRUNCH can be easily incorporated into custom bioinformatics workflows.
 
@@ -21,7 +21,7 @@ The current release of **SuperCRUNCH** is [v1.2](https://github.com/dportik/Supe
 
 ### Major changes in v1.2:
   - **All modules are now compatible with Python 2.7 and Python 3.7.**
-  - **SQL now implemented** in `Parse_Loci.py` (up to 30x speedup), `Filter_Seqs_and_Species.py` (3x speedup), and `Taxon_Assessment.py` (3x speedup).
+  - **SQL now implemented** in `Parse_Loci.py` (up to 30x speedup), `Filter_Seqs_and_Species.py` (up to 20x speedup), and `Taxon_Assessment.py` (>3x speedup).
   - Added output directory specification to all modules.
   - Two trimming modules now included: `Trim_Alignments_Trimal.py` and `Trim_Alignments_Custom.py`. The `Trim_Alignments_Custom.py` module allows finding start and stop block positions, and row-wise (internal) sliding window trimming based on divergence.
   - Added new module `Filter_Fasta_by_Min_Seqs.py` to filter fasta files using a minimum number of sequences.
@@ -33,7 +33,7 @@ For complete version history please see the [change log file](https://github.com
 
 ## Installation
 
-**SuperCRUNCH** consists of a set of modules written in Python (2.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH if you plan to use all the available modules, including:
+**SuperCRUNCH** consists of a set of modules written in Python that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH if you plan to use all the available modules, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
@@ -47,7 +47,7 @@ For complete version history please see the [change log file](https://github.com
 Helpful installation instructions for these dependencies can be found on the [wiki installation page](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions).
 Please note that some modules do not require any dependencies. If you plan to use only a subset of modules you can quickly check which modules require dependencies [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions#module-dependencies-list). 
 
-SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows if using Cygwin. 
+SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows using something like Cygwin. 
 
 
 ## Complete Instructions for Analyses

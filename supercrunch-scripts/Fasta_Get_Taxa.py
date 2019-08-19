@@ -197,12 +197,12 @@ def get_names(f, numerical, genes, badwords):
     with open(f, 'r') as fh:
         #iterate through lines
         for line in fh:
-            #add to line count and print progress when appropriate
-            rcnt += 1
-            if rcnt % 10000 == 0:
-                print("\tProcessed {} lines...".format(rcnt))
             #find record labels, denoted by >
             if line.startswith(">"):
+                #add to line count and print progress when appropriate
+                rcnt += 1
+                if rcnt % 10000 == 0:
+                    print("\tProcessed {:,} records...".format(rcnt))
                 
                 #process species (binomial) names here
                 #begin by removing punctuation and splitting line
@@ -286,7 +286,7 @@ def get_names(f, numerical, genes, badwords):
                                     taxon_ssp = " ".join(parts2)
                                     ssp_set.add(taxon_ssp)
                         
-    print("\tRead {} total lines...".format(rcnt))
+    print("\n\tRead {:,} total records...".format(rcnt))
     						
     return sp_set, ssp_set
 
@@ -306,7 +306,7 @@ def process_names(indir, outdir, numerical):
     genes, badwords = avoid_lists()
     
     for f in flist:
-        print("\nExamining {}".format(f))
+        print("\nExamining {}:".format(f))
         sp_set, ssp_set = get_names(f, numerical, genes, badwords)
         all_sp.update(sp_set)
         all_ssp.update(ssp_set)

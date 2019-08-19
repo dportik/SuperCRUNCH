@@ -4,7 +4,7 @@ SuperCRUNCH: Taxa_Assessment module
     Taxa_Assessment: The goal of this script is to examine a large fasta file of 
     sequences to see if name labels in the decription line of sequence records can be
     matched those from a taxonomic database. Taxon names can contain a mix of species 
-    (binomial name) and subspecies (trinomial name) labels. Note that 'subspecies' refers 
+    (two-part name) and subspecies (three-part name) labels. Note that 'subspecies' refers 
     to a three part name, where the third part can be an actual subspecies label or a 
     unique identifier (such as fied/museum code, or alpha-numerical code). The user supplies 
     a text file containing a list of taxon names to cross-reference. The taxon names in
@@ -14,38 +14,6 @@ SuperCRUNCH: Taxa_Assessment module
     genus and species will be included from the taxon names database, and only the genus 
     and species will be searched in the sequence records. Output files are written to the 
     output directory specified.
-
-[-t] The input taxon name file should simply contain a list of taxon names, one each line. 
-    For all names the genus and species (and subspecies, if present) should separated by a space.
-    All taxon names are converted to uppercase for searching, so names are NOT case-sensitive.
- 
-	Example of file structure for taxon information (showing species and subspecies examples):
-	
-    Varanus acanthurus
-    Varanus albigularis albigularis
-    Varanus albigularis microstictus
-    Varanus auffenbergi
-    Varanus bangonorum
-    Varanus baritji
-    Varanus beccarii
-
-[-o] Full path to an existing directory in which the outputs will be written. 
-
-	Outputs Files:
-	
-	Matched_Taxon_Names.log - Text file summarizing each taxon name matched to database. 
-
-    Unmatched_Taxon_Names.log - Text file summarizing each taxon name not matched to database. 
-	
-	Matched_Taxa.fasta - A fasta file containing all records with a matched taxon name.
-
-	Unmatched_Taxa.fasta - A fasta file containing all records without a matched taxon name.
-                           The taxon names in this file can be renamed/corrected in the
-                           subsequent script and merged with the Matched_Taxa.fasta. 
-                           
-[--no_subspecies] Excludes all subspecies names from searches, regardless of whether the
-     taxon names file contains them or not. This essentially reduces all subspecies names
-     to a binomial name, so all subspecies would be considered a single species. 
     
  -------------------------
 Compatible with Python 2.7 & 3.7
@@ -58,7 +26,7 @@ SuperCRUNCH project
 https://github.com/dportik/SuperCRUNCH
 Written by Daniel Portik 
 daniel.portik@gmail.com
-January 2019
+July 2019
 Distributed under the 
 GNU General Public Lincense
 '''
@@ -80,18 +48,18 @@ def get_args():
     Taxa_Assessment: The goal of this script is to examine a large fasta file of 
     sequences to see if name labels in the decription line of sequence records can be
     matched those from a taxonomic database. Taxon names can contain a mix of species 
-    (binomial name) and subspecies (trinomial name) labels. Note that 'subspecies' refers 
-    to a three part name, where the third part can be an actual subspecies label or a 
+    (two-part name) and subspecies (three-part name) labels. Note that 'subspecies' refers 
+    to a three-part name, where the third part can be an actual subspecies label or a 
     unique identifier (such as fied/museum code, or alpha-numerical code). The user supplies 
     a text file containing a list of taxon names to cross-reference. The taxon names in
     the supplied database and the description lines are pre-processed before searches and 
-    as a result are NOT case-sensitive. If records with valid 'subspecies' (three part) names 
+    as a result are NOT case-sensitive. If records with valid 'subspecies' (three-part) names 
     should not be included, use the --no_subspecies flag. If this flag is used, only the 
     genus and species will be included from the taxon names database, and only the genus 
     and species will be searched in the sequence records. Output files are written to the 
     output directory specified.
 
-    DEPENDENCIES: Python: BioPython, sqlite3.
+    DEPENDENCIES: Python: BioPython.
 	---------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--input",
@@ -218,7 +186,7 @@ def build_sql_db(f, species, subspecies):
     to the SQL database.
     """
     curpath = os.getcwd()
-    db = os.path.join(curpath, "Filter-Seqs.sql.db")
+    db = os.path.join(curpath, "Taxa-Assessment.sql.db")
     b = datetime.now()
     print("\n--------------------------------------------------------------------------------------\n")
     print("Building SQL database: {}".format(db))
@@ -318,14 +286,15 @@ def match_taxa(db, species, subspecies, no_subspecies):
     matched_sspnames = sorted(setssp)
 
     print("\n\n\tFound {:,} sequences with matched taxon names.".format(len(matched_accs)))
-    print("\tFound {:,} matched species (binomial) names.".format(len(matched_spnames)))
-    print("\tFound {:,} matched subspecies (trinomial) names.".format(len(matched_sspnames)))
-    
+    print("\tFound {:,} matched species (two-part) names.".format(len(matched_spnames)))
+    if not no_subspecies:
+        print("\tFound {:,} matched subspecies (three-part) names.".format(len(matched_sspnames)))
+        
     conn.close()
 
     return matched_accs, matched_spnames, matched_sspnames
 
-def get_unmatched_accs_names(db, matched_accs):
+def get_unmatched_accs_names(db, matched_accs, no_subspecies):
     print("\n--------------------------------------------------------------------------------------\n")
     print("Gathering records with unmatched names.\n")
     print("\tStarting SQL query...")
@@ -345,14 +314,15 @@ def get_unmatched_accs_names(db, matched_accs):
     [badssp.add(r['sspname']) for r in results]
         
     print("\tFinished query. Gathering sequences...")
-    numerical = True
+    
     unmatched_accs = sorted(badaccs)
     unmatched_spnames = sorted(badsp)
     unmatched_sspnames = sorted(badssp)
     
     print("\n\tFound {:,} sequences with an unmatched taxon name.".format(len(unmatched_accs)))
-    print("\tFound {:,} unmatched two-part names.".format(len(unmatched_spnames)))
-    print("\tFound {:,} unmatched three-part names.".format(len(unmatched_sspnames)))
+    print("\tFound {:,} unmatched species (two-part) names.".format(len(unmatched_spnames)))
+    if not no_subspecies:
+        print("\tFound {:,} unmatched subspecies (three-part) names.".format(len(unmatched_sspnames)))
     print("\n--------------------------------------------------------------------------------------\n")
     
     conn.close()
@@ -412,7 +382,7 @@ def main():
     matched_accs, matched_spnames, matched_sspnames =  match_taxa(db, species, subspecies, args.no_subspecies)
     allmatchednames = sorted(matched_spnames + matched_sspnames)
     
-    unmatched_accs, unmatched_spnames, unmatched_sspnames = get_unmatched_accs_names(db, matched_accs)
+    unmatched_accs, unmatched_spnames, unmatched_sspnames = get_unmatched_accs_names(db, matched_accs, args.no_subspecies)
     
     write_log(matched_accs, "Matched_Records_Accession_Numbers.log", False)
     write_log(unmatched_accs, "Unmatched_Records_Accession_Numbers.log", False)

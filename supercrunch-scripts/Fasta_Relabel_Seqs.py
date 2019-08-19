@@ -206,7 +206,18 @@ def get_taxon(line):
     
     parts2 = [l.replace(",",'').replace(";",'').replace(":",'') for l in line.upper().split()
                   if len(line.split()) >= int(4)][1:4]
-    taxon_ssp = ("_".join(parts2)).capitalize()
+    
+    if parts2[2].isalpha():
+        taxon_ssp = ("_".join(parts2)).capitalize()
+    else:
+        if "_" in parts2[2]:
+            substrings = parts2[2].split('_')
+            if substrings[0].isalpha() == True and substrings[1].isalpha() == False:
+                taxon_ssp = "_".join([parts2[0].capitalize(), parts2[1].lower(), substrings[0].lower(), substrings[1].upper()])
+            else:
+                taxon_ssp = "_".join([parts2[0].capitalize(), parts2[1].lower(), parts2[2].upper()])
+        else:
+            taxon_ssp = "_".join([parts2[0].capitalize(), parts2[1].lower(), parts2[2].upper()])
 
     taxon_spv = ""
     taxon_sspv = ""
@@ -241,7 +252,7 @@ def relabel_species(f, fdir, subspecies, voucherize):
                     taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
 
                     if voucherize is True:
-                        if subspecies is not None:
+                        if subspecies:
                             if taxon_ssp.upper() in subspecies:
                                 newline = ">{}\n".format(taxon_sspv)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
@@ -255,7 +266,7 @@ def relabel_species(f, fdir, subspecies, voucherize):
                         fh_out.write(newline)
                         
                     elif voucherize is False:
-                        if subspecies is not None:
+                        if subspecies:
                             if taxon_ssp.upper() in subspecies:
                                 newline = ">{}\n".format(taxon_ssp)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
@@ -297,7 +308,7 @@ def relabel_accession(f, fdir, subspecies, voucherize):
                     
                     taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
                     
-                    if subspecies is not None:
+                    if subspecies:
                         if taxon_ssp in subspecies:
                             label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                         else:
@@ -333,7 +344,7 @@ def relabel_species_acc(f, fdir, subspecies, voucherize):
                     taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
                     
                     if voucherize is True:
-                        if subspecies is not None:
+                        if subspecies:
                             if taxon_ssp in subspecies:
                                 newline = ">{0}_{1}\n".format(taxon_sspv, acc)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
@@ -348,7 +359,7 @@ def relabel_species_acc(f, fdir, subspecies, voucherize):
                         fh_out.write(newline)
                         
                     elif voucherize is False:
-                        if subspecies is not None:
+                        if subspecies:
                             if taxon_ssp in subspecies:
                                 newline = ">{0}_{1}\n".format(taxon_ssp, acc)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])

@@ -15,12 +15,12 @@ SuperCRUNCH: Filter_Seqs_and_Species module
     each taxon. This will lead to a supermatrix-style data set. If 'allseqs' is 
     selected, all sequences will be selected for each taxon. This will allow
     population-level (intraspecific) sampling. In both cases, the sequences must 
-    be longer than the base pair length requirement supplied using the -l flag. 
+    be longer than the base pair length requirement supplied using the -m flag. 
     If no sequences are long enough, NO sequence is selected for that taxon. 
     
     The remaining filters generally apply to the 'oneseq' option. When sequences
     are found for a taxon, they are first sorted by length (longest first). 
-    A sequence is selected based on the -f flag. The 'length' option takes the 
+    A 'best' sequence is selected based on the -f flag. The 'length' option takes the 
     longest sequence. The 'translate' option takes the longest sequence
     that passes translation (no internal stop codons). For this option the 
     translation table should be specified with the --table flag. All NCBI 
@@ -30,11 +30,17 @@ SuperCRUNCH: Filter_Seqs_and_Species module
     order, rather than by length. If this is used with -f length, sequence 
     selection is essentially randomized (but minimum length filter must be passed). 
 
-    Finally, if the --vouchered flag is provided, only sequences which have a 
+    If the --vouchered flag is provided, only sequences which have a 
     voucher tag (Voucher_[ID]) will be retained. This can be useful for creating 
     a population-level data set for which particular specimens are known to
     have been sequenced for several loci. It will allow them to be concatenated 
     into a population-level supermatrix downstream. 
+
+    Finally, if your dataset contains a mix of loci that need to be filtered 
+    differently (e.g., coding mtDNA vs. coding nucDNA vs. noncoding), the 
+    --onlyinclude flag can be used. This requires the full path to a text file 
+    containing the names of the fasta files (one file name per line) to be 
+    processed for a particular run. 
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where 
     NAME represents the gene/locus. The NAME portion should not contain any 
@@ -88,12 +94,12 @@ def get_args():
     each taxon. This will lead to a supermatrix-style data set. If 'allseqs' is 
     selected, all sequences will be selected for each taxon. This will allow
     population-level (intraspecific) sampling. In both cases, the sequences must 
-    be longer than the base pair length requirement supplied using the -l flag. 
+    be longer than the base pair length requirement supplied using the -m flag. 
     If no sequences are long enough, NO sequence is selected for that taxon. 
     
     The remaining filters generally apply to the 'oneseq' option. When sequences
     are found for a taxon, they are first sorted by length (longest first). 
-    A sequence is selected based on the -f flag. The 'length' option takes the 
+    A 'best' sequence is selected based on the -f flag. The 'length' option takes the 
     longest sequence. The 'translate' option takes the longest sequence
     that passes translation (no internal stop codons). For this option the 
     translation table should be specified with the --table flag. All NCBI 
@@ -103,11 +109,17 @@ def get_args():
     order, rather than by length. If this is used with -f length, sequence 
     selection is essentially randomized (but minimum length filter must be passed). 
 
-    Finally, if the --vouchered flag is provided, only sequences which have a 
+    If the --vouchered flag is provided, only sequences which have a 
     voucher tag (Voucher_[ID]) will be retained. This can be useful for creating 
     a population-level data set for which particular specimens are known to
     have been sequenced for several loci. It will allow them to be concatenated 
     into a population-level supermatrix downstream. 
+
+    Finally, if your dataset contains a mix of loci that need to be filtered 
+    differently (e.g., coding mtDNA vs. coding nucDNA vs. noncoding), the 
+    --onlyinclude flag can be used. This requires the full path to a text file 
+    containing the names of the fasta files (one file name per line) to be 
+    processed for a particular run. 
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where 
     NAME represents the gene/locus. The NAME portion should not contain any 
@@ -141,7 +153,7 @@ def get_args():
                             "using the -s 'oneseq' option. If the -s 'allseqs' option is "
                             "desired, use the 'length' option.")
     
-    parser.add_argument("-l", "--length",
+    parser.add_argument("-m", "--min_length",
                             required=True,
                             help="REQUIRED: Integer of the minimum number of base pairs "
                             "required to keep a sequence (ex. 150).")
@@ -175,13 +187,18 @@ def get_args():
                                          "1","2","3","4","5","6","7","8","9","10","11","12","13",
                                          "14","15","16","17","18","19","20","21","22","23","24",
                                          "25","26","27","28","29","30","31"],
-                            help="REQUIRED for 'translate' filter: Specifies translation table.")
+                            help="REQUIRED for -f translate: Specifies translation table.")
+    
+    parser.add_argument("--onlyinclude",
+                            required=False,
+                            help="OPTIONAL: The full path to a text file containing the "
+                            "names of the fasta files to process for this run.")
     
     parser.add_argument("--quiet",
                             required=False,
                             action='store_true',
                             help="OPTIONAL: Show less output while running (useful when filtering "
-                            "many loci).")
+                            "many, many loci).")
     
     return parser.parse_args()
 
@@ -220,37 +237,6 @@ def parse_taxa(f):
                   .format(len(species), len(subspecies)))
         
     return species, subspecies
-
-def initiate_sql_db():
-    """
-    Fire up the SQL database. Returns name
-    of database (db).
-    """
-    curpath = os.getcwd()
-    db = os.path.join(curpath, "Filter-Seqs.sql.db")
-    b = datetime.now()
-    print("\n--------------------------------------------------------------------------------------\n")
-    print("Building SQL database: {}".format(db))
-    if os.path.exists(db):
-        os.remove(db)
-        
-    conn = sqlite3.connect(db)
-    cur = conn.cursor()
-    
-    cur.execute("DROP TABLE IF EXISTS records;")
-    cur.execute("""CREATE TABLE records (
-        locus text NOT NULL,
-        accession text NOT NULL,
-        spname text NOT NULL,
-        sspname text NOT NULL,
-        voucher text NOT NULL,
-        length int NOT NULL,
-        translation text NOT NULL)""")
-    #cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    conn.commit()
-    conn.close()
-
-    return db
 
 def get_taxon(line):
     """
@@ -426,37 +412,6 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
         
     return accession, sp_name, ssp_name, voucher
 
-def add_locus_to_db(f, db, species, subspecies, no_subspecies, seq_filter, tcode):
-    """
-    Add the entire contents of this fasta file (f)
-    to the SQL database.
-    """
-    conn = sqlite3.connect(db)
-    cur = conn.cursor()
-    sql_add_records = "INSERT INTO records VALUES (?, ?, ?, ?, ?, ?, ?)"
-
-    locus = f.split('.')[0]
-    print("\tAdding {} to SQL database...".format(f))
-    
-    locus_recs = SeqIO.index(f, "fasta")
-    
-    with open(f, 'r') as fh:
-        for line in fh:
-            if line.startswith('>'):
-                acc, sp, ssp, vouch = parse_fasta_record(line, species, subspecies, no_subspecies)
-                tempseq = locus_recs[acc].seq
-                if seq_filter == "translate":
-                    if check_translation(tempseq, tcode):
-                        tran = "yes"
-                    else:
-                        tran = "no"
-                else:
-                    tran = "NA"
-                cur.execute(sql_add_records, (locus, acc, sp, ssp, vouch, len(tempseq), tran))
-                
-    conn.commit()
-    conn.close()
-
 def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
                     length, randomize, no_subspecies, vouchered, quiet):
     """
@@ -464,6 +419,9 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
     to explain decision tree, options, and variables
     returned.
     """
+    if quiet:
+        print("\tSelecting and writing sequences.")
+        
     #create a list that will simply contain all the accession numbers for
     #every sequence and every taxon for this locus (e.g. this fasta file)
     all_acc_list = []
@@ -497,26 +455,26 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
         #Relax brain, this actually works.
         if len(t.split()) == 2:
             #get all the records that match this taxon name for this locus
-            cur.execute("SELECT * FROM records WHERE locus = '{0}' AND spname = '{1}' AND sspname = 'NA'"
-                            .format(locus, t))
+            cur.execute("SELECT * FROM records WHERE spname = '{0}' AND sspname = 'NA'"
+                            .format(t))
             
             allresults = cur.fetchall()
             
             #get all sequences that match for this name type and this locus and with minimum length required
-            cur.execute("SELECT * FROM records WHERE locus = '{0}' AND spname = '{1}' AND sspname = 'NA' AND length >= {2}"
-                            .format(locus, t, length))
+            cur.execute("SELECT * FROM records WHERE spname = '{0}' AND sspname = 'NA' AND length >= {1}"
+                            .format(t, length))
             results = cur.fetchall()
 
         #If the taxon name is a 'subspecies' name, then we only want records
         #that match that name in the sspname column
         elif len(t.split()) == 3:
             #get all the records that match this taxon name for this locus
-            cur.execute("SELECT * FROM records WHERE locus = '{0}' AND (spname = '{1}' OR sspname = '{1}')"
-                            .format(locus, t))
+            cur.execute("SELECT * FROM records WHERE (spname = '{0}' OR sspname = '{0}')"
+                            .format(t))
             allresults = cur.fetchall()
             
             #get all sequences that match for this name type and this locus and with minimum length required
-            cur.execute("SELECT * FROM records WHERE locus = '{0}' AND (spname = '{1}' OR sspname = '{1}') AND length >= {2}"
+            cur.execute("SELECT * FROM records WHERE (spname = '{1}' OR sspname = '{1}') AND length >= {2}"
                             .format(locus, t, length))
             results = cur.fetchall()
             
@@ -601,7 +559,7 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
                     #filter the resultlist to obtain sequences that pass translation
                     transresultlist = [x for x in resultlist if x[3] == 'yes']
                     if not quiet:
-                        print("\t\tNumber of filtered sequences available: {}".format(len(transresultlist)))
+                        print("\t\tNumber of sequences passing translation: {}".format(len(transresultlist)))
                     #the above action can produce an empty list (e.g., no sequences passed
                     #translation), so before moving on to seq_selection make sure there
                     #are actually sequences here
@@ -636,7 +594,7 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
                     #if no sequences passed translation, handle here 
                     else:
                         if not quiet:
-                            print("\n\t\tAll sequences failed translation!")
+                            print("\n\t\t***All sequences failed translation!")
                         
                         #if the goal is to select one sequence per taxon, we still
                         #want a sequence for this taxon even if none of them passed
@@ -729,9 +687,65 @@ def write_batch_entrez_accs(locus, all_acc_list, adir):
             
     shutil.move(outname, adir)
     
+def make_locus_db(f, species, subspecies, no_subspecies, seq_filter, tcode, quiet):
+    """
+    Add the entire contents of this fasta file (f)
+    to the locus SQL database.
+    """
+    #create name for this db based on locus name
+    locusdb =  "{}.sql.db".format(f.split('/')[-1].split('.')[0])
+    curpath = os.getcwd()
+    db = os.path.join(curpath, locusdb)
+    #double check it doesn't already exist - if it does eliminate
+    if os.path.exists(db):
+        os.remove(db)
+    #establich connection to db
+    conn = sqlite3.connect(db)
+    cur = conn.cursor()
+    #create table in db
+    cur.execute("DROP TABLE IF EXISTS records;")
+    cur.execute("""CREATE TABLE records (
+        accession text NOT NULL,
+        spname text NOT NULL,
+        sspname text NOT NULL,
+        voucher text NOT NULL,
+        length int NOT NULL,
+        translation text NOT NULL)""")
+    sql_add_records = "INSERT INTO records VALUES (?, ?, ?, ?, ?, ?)"
 
-def filter_runner(flist, db, seq_selection, seq_filter, length,
-                      randomize, no_subspecies, vouchered, quiet,
+    if quiet:
+        print("\tBuilding locus SQL database: {}".format(locusdb))
+    elif not quiet:
+        print("\nBuilding locus SQL database: {}".format(locusdb))
+        
+    #load fasta as seq dict using biopython
+    locus_recs = SeqIO.index(f, "fasta")
+    #iterate over fasta contents and add info to sql db
+    with open(f, 'r') as fh:
+        for line in fh:
+            if line.startswith('>'):
+                #get main contents using parse_fasta_record() function
+                acc, sp, ssp, vouch = parse_fasta_record(line, species, subspecies, no_subspecies)
+                #get access to sequence to potentially translate depending on arg supplied
+                tempseq = locus_recs[acc].seq
+                if seq_filter == "translate":
+                    if check_translation(tempseq, tcode):
+                        tran = "yes"
+                    else:
+                        tran = "no"
+                else:
+                    tran = "NA"
+                #add information to sql db
+                cur.execute(sql_add_records, (acc, sp, ssp, vouch, len(tempseq), tran))
+                
+    #save changes to db, close connection, return name of db
+    conn.commit()
+    conn.close()
+    
+    return db
+
+def filter_runner(flist, species, subspecies, seq_selection, seq_filter, length,
+                      randomize, no_subspecies, vouchered, tcode, quiet,
                       fdir, ldir, adir):
     """
     Function to run main tasks. Connect to the 
@@ -744,42 +758,54 @@ def filter_runner(flist, db, seq_selection, seq_filter, length,
     print("\n--------------------------------------------------------------------------------------\n")
     print("Beginning sequence filtering for all loci.\n\n\n")
     
-    conn = sqlite3.connect(db)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    
-    cur.execute("SELECT * FROM records")
-    results = cur.fetchall()
-    
-    emp_species = sorted(set([r['spname'] for r in results if r['spname'] != "NA"]))
-    emp_subspecies = sorted(set([r['sspname'] for r in results if r['sspname'] != "NA"]))
-
-    #create taxon list to sort through depending on
-    #the no_subspecies option
-    if no_subspecies:
-        taxa = emp_species
-    else:
-        taxa = sorted(emp_species + emp_subspecies)
-
-    #iterate over loci and 
+    #iterate over loci
     for f in flist:
         b = datetime.now()
-        locus = f.split('.')[0]
+        #get locus name from full path to fasta file
+        locus = f.split('/')[-1].split('.')[0]
         if not quiet:
             print("\n--------------------------------------------------------------------------------------\n")
         print("Filtering sequences in {}.".format(locus))
-        
+
+        #make an SQL db for this locus
+        db = make_locus_db(f, species, subspecies, no_subspecies, seq_filter, tcode, quiet)
+        conn = sqlite3.connect(db)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+        #get a list of the species and subspecies from this particular file
+        #using the sql db
+        cur.execute("SELECT * FROM records")
+        results = cur.fetchall()
+        emp_species = sorted(set([r['spname'] for r in results if r['spname'] != "NA"]))
+        emp_subspecies = sorted(set([r['sspname'] for r in results if r['sspname'] != "NA"]))
+
+        #create taxon list to sort through depending on
+        #the no_subspecies option
+        if no_subspecies:
+            taxa = emp_species
+        else:
+            taxa = sorted(emp_species + emp_subspecies)
+
+        #filter the sequences using the filter_seqs() function
         all_acc_list, writing_acc_list, all_seq_info, taxon_accs = filter_seqs(locus, cur, taxa,
                                                                                    seq_selection, seq_filter,
                                                                                    length, randomize, no_subspecies,
                                                                                    vouchered, quiet)
+        #write the filtered fasta file and all log files
         write_fasta(f, locus, seq_selection, writing_acc_list, fdir)
         write_species_log(locus, all_seq_info, ldir)
         write_species_accs(locus, taxon_accs, adir)
         write_batch_entrez_accs(locus, all_acc_list, adir)
+        #remove the sql db for this locus
+        os.remove(db)
+        #show elapsed time on screen
         f = datetime.now()
         e = f - b
-        print("\tFinished. Elapsed time: {0} (H:M:S)\n".format(e))
+        if quiet:
+            print("\tFinished. Elapsed time: {0} (H:M:S)\n".format(e))
+        elif not quiet:
+            print("\n\nFinished. Elapsed time: {0} (H:M:S)\n".format(e))
 
 def make_dirs():
     """
@@ -817,18 +843,23 @@ def main():
     
     tcode = translation_val(args.table)
     
+    os.chdir(args.indir)
+    if not args.onlyinclude:
+        flist = sorted([os.path.abspath(f) for f in os.listdir('.') if f.endswith(('.fasta', '.fa'))])
+        print("\nFound {:,} fasta files to filter.".format(len(flist)))
+        
+    elif args.onlyinclude:
+        with open(args.include, 'r') as fh:
+            incl = [l.strip() for l in fh]
+        flist = sorted([os.path.abspath(f) for f in os.listdir('.') if f.endswith(('.fasta', '.fa')) and
+                            f in incl])
+        print("\nFound {:,} fasta files to filter, based on list of files to include.".format(len(flist)))
+
     os.chdir(args.outdir)
     rdir, fdir, ldir, adir = make_dirs()
-    db = initiate_sql_db()
     
-    os.chdir(args.indir)
-    flist = sorted([f for f in os.listdir('.') if f.endswith(('.fasta', '.fa'))])
-    print("\nFound {} fasta files to filter.".format(len(flist)))
-
-    [add_locus_to_db(f, db, species, subspecies, args.no_subspecies, args.seq_filter, tcode) for f in flist]
-
-    filter_runner(flist, db, args.seq_selection, args.seq_filter, args.length,
-                      args.randomize, args.no_subspecies, args.vouchered, args.quiet,
+    filter_runner(flist, species, subspecies, args.seq_selection, args.seq_filter, args.min_length,
+                      args.randomize, args.no_subspecies, args.vouchered, tcode, args.quiet,
                       fdir, ldir, adir)
     
     tf = datetime.now()

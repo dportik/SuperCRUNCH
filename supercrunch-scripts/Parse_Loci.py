@@ -54,7 +54,8 @@ def get_args():
     a mix of species (binomial name) and subspecies (trinomial name) labels. The 
     --no_subspecies flag can be used to only include binomial names in searches. In this case, 
     only the binomial component will be considered for records that have valid subspecies names. 
-
+    If any accession numbers should be excluded from the searches, a file containing a list of 
+    these accessions (one per line) can be specified using the --exclude flag. 
     All searching occurs using SQL, and an SQL database is constructed from the input file (-i) 
     in the output directory specified (-o). If the database for the input file has already been 
     made, the full path to it can be specified using the --sql_db flag, which will save time for
@@ -89,6 +90,11 @@ def get_args():
                             help="OPTIONAL: Ignore subspecies labels in searches and "
                             "only write species names in the updated description lines "
                             "for sequences.")
+    
+    parser.add_argument("--exclude",
+                            required=False,
+                            help="OPTIONAL: The full path to a text file containing a "
+                            "list of accession numbers to ignore during searches.")
     
     parser.add_argument("--sql_db",
                             required=False,
@@ -224,12 +230,12 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
     #get the 'description' line, which here is everything after the 'species' name
     #check to make sure there was actually a species name and stuff follows
     if len(line.split()[3:]) >= int(1):
-        description = " ".join(line.replace(",",'')
+        description = (" ".join(line.replace(",",'')
                          .replace(";",'')
                          .replace(":",'')
                          .replace(")",'')
                          .replace("(",'')
-                         .split()[3:])
+                         .split()[3:]))+" "
     else:
         description = "NA"
 
@@ -305,13 +311,14 @@ def prep_terms(l):
     terms = padded + l[2]
     return terms
 
-def perform_searches(cur, l, spseq, species):
+def perform_searches(cur, l, spseq, species, exclude_accs):
     print("\nSearching for {}:\n".format(l[0][0]))
     
     terms = prep_terms(l)
 
     acc_set = set()
-
+    excluded = int(0)
+    
     for t in terms:
         sql_query = "SELECT * FROM records WHERE spname IN ({0}) AND description LIKE '%{1}%'".format(spseq, t)
         #print sql_query
@@ -319,7 +326,12 @@ def perform_searches(cur, l, spseq, species):
         results = cur.fetchall()
         print("\t{:,} records found using term: '{}'".format(len(results), t))
         for r in results:
-            acc_set.add(r['accession'])
+            if r['accession'] not in exclude_accs:
+                acc_set.add(r['accession'])
+            else:
+                excluded += 1
+    if excluded >= 1:
+        print("\n\t*Excluded {} records for {}, based on --exclude flag.".format(excluded, l[0][0]))
     print("\n\t{:,} total unique records found for {}.".format(len(acc_set), l[0][0]))
 
 
@@ -342,14 +354,14 @@ def write_fasta(gene, writing_recs, records, no_subspecies):
         with open(outname, 'a') as fh:
             for r in writing_recs:
                 if r['voucher'] != 'NA':
-                    fh.write(">{0} {1} {2} {3}\n{4}\n"
+                    fh.write(">{0} {1} {2} DESCRIPTION {3}\n{4}\n"
                                  .format(r['accession'],
                                              r['spname'].capitalize(),
                                              r['voucher'],
                                              r['description'].lower(),
                                              records[r['accession']].seq))
                 elif r['voucher'] == 'NA':
-                    fh.write(">{0} {1} {2} \n{3}\n"
+                    fh.write(">{0} {1} DESCRIPTION {2} \n{3}\n"
                                  .format(r['accession'],
                                              r['spname'].capitalize(),
                                              r['description'].lower(),
@@ -360,14 +372,14 @@ def write_fasta(gene, writing_recs, records, no_subspecies):
             for r in writing_recs:
                 if r['sspname'] == 'NA':
                     if r['voucher'] != 'NA':
-                        fh.write(">{0} {1} {2} {3}\n{4}\n"
+                        fh.write(">{0} {1} {2} DESCRIPTION {3}\n{4}\n"
                                      .format(r['accession'],
                                                  r['spname'].capitalize(),
                                                  r['voucher'],
                                                  r['description'].lower(),
                                                  records[r['accession']].seq))
                     elif r['voucher'] == 'NA':
-                        fh.write(">{0} {1} {2} \n{3}\n"
+                        fh.write(">{0} {1} DESCRIPTION {2} \n{3}\n"
                                      .format(r['accession'],
                                                  r['spname'].capitalize(),
                                                  r['description'].lower(),
@@ -375,14 +387,14 @@ def write_fasta(gene, writing_recs, records, no_subspecies):
         
                 elif r['sspname'] != 'NA':
                     if r['voucher'] != 'NA':
-                        fh.write(">{0} {1} {2} {3}\n{4}\n"
+                        fh.write(">{0} {1} {2} DESCRIPTION {3}\n{4}\n"
                                      .format(r['accession'],
                                                  r['sspname'].capitalize(),
                                                  r['voucher'],
                                                  r['description'].lower(),
                                                  records[r['accession']].seq))
                     elif r['voucher'] == 'NA':
-                        fh.write(">{0} {1} {2} \n{3}\n"
+                        fh.write(">{0} {1} DESCRIPTION {2} \n{3}\n"
                                      .format(r['accession'],
                                                  r['sspname'].capitalize(),
                                                  r['description'].lower(),
@@ -422,13 +434,13 @@ def cleanup(fdir, sdir):
     Moves relevant output files to their output directories. 
     """
     print("\n\nCleaning up output files...")
-
+    
     [os.remove(f) for f in os.listdir('.') if f.endswith('.fasta') and os.stat(f).st_size == 0]
     [shutil.move(f, fdir) for f in os.listdir('.') if f.endswith('.fasta')]
     shutil.move('Loci_Record_Counts.txt', sdir)
     print("\tDone!")
         
-def search_runner(species, loci_info, db, records, no_subspecies):
+def search_runner(species, loci_info, db, records, no_subspecies, exclude):
     conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -437,11 +449,17 @@ def search_runner(species, loci_info, db, records, no_subspecies):
 
     loci_counts = []
 
+    if exclude:
+        with open(exclude, 'r') as fh:
+            exclude_accs = [l.strip() for l in fh]
+    else:
+        exclude_accs = []
+
     print("\n--------------------------------------------------------------------------------------\n")
     for l in loci_info:
         b = datetime.now()
         
-        accessions = perform_searches(cur, l, spseq, species)
+        accessions = perform_searches(cur, l, spseq, species, exclude_accs)
         writing_recs = get_records(l[0][0], cur, accessions, records)
         write_fasta(l[0][0], writing_recs, records, no_subspecies)
         loci_counts.append([l[0][0], len(writing_recs)])
@@ -472,11 +490,10 @@ def main():
         sql_db_name = args.sql_db
         print("\n--------------------------------------------------------------------------------------\n")
         print("Using SQL database provided: {}\n".format(sql_db_name.split('/')[-1]))
-
         
     records = index_fasta(args.input)
 
-    search_runner(species, loci_info, sql_db_name, records, args.no_subspecies)
+    search_runner(species, loci_info, sql_db_name, records, args.no_subspecies, args.exclude)
     cleanup(fdir, sdir)
     
     tf = datetime.now()

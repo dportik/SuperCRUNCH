@@ -9,7 +9,9 @@ SuperCRUNCH: Infer_Supermatrix_Combinations module
     from the Filter_Seqs_and_Species.py module to calculate the number of 
     sequences available per taxon. The log files for all loci should be present
     in the input directory for the calculation to be accurate. No output files 
-    are created, rather the information is logged to the screen.
+    are created, rather the information is logged to the screen. Note - this is
+    unable to incorporate voucher information, it only works for the species/subspecies 
+    labels.
     
     DEPENDENCIES: None.
 
@@ -46,7 +48,9 @@ def get_args():
     from the Filter_Seqs_and_Species.py module to calculate the number of 
     sequences available per taxon. The log files for all loci should be present
     in the input directory for the calculation to be accurate. No output files 
-    are created, rather the information is logged to the screen.
+    are created, rather the information is logged to the screen. Note - this is
+    unable to incorporate voucher information, it only works for the species/subspecies 
+    labels.
     DEPENDENCIES: None.
 	-----------------------------------------------------------------------------""")
     

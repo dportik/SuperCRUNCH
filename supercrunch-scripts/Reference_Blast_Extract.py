@@ -114,21 +114,28 @@ def get_args():
     
     parser.add_argument("-o", "--outdir",
                             required=True,
-                            help="OPTIONAL: The full path to an existing directory to write "
+                            help="REQUIRED: The full path to an existing directory to write "
                             "output files.")
     
-    parser.add_argument("-d", "--blast_db",
-                            required=True,
-                            help="REQUIRED: The name of the reference fasta file that "
-                            "will be used to create the blast database. File name only "
-                            "(rather than full path), should be located in the input directory.")
-    
     parser.add_argument("-e", "--emp_fasta",
-                            required=True,
-                            help="REQUIRED: The name of an empirical fasta to blast to "
+                            required=False,
+                            help="OPTION 1: The name of an empirical fasta to blast to "
                             "the database to prune sequences. File name only (rather than "
                             "full path), should be located in the input directory. Follow "
                             "labeling format: NAME.fasta")
+    
+    parser.add_argument("-d", "--blast_db",
+                            required=False,
+                            help="OPTION 1: The name of the reference fasta file that "
+                            "will be used to create the blast database. File name only "
+                            "(rather than full path), should be located in the input directory.")
+    
+    parser.add_argument("--multisearch",
+                            required=False,
+                            help="OPTION 2: If multiple empirical fasta + blast database "
+                            "pairs are present in the -i (input) directory, provide the full path "
+                            "to a tab-delimited text file containing the pair information "
+                            "to allow all of them to run sequentially. See documentation.")
     
     parser.add_argument("-b", "--blast_task",
                             required=True,
@@ -169,7 +176,6 @@ def make_db(blast_db):
     Generates call string for makeblastd and then
     runs using sp.call() with shell option. 
     """
-    print("\n---------------------------------------------------------------------------\n")
     mdb_str =  "makeblastdb -in {} -dbtype nucl".format(blast_db)
     
     print("\n\n{}".format(mdb_str))
@@ -384,7 +390,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy, bp_bridge):
         #test if number of accns processed divisible by 100, if so print number
         #ie an on-screen progress report
         if count != int(0) and count % int(100) == 0:
-        	print("\t\t\tProcessed hits for {:,} accessions...".format(count))
+        	print("\t\tProcessed hits for {:,} accessions...".format(count))
         #initiate list to store all bp coordinates found for this accn 
         coord_list = []
         #iterate over the file contents
@@ -455,7 +461,7 @@ def pull_records(emp_fasta, parsing_list):
             #test if number of accns processed divisible by 100, if so print number
             #ie an on-screen progress report
             if count != int(0) and count % int(100) == 0:
-                print("\t\t\tFinished writing {:,} updated records...".format(count))
+                print("\t\tFinished writing {:,} updated records...".format(count))
             #look up the sequence using the accn number as the dictionary key
             fullseq = record_dict[item[0]].seq
             seq_parts = []
@@ -538,20 +544,58 @@ def main():
     blastdir, logdir, fdir = make_dirs(args.outdir)
     
     os.chdir(args.indir)
-    make_db(args.blast_db)
-    outname = "{}_blast_results.txt".format((args.emp_fasta).split('.')[0])
-    blastn_to_db(args.blast_task, args.blast_db, args.emp_fasta, outname, args.max_hits, args.threads)
     
-    parsing_list = parse_blastn_output6_NoSelfHits(outname, args.merge_strategy, args.bp_bridge)
-    pull_records(args.emp_fasta, parsing_list)
+    if not args.multisearch:
+        print("\n\n======================================================================================")
+        print("\nProcessing fasta file: {}\n".format(args.emp_fasta.split('.')[0]))
+        print("======================================================================================\n\n")
+        make_db(args.blast_db)
+        outname = "{}_blast_results.txt".format((args.emp_fasta).split('.')[0])
+        blastn_to_db(args.blast_task, args.blast_db, args.emp_fasta, outname, args.max_hits, args.threads)
+    
+        parsing_list = parse_blastn_output6_NoSelfHits(outname, args.merge_strategy, args.bp_bridge)
+        pull_records(args.emp_fasta, parsing_list)
 
-    cleanup(blastdir, logdir, fdir)
+        cleanup(blastdir, logdir, fdir)
+        tf = datetime.now()
+        te = tf - tb
+        print("\n\n--------------------------------------------------------------------------------------")
+        print("\nTotal time to process {0}: {1} (H:M:S)\n".format(args.emp_fasta, te))
+        print("--------------------------------------------------------------------------------------\n\n")    
+
+        
+    elif args.multisearch:
+        with open(args.multisearch, 'r') as fh:
+            pairs = [l.strip().split('\t') for l in fh if l.strip()]
+        if pairs:
+            for p in pairs:
+                print("\n\n======================================================================================")
+                print("\nProcessing fasta file: {}\n".format(p[0]))
+                print("======================================================================================\n\n")
+                b = datetime.now()
+                make_db(p[1])
+                outname = "{}_blast_results.txt".format((p[0]).split('.')[0])
+                blastn_to_db(args.blast_task, p[1], p[0], outname, args.max_hits, args.threads)
+
+                parsing_list = parse_blastn_output6_NoSelfHits(outname, args.merge_strategy, args.bp_bridge)
+                pull_records(p[0], parsing_list)
+
+                cleanup(blastdir, logdir, fdir)
+                f = datetime.now()
+                e = f - b
+                print("\nElapsed time: {0} (H:M:S)\n\n".format(e))
+                
+                
+        else:
+            print("\n\nSomething went wrong while attempting to parse file: {}".format(args.multisearch.split('/')[-1]))
+            print("Please ensure this is a tab-delimited file with empirical fasta name in column 1 and "
+                      "the database fasta name in column 2, and all files are within the -i directory.\n\n")
     
-    tf = datetime.now()
-    te = tf - tb
-    print("\n\n--------------------------------------------------------------------------------------")
-    print("\nTotal time to process {0}: {1} (H:M:S)\n".format(args.emp_fasta,te))
-    print("--------------------------------------------------------------------------------------\n\n")    
+        tf = datetime.now()
+        te = tf - tb
+        print("\n\n--------------------------------------------------------------------------------------")
+        print("\nTotal time to process {0} file(s): {1} (H:M:S)\n".format(len(pairs), te))
+        print("--------------------------------------------------------------------------------------\n\n")    
 
 if __name__ == '__main__':
     main()
