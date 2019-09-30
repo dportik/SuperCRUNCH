@@ -25,20 +25,6 @@ SuperCRUNCH: Cluster_Blast_Extract module
     from each step are written to separate directories which will appear in the
     main output directory specified.
 
-    Main Output Files:
-    
-    [NAME]_blast_output.txt - Contains blast search results in output format 6
-    
-    [NAME]_extracted.fasta - The output fasta file containing the extracted sequences.
-    
-    Log_File_[NAME].txt - A tab delimited text file containing the following columns:
-    
-    			Accn	Original_Length	Retained_Length	Start_Coordinate	End_Coordinate
-                
-                The file is populated with data for every record with blast results, such that
-                the starting and final sequence lengths are provided along with the interval(s)
-                used to extract the final sequence.
-
     DEPENDENCIES: Python: BioPython; Executables in path: blast+ tools 
     (makeblastdb, blastn), cd-hit-est. ***Note the regular version of cd-hit-est
     produced the same results across multiple runs, but the openmp version
@@ -58,11 +44,10 @@ SuperCRUNCH project
 https://github.com/dportik/SuperCRUNCH
 Written by Daniel Portik 
 daniel.portik@gmail.com
-January 2019
+July 2019
 Distributed under the 
 GNU General Public Lincense
 '''
-
 import argparse
 import os
 import subprocess as sp
@@ -102,14 +87,15 @@ def get_args():
     from each step are written to separate directories which will appear in the
     main output directory specified.
 
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
+
     DEPENDENCIES: Python: BioPython; Executables in path: blast+ toolkit 
-    (makeblastdb, blastn), cd-hit-est. ***Note the regular version of cd-hit-est
-    produced the same results across multiple runs, but the openmp version
-    compiled from source gave inconsistent results. It should probably be avoided
-    until it is fixed (e.g., compile using 'make openmp=no'). 
+    (makeblastdb, blastn), cd-hit-est.
 	-----------------------------------------------------------------------------""")
     
-    parser.add_argument("-i", "--in_dir",
+    parser.add_argument("-i", "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory which contains "
                             "the parsed, locus-specific fasta files.")
@@ -639,7 +625,7 @@ def main():
 
     clustdir, blastdir, logdir, fdir = make_dirs(args.outdir)
     
-    os.chdir(args.in_dir)
+    os.chdir(args.indir)
     fastas = sorted([f for f in os.listdir('.') if f.endswith((".fa", ".fasta"))])
 
     for f in fastas:

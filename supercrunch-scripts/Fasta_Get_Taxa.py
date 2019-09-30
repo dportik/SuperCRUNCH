@@ -23,21 +23,10 @@ SuperCRUNCH: Fasta_Get_Taxa module
     list of valid species and subspecies names, which can then be used 
     for other steps in SuperCRUNCH.
     
-    Input fasta files must have extension '.fasta' or '.fa', to be read.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores.
 
-    Output Files:
-    
-    Species_Names.txt - List of unique binomial names constructed from 
-                        record descriptions. If records are labeled correctly 
-                        this should correspond to the genus and species. This 
-                        file should be carefully inspected.
-                                               
-    Subspecies_Names.txt - List of unique trinomial names constructed from 
-                           record descriptions. If records actually contain 
-                           subspecies labels they will be captured in this list, 
-                           however if the records only contain a binomial name 
-                           then spurious names may be produced. This file should 
-                           be carefully inspected. 
            
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -49,7 +38,7 @@ SuperCRUNCH project
 https://github.com/dportik/SuperCRUNCH
 Written by Daniel Portik 
 daniel.portik@gmail.com
-January 2019
+July 2019
 Distributed under the 
 GNU General Public Lincense
 '''
@@ -64,7 +53,7 @@ def get_args():
     """
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
-    Fasta_Get_Taxa: Construct 'species' and 'subspecies' label sets from a 
+    Fasta_Get_Taxa: Construct species (two-part) and subspecies (three-part) labels from a 
     directory of fasta files containing description lines. Writes two output 
     files which are lists of all unique 'species' and 'subspecies' labels 
     found. For smaller data sets, this can help generate a list of taxa. 
@@ -77,8 +66,8 @@ def get_args():
     some bad names produced.
 
     In some cases (such as population level data) it may be desirable to
-    obtain a name such as 'Genus Species Sample', rather than 'Genus Species
-    Subspecies'. In such cases, the 'Sample' component may be a museum code
+    obtain a name such as 'Genus Species SampleCode', rather than 'Genus Species
+    Subspecies'. In such cases, the 'SampleCode' component may be a museum code
     or other numerical identifier. This can be obtained by using the optional 
     flag --numerical.
         
@@ -86,7 +75,11 @@ def get_args():
     list of valid species and subspecies names, which can then be used 
     for other steps in SuperCRUNCH.
     
-    Input fasta files must have extension '.fasta' or '.fa', to be read.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores.
+
+    DEPENDENCIES: None.
 	---------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--indir",

@@ -8,10 +8,9 @@ SuperCRUNCH: Fasta_Convert module
     accession names, as the original longer description
     lines containing whitespace will cause problems.
     
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
     Output_Phylip_Files:
            [NAME].phy - The phylip format alignment.
@@ -53,10 +52,10 @@ def get_args():
     accession names, as the original longer description
     lines containing whitespace will cause problems.
     
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME. 
+
     DEPENDENCIES: Python: BioPython.
     ---------------------------------------------------------------------------""")
     
@@ -111,7 +110,7 @@ BEGIN DATA;
 	DIMENSIONS  NTAX={0} NCHAR={1};
 	FORMAT DATATYPE=DNA  MISSING=N GAP=-;
 MATRIX
-'''.format(aln_info[0],aln_info[1]))
+'''.format(aln_info[0], aln_info[1]))
         
         for rec in contents:
             fh.write("\n{} {}".format(rec.description, str(rec.seq)))

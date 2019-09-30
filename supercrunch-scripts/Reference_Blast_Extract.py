@@ -23,27 +23,12 @@ SuperCRUNCH: Reference_Blast_Extract module
     from each step are written to separate directories which will appear in the
     main output directory specified.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
    
-    Outputs Files:
-    
-    [NAME]_blast_output.txt - Contains blast search results in output format 6
-    
-    [NAME]_extracted.fasta - The output fasta file containing the extracted sequences.
-    
-    Log_File_[NAME].txt - A tab delimited text file containing the following columns:
-    
-    			Accn	Original_Length	Retained_Length	Start_Coordinate	End_Coordinate
-                
-                The file is populated with data for every record with blast results, such that
-                the starting and final sequence lengths are provided along with the interval(s)
-                used to extract the final sequence.
-
-Note - The blast output format 6 is tab-delimited with the following 'hidden' headers:
-qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
+    Note - The blast output format 6 is tab-delimited with the following 'hidden' headers:
+    qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -99,10 +84,9 @@ def get_args():
     from each step are written to separate directories which will appear in the
     main output directory specified.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
     
     DEPENDENCIES: Python: BioPython; Executables in path: blast+ tools (makeblastdb, blastn).
 	---------------------------------------------------------------------------""")
@@ -110,7 +94,7 @@ def get_args():
     parser.add_argument("-i", "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory containing "
-                            "the reference and the empirical fasta files.")
+                            "the reference(s) and the empirical fasta file(s).")
     
     parser.add_argument("-o", "--outdir",
                             required=True,

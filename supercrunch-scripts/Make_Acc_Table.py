@@ -30,10 +30,9 @@ SuperCRUNCH: Make_Acc_Table module
     This tool can be used on unaligned or aligned fasta files, as long as
     they contain full description lines for sequences.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -90,10 +89,10 @@ def get_args():
     This tool can be used on unaligned or aligned fasta files, as long as
     they contain full description lines for sequences.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
+
     DEPENDENCIES: None.
     ---------------------------------------------------------------------------""")
     

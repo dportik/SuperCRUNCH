@@ -13,7 +13,7 @@ SuperCRUNCH: Align module
     Several of the aligment methods will either run under the default 
     settings (muscle) or the auto select settings (mafft, clustalo). 
     The optional flag --accurate can be used for mafft (invokes FFT-NS-i; 
-    e.g., --retree 2 --maxiterate 1000') and clustalo (enables --iter=5, 
+    e.g., --retree 2 --maxiterate 1000) and clustalo (enables --iter=5, 
     in which the guide-tree and HMM each undergo 5 iterations, rather
     than only one).
     
@@ -31,14 +31,12 @@ SuperCRUNCH: Align module
     Output files vary between aligners but will be moved to an aligner-specific
     output directory in the main output directory specified by the user.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
-    
 -------------------------
-For Python 2.7
+Compatible with Python 2.7 & 3.7
 Python packages required:
 	-BioPython
 Dependencies:
@@ -52,7 +50,7 @@ SuperCRUNCH project
 https://github.com/dportik/SuperCRUNCH
 Written by Daniel Portik 
 daniel.portik@gmail.com
-January 2019
+ 2019
 Distributed under the 
 GNU General Public Lincense
 '''
@@ -83,7 +81,7 @@ def get_args():
     Several of the aligment methods will either run under the default 
     settings (muscle) or the auto select settings (mafft, clustalo). 
     The optional flag --accurate can be used for mafft (invokes FFT-NS-i; 
-    e.g., --retree 2 --maxiterate 1000') and clustalo (enables --iter=5, 
+    e.g., --retree 2 --maxiterate 1000) and clustalo (enables --iter=5, 
     in which the guide-tree and HMM each undergo 5 iterations, rather
     than only one).
     
@@ -101,10 +99,9 @@ def get_args():
     Output files vary between aligners but will be moved to an aligner-specific
     output directory in the main output directory specified by the user.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
     
     DEPENDENCIES: Python: BioPython; Executables in path: mafft, muscle, 
     clustalo; macse jar file required.
@@ -544,7 +541,7 @@ def main():
     tf = datetime.now()
     te = tf - tb
     print("\n\n--------------------------------------------------------------------------------------")
-    print("\nTotal time to create {2} aligments using {1}: {0} (H:M:S)\n".format(te, args.aln, len(flist)))
+    print("\nTotal time to create {2} aligments using {1}: {0} (H:M:S)\n".format(te, args.aln, len(commands)))
     print("--------------------------------------------------------------------------------------\n\n")
         
 

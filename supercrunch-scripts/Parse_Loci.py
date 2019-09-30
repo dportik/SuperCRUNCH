@@ -6,11 +6,12 @@ SuperCRUNCH: Parse_Loci module
     to locus-specific fasta files. For a sequence to be written to a locus-specific fasta 
     file, it must match either the gene abbreviation or description for that locus AND have 
     a taxon label that is present in the taxon names list. The taxon names list can contain 
-    a mix of species (binomial name) and subspecies (trinomial name) labels. The 
-    --no_subspecies flag can be used to only include binomial names in searches. In this case, 
-    only the binomial component will be considered for records that have valid subspecies names. 
+    a mix of species (two-part) and subspecies (three-part) names. The 
+    --no_subspecies flag can be used to only include species names in searches. In this case, 
+    only species names will be considered for records, regardless of whether or not they 
+    have a valid subspecies name. 
 
-    All searching occurs using SQL, and an SQL database is constructed from the input file (-i) 
+    All searches occur using SQL, and an SQL database is constructed from the input file (-i) 
     in the output directory specified (-o). If the database for the input file has already been 
     made, the full path to it can be specified using the --sql_db flag, which will save time for
     multiple runs on very large fasta files. All output fasta files and a summary file are 
@@ -20,7 +21,6 @@ SuperCRUNCH: Parse_Loci module
 Compatible with Python 2.7 & 3.7
 Python packages required:
 	-BioPython
-    -sqlite3
 -------------------------
 
 SuperCRUNCH project
@@ -31,12 +31,11 @@ July 2019
 Distributed under the 
 GNU General Public Lincense
 '''
-
-import sqlite3
 import sys
 import os
 import argparse
 import shutil
+import sqlite3
 from Bio import SeqIO
 from datetime import datetime
 
@@ -51,17 +50,18 @@ def get_args():
     to locus-specific fasta files. For a sequence to be written to a locus-specific fasta 
     file, it must match either the gene abbreviation or description for that locus AND have 
     a taxon label that is present in the taxon names list. The taxon names list can contain 
-    a mix of species (binomial name) and subspecies (trinomial name) labels. The 
-    --no_subspecies flag can be used to only include binomial names in searches. In this case, 
-    only the binomial component will be considered for records that have valid subspecies names. 
-    If any accession numbers should be excluded from the searches, a file containing a list of 
-    these accessions (one per line) can be specified using the --exclude flag. 
-    All searching occurs using SQL, and an SQL database is constructed from the input file (-i) 
+    a mix of species (two-part) and subspecies (three-part) names. The 
+    --no_subspecies flag can be used to only include species names in searches. In this case, 
+    only species names will be considered for records, regardless of whether or not they 
+    have a valid subspecies name. 
+
+    All searches occur using SQL, and an SQL database is constructed from the input file (-i) 
     in the output directory specified (-o). If the database for the input file has already been 
     made, the full path to it can be specified using the --sql_db flag, which will save time for
     multiple runs on very large fasta files. All output fasta files and a summary file are 
     written to their relevant directories within the output directory specified (-o). 
-    DEPENDENCIES: Python: BioPython, sqlite3
+
+    DEPENDENCIES: Python: BioPython.
 	---------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--input",
@@ -230,11 +230,12 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
     #get the 'description' line, which here is everything after the 'species' name
     #check to make sure there was actually a species name and stuff follows
     if len(line.split()[3:]) >= int(1):
-        description = (" ".join(line.replace(",",'')
-                         .replace(";",'')
-                         .replace(":",'')
-                         .replace(")",'')
-                         .replace("(",'')
+        description = (" ".join(line.replace(",", '')
+                         .replace(";", '')
+                         .replace(":", '')
+                         .replace(")", '')
+                         .replace("(", '')
+                         .replace("<", '')
                          .split()[3:]))+" "
     else:
         description = "NA"
@@ -243,21 +244,21 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
     #voucher, isolate, and strain in the description line
     if 'VOUCHER' in description:
         parts = description.split('VOUCHER ')[-1].split()
-        if parts[0].isalpha() and len(parts) > 1:
+        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
             voucher = "Voucher_{}_{}".format(parts[0], parts[1])
         else:
             voucher = "Voucher_{}".format(parts[0])
             
     elif 'ISOLATE' in description:
         parts = description.split('ISOLATE ')[-1].split()
-        if parts[0].isalpha() and len(parts) > 1:
+        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
             voucher = "Voucher_{}_{}".format(parts[0], parts[1])
         else:
             voucher = "Voucher_{}".format(parts[0])
             
     elif 'STRAIN' in description:
         parts = description.split('STRAIN ')[-1].split()
-        if parts[0].isalpha() and len(parts) > 1:
+        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
             voucher = "Voucher_{}_{}".format(parts[0], parts[1])
         else:
             voucher = "Voucher_{}".format(parts[0])

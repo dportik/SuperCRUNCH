@@ -4,7 +4,7 @@ SuperCRUNCH: Trim_Alignments_Trimal module
 	Trim_Alignments_Trimal: Use the program trimal to batch trim all alignment files in a 
     directory. There are four options (-a) for using trimal in this script. The 
     first is to use the 'gt' method. The default value is set to 0.05, meaning for 
-    a column to be kept 95% of the sequences must not have a gap. This value can 
+    a column to be kept 95% of the sequences must not contain a gap. This value can 
     be changed using the --gt flag with your own value selected. The second option 
     is 'noallgaps', which removes any columns composed entirely of gaps. The third 
     option 'both' runs the gt method, followed by the noallgaps method. The fourth 
@@ -20,7 +20,7 @@ SuperCRUNCH: Trim_Alignments_Trimal module
     The output format must be specified using the -f argument (choices: fasta, 
     nexus, or phylip). 
 
-    Timmed alignment output files will be moved to following output directory specified.
+    Trimmed alignment output files will be moved to following output directory specified.
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -36,14 +36,11 @@ January 2019
 Distributed under the 
 GNU General Public Lincense
 '''
-
 import argparse
 import os
 import subprocess as sp
 import shutil
 from datetime import datetime
-from Bio import SeqIO
-from Bio.Seq import Seq
 
 def get_args():
     """
@@ -54,7 +51,7 @@ def get_args():
 	Trim_Alignments_Trimal: Use the program trimal to batch trim all alignment files in a 
     directory. There are four options (-a) for using trimal in this script. The 
     first is to use the 'gt' method. The default value is set to 0.05, meaning for 
-    a column to be kept 95% of the sequences must not have a gap. This value can 
+    a column to be kept 95% of the sequences must not contain a gap. This value can 
     be changed using the --gt flag with your own value selected. The second option 
     is 'noallgaps', which removes any columns composed entirely of gaps. The third 
     option 'both' runs the gt method, followed by the noallgaps method. The fourth 
@@ -70,7 +67,7 @@ def get_args():
     The output format must be specified using the -f argument (choices: fasta, 
     nexus, or phylip). 
 
-    Timmed alignment output files will be moved to following output directory specified.
+    Trimmed alignment output files will be moved to following output directory specified.
 
     DEPENDENCIES: Executables in path: trimal.
     ---------------------------------------------------------------------------""")

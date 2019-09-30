@@ -1,5 +1,35 @@
+'''
+SuperCRUNCH: Seq_Length_Heterogeneity module
+                            
+    Seq_Length_Heterogeneity - Calculates several metrics in an effort to quantify
+    sequence length variation within alignments. Designed to work for a directory
+    (-i) that contains either phylip or fasta alignment files, with the format
+    specified by the -f flag. The input alignment files must be labeled with one of the 
+    following extensions to be read: NAME.fasta, NAME.fa, NAME.phylip, or NAME.phy. 
+    The user must select the sequence type to calculate metrics from (-s), with 
+    choices 'bases' or 'alns'. For 'bases', only the nucleotides are counted for 
+    a sequence (all gaps are ignored), and the length is obtained from the sum of 
+    the number of bases present. For 'alns', the position of the first nucleotide 
+    and last nucleotide in the sequence alignment are used to infer the aligned 
+    sequence length. From the lengths obtained from all the sequences in an 
+    alignment, the following metrics are calculated: mean, minimum, maximum, 
+    standard deviation, and coefficient of variation. The results for all alignments 
+    are written to a tab-delimited output file in the output directory specified (-o). 
+    
+-------------------------
+Compatible with Python 2.7 & 3.7
+Dependencies: 
+    None
+-------------------------
 
-
+SuperCRUNCH project
+https://github.com/dportik/SuperCRUNCH
+Written by Daniel Portik 
+daniel.portik@gmail.com
+July 2019
+Distributed under the 
+GNU General Public Lincense
+'''
 import os
 import shutil
 import argparse
@@ -15,25 +45,28 @@ def get_args():
     Seq_Length_Heterogeneity - Calculates several metrics in an effort to quantify
     sequence length variation within alignments. Designed to work for a directory
     (-i) that contains either phylip or fasta alignment files, with the format
-    specified by the -f flag. The user must select the sequence type
-    to calculate metrics from (-s), with choices 'bases' or 'alns'. For 'bases', 
-    only the nucleotides are counted for a sequence (all gaps are ignored), and the
-    length is obtained from the sum of the number of bases present. For
-    'alns', the position of the first nucleotide and last nucleotide in 
-    the sequence alignment are used to infer the aligned sequence length. 
-    From the lengths obtained from all the sequences in an alignment, the 
-    following metrics are calculated: mean, minimum, maximum, standard deviation, 
-    and coefficient of variation. The results for all alignments are written to 
-    a tab-delimited output file in the output directory specified (-o). 
+    specified by the -f flag. The input alignment files must be labeled with one of the 
+    following extensions to be read: NAME.fasta, NAME.fa, NAME.phylip, or NAME.phy. 
+    The user must select the sequence type to calculate metrics from (-s), with 
+    choices 'bases' or 'alns'. For 'bases', only the nucleotides are counted for 
+    a sequence (all gaps are ignored), and the length is obtained from the sum of 
+    the number of bases present. For 'alns', the position of the first nucleotide 
+    and last nucleotide in the sequence alignment are used to infer the aligned 
+    sequence length. From the lengths obtained from all the sequences in an 
+    alignment, the following metrics are calculated: mean, minimum, maximum, 
+    standard deviation, and coefficient of variation. The results for all alignments 
+    are written to a tab-delimited output file in the output directory specified (-o). 
+
+    DEPENDENCIES: None.
     ---------------------------------------------------------------------------""")
     
-    parser.add_argument("-i", "--in_dir",
+    parser.add_argument("-i", "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory which "
                             "contains the input alignment files (fasta or phylip "
                             "format).")
     
-    parser.add_argument("-o", "--out_dir",
+    parser.add_argument("-o", "--outdir",
                             required=True,
                             help="REQUIRED: The full path to an existing directory "
                             "to write output files.")
@@ -201,7 +234,7 @@ def main():
     tb = datetime.now()
     
     args = get_args()
-    os.chdir(args.in_dir)
+    os.chdir(args.indir)
     
     if args.format == "fasta":
         flist = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
@@ -221,7 +254,7 @@ def main():
             print("\nNo results generated, something went wrong.")
             print("Please check file formats are correct.\n")
         else:    
-            write_output(results, args.out_dir, args.seqtype)
+            write_output(results, args.outdir, args.seqtype)
     
             tf = datetime.now()
             te = tf - tb

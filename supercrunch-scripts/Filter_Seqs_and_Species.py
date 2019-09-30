@@ -6,8 +6,8 @@ SuperCRUNCH: Filter_Seqs_and_Species module
     taxon. Taxon names in the decription line of sequence records are matched
     to those from a supplied taxon names file in a similar way to Parse_Loci.py
     (through an SQL database constructed from the sequence descriptions). 
-    Taxon names can contain a mix of species (binomial name) and subspecies 
-    (trinomial name) labels. The --no_subspecies flag can be used to only 
+    Taxon names can contain a mix of species (two-part) and subspecies 
+    (three-part) names. The --no_subspecies flag can be used to only 
     include binomial names in searches.
 
     The main decision for filtering is the -s flag, with options 'oneseq' or 'allseqs'.
@@ -42,16 +42,14 @@ SuperCRUNCH: Filter_Seqs_and_Species module
     containing the names of the fasta files (one file name per line) to be 
     processed for a particular run. 
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where 
-    NAME represents the gene/locus. The NAME portion should not contain any 
-    periods or spaces, but can contain underscores. Output files are labeled 
-    using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
 -------------------------
 Compatible with Python 2.7 & 3.7
 Python packages required:
 	-BioPython
-    -sqlite3
 -------------------------
 
 SuperCRUNCH project
@@ -85,8 +83,8 @@ def get_args():
     taxon. Taxon names in the decription line of sequence records are matched
     to those from a supplied taxon names file in a similar way to Parse_Loci.py
     (through an SQL database constructed from the sequence descriptions). 
-    Taxon names can contain a mix of species (binomial name) and subspecies 
-    (trinomial name) labels. The --no_subspecies flag can be used to only 
+    Taxon names can contain a mix of species (two-part) and subspecies 
+    (three-part) names. The --no_subspecies flag can be used to only 
     include binomial names in searches.
 
     The main decision for filtering is the -s flag, with options 'oneseq' or 'allseqs'.
@@ -121,12 +119,11 @@ def get_args():
     containing the names of the fasta files (one file name per line) to be 
     processed for a particular run. 
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', where 
-    NAME represents the gene/locus. The NAME portion should not contain any 
-    periods or spaces, but can contain underscores. Output files are labeled 
-    using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
     		
-    DEPENDENCIES: Python: BioPython, sqlite3
+    DEPENDENCIES: Python: BioPython.
 	-----------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--indir",
@@ -150,8 +147,7 @@ def get_args():
                             choices=["translate", "length"],
                             help="REQUIRED: Strategy for filtering sequence data, "
                             "particularly for selecting one representative sequence "
-                            "using the -s 'oneseq' option. If the -s 'allseqs' option is "
-                            "desired, use the 'length' option.")
+                            "using the -s 'oneseq' option.")
     
     parser.add_argument("-m", "--min_length",
                             required=True,
@@ -161,24 +157,25 @@ def get_args():
     parser.add_argument("-t", "--taxa",
                             required=True,
                             help="REQUIRED: The full path to a text file containing all "
-                            "taxon names to cross-reference in the fasta file.")
+                            "taxon names to cross-reference in the fasta file(s).")
     
     parser.add_argument("--no_subspecies",
                             required=False,
                             action='store_true',
                             help="OPTIONAL: Ignore any subspecies labels in both the name "
-                            "database and record searches (only search binomial names).")
+                            "database and record searches. Only searches binomial "
+                            "(two-part) names).")
     
     parser.add_argument("--randomize",
                             required=False,
                             action='store_true',
                             help="OPTIONAL: For taxa with multiple sequences, shuffle order "
-                            "randomly. Overrides sorting by length before searching.")
+                            "randomly. Overrides sorting by length for sequence selection step.")
     
     parser.add_argument("--vouchered",
                             required=False,
                             action='store_true',
-                            help="OPTIONAL: Select only sequences that containe a Voucher_[ID] "
+                            help="OPTIONAL: Select only sequences that contain a Voucher_[ID] "
                             "tag in the description line (inserted during Parse_Loci.py).")
     
     parser.add_argument("--table",
@@ -849,7 +846,7 @@ def main():
         print("\nFound {:,} fasta files to filter.".format(len(flist)))
         
     elif args.onlyinclude:
-        with open(args.include, 'r') as fh:
+        with open(args.onlyinclude, 'r') as fh:
             incl = [l.strip() for l in fh]
         flist = sorted([os.path.abspath(f) for f in os.listdir('.') if f.endswith(('.fasta', '.fa')) and
                             f in incl])

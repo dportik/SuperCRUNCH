@@ -1,101 +1,22 @@
 ''''
 SuperCRUNCH: Relabel_Fasta module
 
-    Relabel_Fasta: Process fasta files to relabel record using one of three strategies:
-    species, accession, species_acc. With 'species', the record description is split by 
-    spaces, exclude the accession number, then join the second and third elements of 
-    the split line with an underscore. This generally corresponds to the genus and 
-    species if records are labeled properly. With 'accession', the accession number
-    will be used to label the sequence record. With 'species_acc', the record is 
-    labeled by taxon and accession number. In all strategies, any spaces are replaced
-    by underscores. If the optional -s (--subspecies) flag is included with a text
-    file containing subspecies (trinomial) names, then the species component of each
-    of the above options will include the trinomial if appropriate.
+    Relabel_Fasta: Process fasta files to relabel record using one of three 
+    strategies: species, accession, species_acc. With 'species', the record 
+    description is split by spaces, exclude the accession number, then join 
+    the second and third elements of the split line with an underscore. This 
+    generally corresponds to the genus and species if records are labeled 
+    properly. With 'accession', the accession number will be used to label 
+    the sequence record. With 'species_acc', the record is labeled by taxon 
+    and accession number. In all strategies, any spaces are replaced by 
+    underscores. If the optional -s (--subspecies) flag is included with a 
+    text file containing subspecies (three-part) names, then the species 
+    component of each of the above options will include the trinomial if 
+    appropriate. 
 
-    Example input fasta file:
-
-    >JN881132.1 Daboia russelii activity-dependent neuroprotector (ADNP) gene, partial cds
-    ...Sequence....
-    >KU765220.1 Sceloporus undulatus voucher ADL182 activity-dependent neuroprotector ...
-    ...Sequence....
-
-    Output using -r 'species':
-
-    >Daboia_russelii
-    ...Sequence....
-    >Sceloporus_undulatus
-    ...Sequence....
-
-    Output using -r 'accession':
-
-    >JN881132.1
-    ...Sequence....
-    >KU765220.1
-    ...Sequence....
-
-    Output using -r 'species_acc':
-
-    >Daboia_russelii_JN881132.1
-    ...Sequence....
-    >Sceloporus_undulatus_KU765220.1
-    ...Sequence....
-
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
-
-[-s] The input taxon name file should simply contain a list of taxon names, one on each line. 
-    Although this file is only necessary for getting subspecies taxonomic names, it can also 
-    contain binomial names (genus and species) that will simply be ignored. For all names the 
-    genus, species, and subspecies should be separated by a space. All taxon names are converted 
-    to uppercase for searching, so names are NOT case-sensitive.
- 
-	Example of file structure for taxon information (showing species and subspecies examples):
-	
-    Varanus acanthurus
-    Varanus albigularis albigularis
-    Varanus albigularis microstictus
-    Varanus auffenbergi
-    Varanus bangonorum
-    Varanus baritji
-    Varanus beccarii
-    
-    Here is how the subspecies flag would affect the following labeling of an example 
-    input fasta file:
-
-    >JN881132.1 Varanus acanthurus activity-dependent neuroprotector (ADNP) gene, ...
-    ...Sequence....
-    >KU765220.1 Varanus albigularis albigularis voucher ADL182 activity-dependent ...
-    ...Sequence....
-
-    Output using -r 'species':
-
-    >Varanus_acanthurus
-    ...Sequence....
-    >Varanus_albigularis_albigularis
-    ...Sequence....
-
-    Output using -r 'accession':
-
-    >JN881132.1
-    ...Sequence....
-    >KU765220.1
-    ...Sequence....
-
-    Output using -r 'species_acc':
-
-    >Varanus_acanthurus_JN881132.1
-    ...Sequence....
-    >Varanus_albigularis_albigularis_KU765220.1
-    ...Sequence....
-
-
-    Output files:
-    
-        [fasta name]_relabeled.fasta - Contains all the relabeled sequences from 
-                                    original input fasta. No modifications have been made 
-                                    to the actual sequences.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -132,20 +53,20 @@ def get_args():
     the sequence record. With 'species_acc', the record is labeled by taxon 
     and accession number. In all strategies, any spaces are replaced by 
     underscores. If the optional -s (--subspecies) flag is included with a 
-    text file containing subspecies (trinomial) names, then the species 
+    text file containing subspecies (three-part) names, then the species 
     component of each of the above options will include the trinomial if 
     appropriate. 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
+
     DEPENDENCIES: None.
     ---------------------------------------------------------------------------""")
     parser.add_argument("-i", "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory which "
-                            "contains the input fasta files. Follow labeling format:"
-                            "NAME.fasta")
+                            "contains the input fasta file(s).")
     
     parser.add_argument("-o", "--outdir",
                             required=True,
@@ -155,14 +76,14 @@ def get_args():
     parser.add_argument("-r", "--relabel",
                             required=True,
                             choices=["species", "accession", "species_acc"],
-                            help="REQUIRED: The strategy for relabeling seequence records.")
+                            help="REQUIRED: The strategy for relabeling sequence records.")
     
     parser.add_argument("-s", "--subspecies",
                             required=False,
                             default=None,
                             help="OPTIONAL: Allows subspecies names to be included in the "
                             "relabeling. This flag requires a full path to a text file containing "
-                            "all subspecies names to cross-reference in the fasta file.")
+                            "all subspecies names to cross-reference in the fasta file(s).")
     
     parser.add_argument("--voucherize",
                             required=False,
@@ -309,7 +230,7 @@ def relabel_accession(f, fdir, subspecies, voucherize):
                     taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
                     
                     if subspecies:
-                        if taxon_ssp in subspecies:
+                        if taxon_ssp.upper() in subspecies:
                             label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                         else:
                             label_key.append([acc, taxon_sp.replace('_',' '), descrip])
@@ -345,7 +266,7 @@ def relabel_species_acc(f, fdir, subspecies, voucherize):
                     
                     if voucherize is True:
                         if subspecies:
-                            if taxon_ssp in subspecies:
+                            if taxon_ssp.upper() in subspecies:
                                 newline = ">{0}_{1}\n".format(taxon_sspv, acc)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                             else:
@@ -360,7 +281,7 @@ def relabel_species_acc(f, fdir, subspecies, voucherize):
                         
                     elif voucherize is False:
                         if subspecies:
-                            if taxon_ssp in subspecies:
+                            if taxon_ssp.upper() in subspecies:
                                 newline = ">{0}_{1}\n".format(taxon_ssp, acc)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                             else:

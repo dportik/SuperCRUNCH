@@ -26,10 +26,9 @@ SuperCRUNCH: Trim_Alignments_Custom module
     modified versions of functions included in the PHYLUCE package, specifically 
     the generic_align.py module.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -45,7 +44,6 @@ July 2019
 Distributed under the 
 GNU General Public Lincense
 '''
-
 import os
 import re
 import numpy
@@ -91,12 +89,11 @@ def get_args():
     modified versions of functions included in the PHYLUCE package, specifically 
     the generic_align.py module.
 
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
-    DEPENDENCIES: Executables in path: trimal.
+    DEPENDENCIES: Python: Biopython; Executables in path: trimal.
 	-----------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--indir",
@@ -124,34 +121,34 @@ def get_args():
                             required=False,
                             type=int,
                             default=20,
-                            help="Optional: Sliding window size for trimming.")
+                            help="OPTIONAL: Sliding window size for trimming.")
     
     parser.add_argument("-p", "--proportion",
                             required=False,
                             type=float,
                             default=0.65,
-                            help="Optional: The proportion of taxa required to have "
+                            help="OPTIONAL: The proportion of taxa required to have "
                             "sequence at alignment ends.")
     
     parser.add_argument("-t", "--threshold",
                             required=False,
                             type=float,
                             default=0.65,
-                            help="Optional: The proportion of residues required across "
+                            help="OPTIONAL: The proportion of residues required across "
                             "the window in proportion of taxa.")
     
     parser.add_argument("-d", "--max_divergence",
                             required=False,
                             type=float,
                             default=0.20,
-                            help="Optional: The max proportion of sequence divergence allowed "
+                            help="OPTIONAL: The max proportion of sequence divergence allowed "
                             "between any row of the alignment and the consensus sequence.")
     
     parser.add_argument("-l", "--min_length",
                             required=False,
                             type=int,
                             default=100,
-                            help="Optional: The minimum length of alignments to keep.")
+                            help="OPTIONAL: The minimum length of alignments to keep.")
     
     return parser.parse_args()
 
@@ -161,7 +158,7 @@ def record_formatter(trim, name):
     ---------------------------------------------------------------------
     MODIFIED FUNCTION FROM PHYLUCE: generic_align.py
     ---------------------------------------------------------------------
-    return a string formatted as a biopython sequence record
+    Return a string formatted as a biopython sequence record.
     """
     return SeqRecord(Seq(trim, Gapped(IUPAC.ambiguous_dna, "-?")), id=name, name=name, description=name)
     
@@ -170,7 +167,7 @@ def alignment_consensus(alignment):
     ---------------------------------------------------------------------
     MODIFIED FUNCTION FROM PHYLUCE: generic_align.py
     ---------------------------------------------------------------------
-    return consensus for an alignment object using BioPython
+    Return consensus for an alignment object using BioPython.
     """
     consensus = []
     for pos in xrange(alignment.get_alignment_length()):
@@ -190,7 +187,7 @@ def get_ends(seq):
     ---------------------------------------------------------------------
     MODIFIED FUNCTION FROM PHYLUCE: generic_align.py
     ---------------------------------------------------------------------
-    Find the start and end of sequence data for a given alignment row
+    Find the start and end of sequence data for a given alignment row.
     """
     f = re.compile("^([-]+)")
     result = f.search(str(seq.seq))
@@ -214,7 +211,7 @@ def running_average(alignment, window_size, proportion, threshold):
     ---------------------------------------------------------------------
     Trim an alignment (assuming default parameters) such that `proportion`
     of taxa have `threshold` of residues at each position across the first
-    and last `window_size` column slice of the alignment
+    and last `window_size` column slice of the alignment.
     """
     good_alignment = []
     taxa = len(alignment)
@@ -346,10 +343,10 @@ def run_trim(f, analysis, outformat, logname, window, proportion,
                  threshold, max_divergence, min_length):
     """
     Run trimming method on alignment. Afterwards, eliminate bad columns 
-    using gap-threshold value of 0.05 and any columns composed
+    using gap-threshold value of 0.05, eliminate any columns composed
     of only gaps using trimal -noallgaps, and output in format desired. 
-    Write a log file of the starting length and final length of the
-    alignments.
+    Write a log file containing the starting length and final length of 
+    the alignments.
     """
     #read in alignment using biopython
     alignment = AlignIO.read(f, 'fasta')

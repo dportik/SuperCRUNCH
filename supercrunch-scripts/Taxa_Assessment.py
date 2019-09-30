@@ -1,11 +1,11 @@
 '''
 SuperCRUNCH: Taxa_Assessment module
 
-    Taxa_Assessment: The goal of this script is to examine a large fasta file of 
+    Taxa_Assessment: The goal of this script is to examine a fasta file of 
     sequences to see if name labels in the decription line of sequence records can be
     matched those from a taxonomic database. Taxon names can contain a mix of species 
     (two-part name) and subspecies (three-part name) labels. Note that 'subspecies' refers 
-    to a three part name, where the third part can be an actual subspecies label or a 
+    to a three-part name, where the third part can be an actual subspecies label or a 
     unique identifier (such as fied/museum code, or alpha-numerical code). The user supplies 
     a text file containing a list of taxon names to cross-reference. The taxon names in
     the supplied database and the description lines are pre-processed before searches and 
@@ -19,7 +19,6 @@ SuperCRUNCH: Taxa_Assessment module
 Compatible with Python 2.7 & 3.7
 Python packages required:
 	-BioPython
-	-NumPy 
 -------------------------
 
 SuperCRUNCH project
@@ -45,7 +44,7 @@ def get_args():
     """
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
-    Taxa_Assessment: The goal of this script is to examine a large fasta file of 
+    Taxa_Assessment: The goal of this script is to examine a fasta file of 
     sequences to see if name labels in the decription line of sequence records can be
     matched those from a taxonomic database. Taxon names can contain a mix of species 
     (two-part name) and subspecies (three-part name) labels. Note that 'subspecies' refers 
@@ -260,35 +259,37 @@ def match_taxa(db, species, subspecies, no_subspecies):
     spseq = ','.join(['?']*len(species))
     sspseq = ','.join(['?']*len(subspecies))
 
-    print("Starting SQL queries...")
+    print("\n\tStarting SQL queries...")
     namecount = int(0)
     if no_subspecies:
+        print("\tSearching for species names...")
         accs, spnames = run_query(cur, "spname", spseq, species)
         set_accs.update(accs)
         setsp.update(spnames)
+        print("\t\tFinished.")
     
     else:
         print("\tSearching for species names...")
         accs, spnames = run_query(cur, "spname", spseq, species)
-        #print(accs)
-        #print(names)
         set_accs.update(accs)
         setsp.update(spnames)
+        print("\t\tFinished.")
 
-        print("\tSearching for subspecies names...")
         if subspecies:
+            print("\tSearching for subspecies names...")
             accs, sspnames = run_query(cur, "sspname", sspseq, subspecies)
             set_accs.update(accs)
             setssp.update(sspnames)
+            print("\t\tFinished.")
 
     matched_accs = sorted(set_accs)
     matched_spnames = sorted(setsp)
     matched_sspnames = sorted(setssp)
 
-    print("\n\n\tFound {:,} sequences with matched taxon names.".format(len(matched_accs)))
-    print("\tFound {:,} matched species (two-part) names.".format(len(matched_spnames)))
+    print("\n\tFound {:,} sequences with matched taxon names.".format(len(matched_accs)))
+    print("\tFound {:,} unique matched species (two-part) names.".format(len(matched_spnames)))
     if not no_subspecies:
-        print("\tFound {:,} matched subspecies (three-part) names.".format(len(matched_sspnames)))
+        print("\tFound {:,} unique matched subspecies (three-part) names.".format(len(matched_sspnames)))
         
     conn.close()
 
@@ -313,16 +314,16 @@ def get_unmatched_accs_names(db, matched_accs, no_subspecies):
     [badsp.add(r['spname']) for r in results]
     [badssp.add(r['sspname']) for r in results]
         
-    print("\tFinished query. Gathering sequences...")
+    print("\t\tFinished.\n\n\tGathering sequences...")
     
     unmatched_accs = sorted(badaccs)
     unmatched_spnames = sorted(badsp)
     unmatched_sspnames = sorted(badssp)
     
     print("\n\tFound {:,} sequences with an unmatched taxon name.".format(len(unmatched_accs)))
-    print("\tFound {:,} unmatched species (two-part) names.".format(len(unmatched_spnames)))
+    print("\tFound {:,} unique unmatched species (two-part) names.".format(len(unmatched_spnames)))
     if not no_subspecies:
-        print("\tFound {:,} unmatched subspecies (three-part) names.".format(len(unmatched_sspnames)))
+        print("\tFound {:,} unique unmatched subspecies (three-part) names.".format(len(unmatched_sspnames)))
     print("\n--------------------------------------------------------------------------------------\n")
     
     conn.close()

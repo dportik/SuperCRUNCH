@@ -12,6 +12,10 @@ SuperCRUNCH: Filter_Fasta_by_Min_Seqs module
     that pass the minimum sequence filter to the output directory 
     specified with the -o flag.
 
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores.
+
 -------------------------
 Compatible with Python 2.7 & 3.7
 Dependencies: 
@@ -47,6 +51,12 @@ def get_args():
     -i, --min_seqs, and the optional -o flags will copy the fasta files 
     that pass the minimum sequence filter to the output directory 
     specified with the -o flag.
+
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
+
+    DEPENDENCIES: None.
 	---------------------------------------------------------------------------""")
     
     parser.add_argument("-i", "--indir",

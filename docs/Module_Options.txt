@@ -1,0 +1,514 @@
+Remove_Duplicate_Accessions.py
+  -i, --input 
+  REQUIRED: The full path to a fasta file of sequence
+                        data to filter.
+  -o, --outdir 
+  REQUIRED: The full path to an existing directory to
+                        write output fasta file.
+
+
+### Taxon Filtering 
+
+Fasta_Get_Taxa.py
+  -i, --indir 
+  REQUIRED: The full path to a directory with fasta
+                        file(s).
+  -o , --outdir 
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  --numerical           
+  OPTIONAL: Allows the third part of a name to also
+                        contain numbers and special characters, rather than
+                        just letters. Useful for samples of the same species
+                        with museum/field codes or other unique identifiers
+                        immediately following the species label.
+
+
+
+Taxa_Assessment.py
+  -i, --input 
+  REQUIRED: The full path to a fasta file of sequence
+                        data.
+  -t, --taxa 
+  REQUIRED: The full path to a text file containing all
+                        taxon names to cross-reference in the fasta file.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  --no_subspecies       
+  OPTIONAL: Ignore any subspecies labels in both the
+                        name database and record searches (only search
+                        binomial names).
+  --sql_db       
+  OPTIONAL: The full path to the sql database to use for
+                        searches. Assumes the database was created with this
+                        module for the input fasta file being used.
+
+
+
+Rename_Merge.py
+  -i, --input
+  REQUIRED: The full path to a fasta file to replace
+                        names inside. If you have used the Taxa_Assessment
+                        module, this should be the file Unmatched_Taxa.fasta.
+  -r, --replace
+  REQUIRED: The full path to a text file containing the
+                        replacement name information.
+  -o OUTDIR, --outdir OUTDIR
+                        REQUIRED: The full path to an existing directory to
+                        write output files.
+  -m, --merge
+  OPTIONAL: The full path to a fasta file to merge with
+                        the updated records. If you have used the
+                        Taxa_Assessment module, this should be the file
+                        Matched_Taxa.fasta.
+  --sql_db
+  OPTIONAL: The full path to the sql database to use for
+                        searches. Assumes the database was created with this
+                        module for the input fasta file being used.
+  --quiet               
+  OPTIONAL: Show less output while running.
+
+
+
+
+### Locus Parsing
+
+Parse_Loci.py
+  -i, --input
+  REQUIRED: The full path to a fasta file of sequence
+                        data.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -l, --loci
+  REQUIRED: The full path to a text file containing loci
+                        information to search for within the fasta file.
+  -t, --taxa
+  REQUIRED: The full path to a text file containing all
+                        taxon names to cross-reference in the fasta file.
+  --no_subspecies
+  OPTIONAL: Ignore subspecies labels in searches and
+                        only write species names in the updated description
+                        lines for sequences.
+  --exclude
+  OPTIONAL: The full path to a text file containing a
+                        list of accession numbers to ignore during searches.
+  --sql_db 
+  OPTIONAL: The full path to the sql database to use for
+                        searches. Assumes the database was created with this
+                        module for the input fasta file being used.
+
+
+
+
+### Similarity Filtering
+
+Cluster_Blast_Extract.py
+  -i, --in_dir 
+  REQUIRED: The full path to a directory which contains
+                        the parsed, locus-specific fasta files.
+  -o, --outdir
+  OPTIONAL: The full path to an existing directory to
+                        write output files.
+  -b, --blast_task
+  REQUIRED: The type of blast search to conduct. 
+                        {blastn,blastn-short,dc-megablast,megablast}
+  --max_hits
+  OPTIONAL: The maximum number of blast matches allowed
+                        per input sequence. (May want to set < 300)
+  -m, --merge_strategy
+  DEFAULT = 'span'. The strategy for dealing with
+                        multiple non-overlapping blast coordinates. See
+                        documentation for details. {span,nospan,all}
+  --bp_bridge
+  OPTIONAL: The base pair distance used to merge non-
+                        overlapping blast coordinates for -m span (default =
+                        100).
+  --threads
+  OPTIONAL: Specifies number of threads to use for
+                        blastn (recommended: 4).
+
+
+
+Reference_Blast_Extract.py
+  -i, --indir
+  REQUIRED: The full path to a directory containing the
+                        reference and the empirical fasta files.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -e, --emp_fasta
+  OPTION 1: The name of an empirical fasta to blast to
+                        the database to prune sequences. File name only
+                        (rather than full path), should be located in the
+                        input directory. Follow labeling format: NAME.fasta
+  -d, --blast_db
+  OPTION 1: The name of the reference fasta file that
+                        will be used to create the blast database. File name
+                        only (rather than full path), should be located in the
+                        input directory.
+  --multisearch
+  OPTION 2: If multiple empirical fasta + blast database
+                        pairs are present in the -i (input) directory, provide
+                        the full path to a tab-delimited text file containing
+                        the pair information to allow all of them to run
+                        sequentially. See documentation.
+  -b, --blast_task
+  REQUIRED: The type of blast search to conduct.
+                        {blastn,blastn-short,dc-megablast,megablast}
+  --max_hits
+  OPTIONAL: The maximum number of blast matches allowed
+                        per input sequence. May want to set < 300.
+  -m, --merge_strategy
+  DEFAULT = 'span'. The strategy for dealing with
+                        multiple non-overlapping blast coordinates. See
+                        documentation for details. {span,nospan,all}
+  --bp_bridge
+  OPTIONAL: The base pair distance used to merge non-
+                        overlapping blast coordinates for -m span (default =
+                        100).
+  --threads
+  OPTIONAL: Specifies number of threads to use for
+                        blastn (recommended: 4).
+
+
+
+Contamination_Filter.py
+  -i, --indir
+  REQUIRED: The full path to a directory containing the
+                        reference and the empirical fasta files
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -e, --emp_fasta
+  OPTION 1: The name of an empirical fasta to blast to
+                        the database to identify 'contaminated' sequences.
+                        File name only (rather than full path), should be
+                        located in the input directory. Follow labeling
+                        format: NAME.fasta
+  -d, --blast_db
+  OPTION 1: The name of the reference fasta file (of
+                        sequences from the contamination source) that will be
+                        used to create the blast database. File name only
+                        (rather than full path), should be located in the
+                        input directory.
+  --multisearch
+  OPTION 2: If multiple empirical fasta + blast database
+                        pairs are present in the -i (input) directory, provide
+                        the full path to a tab-delimited text file containing
+                        the pair information to allow all of them to run
+                        sequentially. See documentation.
+  -b, --blast_task
+  REQUIRED: The type of blast search to conduct.
+                        {blastn,blastn-short,dc-megablast,megablast}
+  --max_hits
+  OPTIONAL: The maximum number of blast matches allowed
+                        per input sequence.
+
+
+
+
+
+### Sequence Selection
+
+Filter_Seqs_and_Species.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the fasta files to filter by species and sequence.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -s, --seq_selection
+  REQUIRED: Select one representative sequence per taxon
+                        or select all sequences available per taxon.{oneseq,allseqs}
+  -f, --seq_filter
+  REQUIRED: Strategy for filtering sequence data,
+                        particularly for selecting one representative sequence
+                        using the -s 'oneseq' option. If the -s 'allseqs'
+                        option is desired, use the 'length' option.{translate,length}
+  -m, --min_length
+  REQUIRED: Integer of the minimum number of base pairs
+                        required to keep a sequence (ex. 150).
+  -t, --taxa
+  REQUIRED: The full path to a text file containing all
+                        taxon names to cross-reference in the fasta file.
+  --no_subspecies
+  OPTIONAL: Ignore any subspecies labels in both the
+                        name database and record searches (only search
+                        binomial names).
+  --randomize
+  OPTIONAL: For taxa with multiple sequences, shuffle
+                        order randomly. Overrides sorting by length for
+                        sequence selection step.
+  --vouchered
+  OPTIONAL: Select only sequences that containe a
+                        Voucher_[ID] tag in the description line (inserted
+                        during Parse_Loci.py).
+  --table
+  REQUIRED for -f translate: Specifies translation table.
+                        {standard,vertmtdna,invertmtdna,yeastmtdna,plastid,1,2,
+                        3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,
+                        24,25,26,27,28,29,30,31}
+  --onlyinclude
+  OPTIONAL: The full path to a text file containing the
+                        names of the fasta files to process for this run.
+  --quiet
+  OPTIONAL: Show less output while running (useful when
+                        filtering many, many loci).
+
+
+
+Fasta_Filter_by_Min_Seqs.py
+  -i, --indir
+  REQUIRED: The full path to a directory of fasta files.
+  --min_seqs
+  REQUIRED: The minimum number of taxa/sequences
+                        required.
+  -o, --outdir
+  OPTIONAL: The full path to an existing directory to
+                        copy files passing the filter.
+
+
+
+
+Make_Acc_Table.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input fasta files.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -s, --subspecies
+  OPTIONAL: If subspecies names are to be included, this
+                        should be the full path to a text file containing all
+                        subspecies names to cross-reference in the fasta file.
+                        This can be the same taxon list used in earlier steps.
+  --voucherize
+  OPTIONAL: If a 'Voucher_[ID]' entry is included in the
+                        sequence description, append the ID component to the
+                        end of the species/subspecies label (e.g.,
+                        Hyperolius_nitidulus_MVZ236473). The Voucher_[ID]
+                        field is generated by the Parse_Loci.py module.
+
+
+
+
+Infer_Supermatrix_Combinations.py
+  -i, --in_dir
+  REQUIRED: The full path to a directory which contains
+                        all the [locus]_species_log.txt files. This should be
+                        the Results/Taxon-Log-Files/ output directory from the
+                        Filter_Seqs_and_Species.py module.
+
+
+
+
+
+
+### Multiple Sequence Alignment
+
+Adjust_Direction.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input fasta files. Follow labeling format:
+                        NAME.fasta
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  --threads
+  OPTIONAL: Specify number of threads to use for MAFFT
+                        (default is one).
+  --accurate
+  OPTIONAL: Use --adjustdirectionaccurately MAFFT
+                        implementation, rather than --adjustdirection.
+
+
+
+
+Coding_Translation_Tests.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input fasta files.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  --table
+  REQUIRED: Specifies translation table to use for all files.
+                        {standard,vertmtdna,invertmtdna,yeastmtdna,plastid,1,2,
+                        3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,
+                        24,25,26,27,28,29,30,31}
+  --rc
+  OPTIONAL: In addition to forward frames, examine
+                        reverse complement during translation tests.
+  --onlyinclude
+  OPTIONAL: The full path to a text file containing the
+                        names of the fasta files to process for this run.
+  --quiet
+  OPTIONAL: Show less output while running (useful when
+                        filtering many loci).
+
+
+
+Align.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input fasta files.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -a, --aln
+  REQUIRED: Specify whether alignment is by mafft,
+                        macse, muscle, or clustalo. If macse must provide
+                        flags --mpath and --table. Selecting 'all' will run
+                        mafft, muscle, and clustalo sequentially. 
+                        {mafft,macse,muscle,clustalo,all}
+  --accurate
+  OPTIONAL: Specifies mafft, clustalo, or macse to use
+                        more thorough search settings.
+  --threads
+  OPTIONAL: Specifies number of threads to use in mafft
+                        and/or clustalo.
+  --mpath
+  MACSE REQUIRED: Full path to a macse.jar file.
+  --table
+  MACSE REQUIRED: Specifies translation table for macse.
+                        {standard,vertmtdna,invertmtdna,yeastmtdna,plastid,1,2,
+                        3,4,5,6,9,10,11,12,13,14,15,16,21,22,23}
+  --mem
+  MACSE OPTIONAL: An integer to assign additional memory
+                        to macse (in GB), default=1.
+  --pass_fail
+  MACSE OPTIONAL: Specifies macse to use two fasta files
+                        for dual file alignment. See documentation for
+                        details.
+
+
+
+
+
+### Post-Alignment
+
+Fasta_Relabel_Seqs.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input fasta files. Follow labeling
+                        format:NAME.fasta
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -r, --relabel
+  REQUIRED: The strategy for relabeling seequence
+                        records. {species,accession,species_acc}
+  -s, --subspecies
+  OPTIONAL: Allows subspecies names to be included in
+                        the relabeling. This flag requires a full path to a
+                        text file containing all subspecies names to cross-
+                        reference in the fasta file.
+  --voucherize
+  OPTIONAL: If a 'Voucher_[ID]' entry is included in the
+                        sequence description, append the ID component to the
+                        end of the species/subspecies label (e.g.,
+                        Hyperolius_nitidulus_MVZ236473). The Voucher_[ID]
+                        field is generated by the Parse_Loci.py module.
+
+
+
+Trim_Alignments_Custom.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the aligned and relabeled fasta files to trim.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -a, --analysis
+  REQUIRED: Specify the method for trimming alignments.
+                        {edges_internal,edges,internal}
+  -f, --format
+  REQUIRED: Specify the output file format for trimmed
+                        alignment. {fasta,nexus,phylip}
+  -w, --window
+  OPTIONAL: Sliding window size for trimming.
+  -p, --proportion
+  OPTIONAL: The proportion of taxa required to have
+                        sequence at alignment ends.
+  -t, --threshold
+  OPTIONAL: The proportion of residues required across
+                        the window in proportion of taxa.
+  -d, --max_divergence
+  OPTIONAL: The max proportion of sequence divergence
+                        allowed between any row of the alignment and the
+                        consensus sequence.
+  -l, --min_length
+  OPTIONAL: The minimum length of alignments to keep.
+
+
+
+
+Trim_Alignments_Trimal.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input alignment files. File formats are auto-
+                        detected and can be include fasta, nexus, or phylip
+                        formats, but input alignment files must be labeled
+                        with one of the following extensions: NAME.fasta,
+                        NAME.fa, NAME.nexus, NAME.nex, NAME.phylip, or
+                        NAME.phy.
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -f, --format
+  REQUIRED: Specify the output file format for trimmed
+                        alignment. {fasta,nexus,phylip}
+  -a, --analysis
+  REQUIRED: Specify the trimal method for trimming
+                        alignments. {gt,noallgaps,both,gappyout}
+  --gt
+  OPTIONAL: Specify the gt (gap threshold) value for
+                        trimal - the minimum fraction of sequences without a
+                        gap. (default=0.05)
+
+
+
+Fasta_Convert.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the fasta format alignments to convert.
+  -o, --outdir
+  OPTIONAL: The full path to an existing directory to
+                        write output files.
+
+Seq_Length_Heterogeneity.py
+  -i, --in_dir
+  REQUIRED: The full path to a directory which contains
+                        the input alignment files (fasta or phylip format).
+  -o, --out_dir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  -f, --format
+  REQUIRED: The file format of the INPUT alignments.
+                         {fasta,phylip}
+  -s, --seqtype
+  REQUIRED: Use de-aligned sequence lengths (bases) or
+                        aligned sequence lengths (alns) for calculations.
+                         {bases,alns}
+
+
+
+Concatenation.py
+  -i, --indir
+  REQUIRED: The full path to a directory which contains
+                        the input alignment files (fasta or phylip).
+  -o, --outdir
+  REQUIRED: The full path to an existing directory to
+                        write output files.
+  --informat
+  REQUIRED: The file format of the INPUT alignments.
+                        {fasta,phylip}
+  --outformat
+  REQUIRED: The file format for the OUTPUT concatenated
+                        alignment. {fasta,phylip}
+  -s, --symbol
+  REQUIRED: A base pair symbol used to represent missing
+                        data when sequences are not available for a taxon.
+                        {dash,N,?}

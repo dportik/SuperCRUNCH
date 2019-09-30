@@ -27,22 +27,6 @@ SuperCRUNCH: Adjust_Direction module
     contain any periods or spaces, but can contain underscores. Output 
     files are labeled using a prefix identical to NAME.
     
-    A few output files are produced per fasta and moved to the output 
-    directory called Output_mafft_Adjust_Fasta_Files:
-    
-    	[NAME]_Direction.fasta - The UNALIGNED fasta file from mafft adjustment,
-                                 in which all sequences are now correctly oriented.
-    	
-    	[NAME]_Adjusted_Name_Log.txt - Contains the full names of the sequences 
-                                       that were reversed in this particular 
-                                       fasta file.
-    
-    Another single output file is created:
-    
-        Log_Sequences_Adjusted.txt - Contains the names of all fasta files and 
-                                     the number of sequences that were found 
-                                     correctly oriented or had to be reversed.
-
 -------------------------
 Compatible with Python 2.7 & 3.7
 Python modules required:
@@ -106,8 +90,7 @@ def get_args():
                             "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory which "
-                            "contains the input fasta files. Follow labeling "
-                            "format: NAME.fasta")
+                            "contains the input fasta files.")
     
     parser.add_argument("-o", "--outdir",
                             required=True,

@@ -11,7 +11,7 @@ CAND1	CAND1	cullin-associated and neddylation-dissociated protein 1
 CARD4	CARD4	caspase recruitment domain family member 4
 CILP	CILP	cartilage intermediate layer protein
 CMOS	CMOS;C-MOS	oocyte maturation factor
-CXCR4	CXCR5	chemokine C-X-C motif receptor 4;C-X-C chemokine receptor type 4
+CXCR4	CXCR4	chemokine C-X-C motif receptor 4;C-X-C chemokine receptor type 4
 DLL1	DLL1;DLL	distal-less
 DNAH3	DNAH3	dynein axonemal heavy chain 3;dynein axonemal heavy chain 3s
 ECEL1	ECEL1;ECEL	endothelin converting;endothelin converting enzyme-like 1
@@ -60,10 +60,10 @@ UBN1	UBN1	ubinuclein 1
 VCPIP	VCPIP;VCPIP1	valosin-containing protein;p97/p47 complete interacting protein 1
 ZEB2	ZEB2	zinc finger homeobox protein
 ZFP36L1	ZFP36L1	zinc finger protein 36;protein 36 C3H type-like 1
-12S	12S	12S ribosomal RNA; small subunit ribosomal;mitochondrion, complete genome
-16S	16S	16S ribosomal RNA;large subunit ribosomal;mitochondrion, complete genome
-CO1	CO1;COX1;COI	cytochrome oxidase subunit 1;oxidase subunit I;oxidase subunit 1;mitochondrion, complete genome
-CYTB	CYTB;CYT-B	cytochrome b;mitochondrion, complete genome
-ND1	ND1	dehydrogenase subunit 1;mitochondrion, complete genome
-ND2	ND2	dehydrogenase subunit 2;mitochondrion, complete genome
-ND4	ND4	dehydrogenase subunit 4;mitochondrion, complete genome
+12S	12S	12S ribosomal RNA; small subunit ribosomal;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+16S	16S	16S ribosomal RNA;large subunit ribosomal;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+CO1	CO1;COX1;COI	cytochrome oxidase subunit 1;oxidase subunit I;oxidase subunit 1;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+CYTB	CYTB;CYT-B	cytochrome b;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+ND1	ND1	dehydrogenase subunit 1;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+ND2	ND2	dehydrogenase subunit 2;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome
+ND4	ND4	dehydrogenase subunit 4;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome

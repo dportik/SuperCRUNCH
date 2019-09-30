@@ -400,7 +400,7 @@ def merge_fastas(f1, f2, outname):
                 
     f = datetime.now()
     e = f - b
-    print("Total time to write merged fasta file: {0} (H:M:S)\n".format(te))
+    print("Total time to write merged fasta file: {0} (H:M:S)\n".format(e))
     
 def write_log(rename_info):
     """

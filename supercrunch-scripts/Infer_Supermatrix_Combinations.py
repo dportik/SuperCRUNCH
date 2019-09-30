@@ -6,15 +6,14 @@ SuperCRUNCH: Infer_Supermatrix_Combinations module
     for each taxon for each locus. If all taxa have only one sequence available, 
     the answer is one, but if taxa have multiple sequences available, this number
     will be extremely large. Relies on the [locus]_species_log.txt files produced 
-    from the Filter_Seqs_and_Species.py module to calculate the number of 
+    from the Filter_Seqs_and_Species.py module, which are located in the 
+    Results/Taxon-Log-Files/ output directory, to calculate the number of 
     sequences available per taxon. The log files for all loci should be present
     in the input directory for the calculation to be accurate. No output files 
     are created, rather the information is logged to the screen. Note - this is
     unable to incorporate voucher information, it only works for the species/subspecies 
     labels.
     
-    DEPENDENCIES: None.
-
 -------------------------
 Compatible with Python 2.7 & 3.7
 Dependencies: 
@@ -29,7 +28,6 @@ January 2019
 Distributed under the 
 GNU General Public Lincense
 '''
-
 import argparse
 import os
 from decimal import Decimal
@@ -45,19 +43,23 @@ def get_args():
     for each taxon for each locus. If all taxa have only one sequence available, 
     the answer is one, but if taxa have multiple sequences available, this number
     will be extremely large. Relies on the [locus]_species_log.txt files produced 
-    from the Filter_Seqs_and_Species.py module to calculate the number of 
+    from the Filter_Seqs_and_Species.py module, which are located in the 
+    Results/Taxon-Log-Files/ output directory, to calculate the number of 
     sequences available per taxon. The log files for all loci should be present
     in the input directory for the calculation to be accurate. No output files 
     are created, rather the information is logged to the screen. Note - this is
     unable to incorporate voucher information, it only works for the species/subspecies 
     labels.
+
     DEPENDENCIES: None.
 	-----------------------------------------------------------------------------""")
     
-    parser.add_argument("-i", "--in_dir",
+    parser.add_argument("-i", "--indir",
                             required=True,
                             help="REQUIRED: The full path to a directory which "
-                            "contains all the [locus]_species_log.txt files.")
+                            "contains all the [locus]_species_log.txt files. This "
+                            "should be the Results/Taxon-Log-Files/ output directory "
+                            "from the Filter_Seqs_and_Species.py module.")
     
     return parser.parse_args()
 
@@ -110,7 +112,7 @@ def make_product(flist):
 
 def main():
     args = get_args()
-    os.chdir(args.in_dir)
+    os.chdir(args.indir)
     
     flist = sorted([f for f in os.listdir('.') if f.endswith('_species_log.txt')])
     print("\n\nFound {} loci to examine.\n\n".format(len(flist)))

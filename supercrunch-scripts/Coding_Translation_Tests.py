@@ -34,10 +34,9 @@ SuperCRUNCH: Coding_Translation_Tests module
     to the first codon position and the completion of the final codon. This is 
     required for some alignment programs.
     
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
     All output files are written to relevant directories in the specified
     output directory.
@@ -104,10 +103,9 @@ def get_args():
     to the first codon position and the completion of the final codon. This is 
     required for some alignment programs.
     
-    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa', 
-    where NAME represents the gene/locus. The NAME portion should not 
-    contain any periods or spaces, but can contain underscores. Output 
-    files are labeled using a prefix identical to NAME.
+    Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
+    NAME portion should not contain any periods or spaces, but can contain 
+    underscores. Output files are labeled using a prefix identical to NAME.
 
     All output files are written to relevant directories in the specified
     output directory.
@@ -136,8 +134,8 @@ def get_args():
     
     parser.add_argument("--rc",
                             action='store_true',
-                            help="OPTIONAL: In addition to forward frames, examine reverse "
-                            "complement during translation tests.")
+                            help="OPTIONAL: In addition to all forward reading frames, examine "
+                            "all reverse reading frames during translation tests.")
 
     parser.add_argument("--onlyinclude",
                             required=False,
@@ -412,8 +410,9 @@ def main():
         flist = sorted([os.path.abspath(f) for f in os.listdir('.')
                             if f.endswith(('.fasta', '.fa'))])
         print("\nFound {:,} fasta files to perform length adjustments and translation tests.".format(len(flist)))
+        
     elif args.onlyinclude:
-        with open(args.include, 'r') as fh:
+        with open(args.onlyinclude, 'r') as fh:
             incl = [l.strip() for l in fh]
         flist = sorted([os.path.abspath(f) for f in os.listdir('.')
                             if f.endswith(('.fasta', '.fa')) and f in incl])
