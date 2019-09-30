@@ -10,7 +10,7 @@ SuperCRUNCH can be used to process sequences downloaded directly from GenBank/NC
 
 SuperCRUNCH is scalable and can be used to assemble a variety of datasets, ranging from small population-level datasets (one taxon, one gene) to large phylogenomic datasets with thousands of loci (such as UCEs or other sequence capture datasets). SuperCRUNCH was intended to be transparent, objective and repeatable, and provides meaningful output at every step to help guide user decisions. In addition, it is modular in design and various components of SuperCRUNCH can be easily incorporated into custom bioinformatics workflows.
 
-A full overview of **SuperCRUNCH** is described in the following pre-print article:
+A full overview of SuperCRUNCH is described in the following pre-print article:
 
 + Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
 
@@ -37,7 +37,7 @@ For complete version history please see the [change log file](https://github.com
 
 ## Installation
 
-**SuperCRUNCH** consists of a set of modules written in Python that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH if you plan to use all the available modules, including:
+SuperCRUNCH consists of a set of modules written in Python that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH if you plan to use all the available modules, including:
 
 + [Biopython](https://biopython.org/)
 + [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
@@ -55,7 +55,7 @@ SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also wo
 
 ## Complete Instructions for Analyses
 
-SuperCRUNCH has extensive documentation which can be accessed through the wiki tab at the top of the page. An overview of the components of **SuperCRUNCH** can be found on the [Analysis Overview](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview) page. This section outlines all major topics and navigates to detailed instructions for each step, including usage for all modules, proposed workflows, and common issues. Quick links to major components of SuperCRUNCH are also provided below:
+SuperCRUNCH has extensive documentation which can be accessed through the wiki tab at the top of the page. An overview of the components of SuperCRUNCH can be found on the [**Analysis Overview**](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview) page. This section outlines all major topics and navigates to detailed instructions for each step, including usage for all modules, proposed workflows, and common issues. Quick links to major components of SuperCRUNCH are also provided below:
 
 + [**Starting Sequences**](https://github.com/dportik/SuperCRUNCH/wiki/2:-Starting-Sequences)
 + [**Assessing Taxonomy**](https://github.com/dportik/SuperCRUNCH/wiki/3:-Assessing-Taxonomy)
@@ -68,11 +68,11 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 ## Tutorials and Examples
 
-New tutorials that use **SuperCRUNCH v1.2** are under construction, please check back soon! 
+New tutorials that use SuperCRUNCH v1.2 are under construction, please check back soon! 
 
 ## Citation
 
-**SuperCRUNCH** is currently described in a pre-print available on BioRxiv:
+SuperCRUNCH is currently described in a pre-print available on BioRxiv:
 
 + Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://doi.org/10.1101/538728.
 
