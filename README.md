@@ -17,7 +17,7 @@ A full overview of SuperCRUNCH is described in the following pre-print article:
 
 ## Version
 
-The current release of **SuperCRUNCH** is [v1.2](https://github.com/dportik/SuperCRUNCH/releases). 
+The current release of **SuperCRUNCH** is [**v1.2**](https://github.com/dportik/SuperCRUNCH/releases). 
 
 ### Major changes in v1.2:
   - **All modules are now compatible with Python 2.7 and Python 3.7.**
@@ -39,16 +39,16 @@ For complete version history please see the [change log file](https://github.com
 
 SuperCRUNCH consists of a set of modules written in Python that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. There are several external dependencies that should be installed prior to use of SuperCRUNCH if you plan to use all the available modules, including:
 
-+ [Biopython](https://biopython.org/)
-+ [NCBI-BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
-+ [CD-HIT-EST](http://weizhongli-lab.org/cd-hit/)
-+ [MAFFT](https://mafft.cbrc.jp/alignment/software/)
-+ [Muscle](https://www.drive5.com/muscle/)
-+ [Clustal-O](http://www.clustal.org/omega/)
-+ [MACSE](https://bioweb.supagro.inra.fr/macse/)
-+ [trimAl](http://trimal.cgenomics.org/)
++ [**Biopython**](https://biopython.org/)
++ [**NCBI-BLAST+**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
++ [**CD-HIT-EST**](http://weizhongli-lab.org/cd-hit/)
++ [**MAFFT**](https://mafft.cbrc.jp/alignment/software/)
++ [**Muscle**](https://www.drive5.com/muscle/)
++ [**Clustal-O**](http://www.clustal.org/omega/)
++ [**MACSE**](https://bioweb.supagro.inra.fr/macse/)
++ [**trimAl**](http://trimal.cgenomics.org/)
 
-Helpful installation instructions for these dependencies can be found on the [Installation Instructions](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions) wiki. Please note that some modules do not require any dependencies. If you plan to use only a subset of modules you can quickly check which modules require dependencies [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions#module-dependencies-list). 
+Helpful installation instructions for these dependencies can be found on the [**Installation Instructions**](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions) wiki. Please note that some modules do not require any dependencies. If you plan to use only a subset of modules you can quickly check which modules require dependencies [here](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions#module-dependencies-list). 
 
 SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows using a program like Cygwin. 
 
