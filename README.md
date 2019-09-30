@@ -55,7 +55,7 @@ SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also wo
 
 ## Complete Instructions for Analyses
 
-SuperCRUNCH has extensive documentation which can be accessed through the wiki tab at the top of the page. An overview of the components of SuperCRUNCH can be found on the [**Analysis Overview**](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview) page. This section outlines all major topics and navigates to detailed instructions for each step, including usage for all modules, proposed workflows, and common issues. Quick links to major components of SuperCRUNCH are also provided below:
+SuperCRUNCH has extensive documentation which can be accessed through the wiki tab at the top of the page. An overview of the components of SuperCRUNCH can be found on the [**Analysis Overview**](https://github.com/dportik/SuperCRUNCH/wiki/1:-Analysis-Overview) page. This section outlines all major topics and navigates to detailed instructions for each step, including usage for all modules, proposed workflows, and common issues. Quick links to wiki pages for the major components of SuperCRUNCH are also provided below:
 
 + [**Starting Sequences**](https://github.com/dportik/SuperCRUNCH/wiki/2:-Starting-Sequences)
 + [**Assessing Taxonomy**](https://github.com/dportik/SuperCRUNCH/wiki/3:-Assessing-Taxonomy)
