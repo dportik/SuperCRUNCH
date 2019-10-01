@@ -12,9 +12,7 @@ SuperCRUNCH: Relabel_Fasta module
     underscores. If the optional -s (--subspecies) flag is included with a 
     text file containing subspecies (three-part) names, then the species 
     component of each of the above options will include the trinomial if 
-    appropriate. If the optional --voucherize flag is used, the [ID] contents of 
-    the Voucher_[ID] tag (if present) will be added to the end of the label. 
-    See documentation for more details.
+    appropriate. 
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
     NAME portion should not contain any periods or spaces, but can contain 
@@ -57,9 +55,7 @@ def get_args():
     underscores. If the optional -s (--subspecies) flag is included with a 
     text file containing subspecies (three-part) names, then the species 
     component of each of the above options will include the trinomial if 
-    appropriate. If the optional --voucherize flag is used, the [ID] contents of 
-    the Voucher_[ID] tag (if present) will be added to the end of the label. 
-    See documentation for more details.
+    appropriate. 
 
     Input fasta files should be labeled as 'NAME.fasta' or 'NAME.fa'. The 
     NAME portion should not contain any periods or spaces, but can contain 
@@ -143,24 +139,20 @@ def get_taxon(line):
                 taxon_ssp = "_".join([parts2[0].capitalize(), parts2[1].lower(), parts2[2].upper()])
         else:
             taxon_ssp = "_".join([parts2[0].capitalize(), parts2[1].lower(), parts2[2].upper()])
-            
-    vouch = ""
+
     taxon_spv = ""
     taxon_sspv = ""
     for part in line.split():
         if part.startswith('Voucher_'):
             taxon_spv = "{}_{}".format(taxon_sp, part.replace('Voucher_',''))
             taxon_sspv = "{}_{}".format(taxon_ssp, part.replace('Voucher_',''))
-            vouch = part.replace('Voucher_','')
             
     if not taxon_spv:
         taxon_spv = taxon_sp
     if not taxon_sspv:
         taxon_sspv = taxon_ssp
-    if not vouch:
-        vouch = None
     
-    return taxon_sp, taxon_ssp, taxon_spv, taxon_sspv, vouch
+    return taxon_sp, taxon_ssp, taxon_spv, taxon_sspv
 
 def relabel_species(f, fdir, subspecies, voucherize):
     """
@@ -178,7 +170,7 @@ def relabel_species(f, fdir, subspecies, voucherize):
                     acc = [l.strip('>') for l in line.split()][0]
                     descrip = " ".join([l.strip() for l in line.split()][1:])
                     
-                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv, vouch = get_taxon(line)
+                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
 
                     if voucherize is True:
                         if subspecies:
@@ -232,38 +224,20 @@ def relabel_accession(f, fdir, subspecies, voucherize):
                     acc = [l.strip('>') for l in line.split()][0]
                     descrip = " ".join([l.strip() for l in line.split()][1:])
                     
-                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv, vouch = get_taxon(line)
+                    newline = ">{}\n".format(acc)
+                    fh_out.write(newline)
                     
-                    if voucherize is True:
-                        if vouch:
-                            newline = ">{}_{}\n".format(acc, vouch)
-                        else:
-                            newline = ">{}\n".format(acc)
-                        
-                        if subspecies:
-                            if taxon_ssp.upper() in subspecies:
-                                label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
-                            else:
-                                label_key.append([acc, taxon_sp.replace('_',' '), descrip])
-
+                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
+                    
+                    if subspecies:
+                        if taxon_ssp.upper() in subspecies:
+                            label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                         else:
                             label_key.append([acc, taxon_sp.replace('_',' '), descrip])
                             
-                        fh_out.write(newline)
+                    else:
+                        label_key.append([acc, taxon_sp.replace('_',' '), descrip])
                         
-                    elif voucherize is False:
-                        newline = ">{}\n".format(acc)
-                        
-                        if subspecies:
-                            if taxon_ssp.upper() in subspecies:
-                                label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
-                            else:
-                                label_key.append([acc, taxon_sp.replace('_',' '), descrip])
-
-                        else:
-                            label_key.append([acc, taxon_sp.replace('_',' '), descrip])
-                            
-                        fh_out.write(newline)
                 else:
                     fh_out.write("{}\n".format(line))
                     
@@ -288,28 +262,19 @@ def relabel_species_acc(f, fdir, subspecies, voucherize):
                     acc = [l.strip('>') for l in line.split()][0]
                     descrip = " ".join([l.strip() for l in line.split()][1:])
                     
-                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv, vouch = get_taxon(line)
+                    taxon_sp, taxon_ssp, taxon_spv, taxon_sspv = get_taxon(line)
                     
                     if voucherize is True:
                         if subspecies:
                             if taxon_ssp.upper() in subspecies:
-                                if vouch:
-                                    newline = ">{0}_{1}_{2}\n".format(taxon_ssp, acc, vouch)
-                                else:
-                                    newline = ">{0}_{1}\n".format(taxon_ssp, acc)
+                                newline = ">{0}_{1}\n".format(taxon_sspv, acc)
                                 label_key.append([acc, taxon_ssp.replace('_',' '), descrip])
                             else:
-                                if vouch:
-                                    newline = ">{0}_{1}_{2}\n".format(taxon_sp, acc, vouch)
-                                else:
-                                    newline = ">{0}_{1}\n".format(taxon_sp, acc)
+                                newline = ">{0}_{1}\n".format(taxon_spv, acc)
                                 label_key.append([acc, taxon_sp.replace('_',' '), descrip])
 
                         else:
-                            if vouch:
-                                newline = ">{0}_{1}_{2}\n".format(taxon_sp, acc, vouch)
-                            else:
-                                newline = ">{0}_{1}\n".format(taxon_sp, acc)
+                            newline = ">{0}_{1}\n".format(taxon_spv, acc)
                             label_key.append([acc, taxon_sp.replace('_',' '), descrip])
 
                         fh_out.write(newline)
