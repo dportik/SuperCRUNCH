@@ -2,7 +2,7 @@
 SuperCRUNCH: Concatenation module
 						
     Concatenation: Combine multiple alignments into a single concatenated 
-    alignment. The input file format can be non-interleaved fasta or phylip, 
+    alignment. The input file format can be fasta or phylip, 
     and is selected using the --informat flag. The input alignment files must be 
     labeled with one of the following extensions to be read: NAME.fasta, 
     NAME.fa, NAME.phylip, or NAME.phy. The complete set of taxa is assessed 
@@ -41,7 +41,7 @@ def get_args():
     parser = argparse.ArgumentParser(
             description="""---------------------------------------------------------------------------
     Concatenation: Combine multiple alignments into a single concatenated 
-    alignment. The input file format can be non-interleaved fasta or phylip, 
+    alignment. The input file format can be fasta or phylip, 
     and is selected using the --informat flag. The input alignment files must be 
     labeled with one of the following extensions to be read: NAME.fasta, 
     NAME.fa, NAME.phylip, or NAME.phy. The complete set of taxa is assessed 

@@ -3,7 +3,7 @@ SuperCRUNCH: Fasta_Convert module
 
     Fasta_Convert: Converts a directory of aligned fasta files into 
     both phylip and nexus formats. Moves new files into corresponding 
-    directories in th specified output directory. Note this should 
+    directories in the specified output directory. Note this should 
     only be used after records have been renamed with species or 
     accession names, as the original longer description
     lines containing whitespace will cause problems.
@@ -47,7 +47,7 @@ def get_args():
             description="""---------------------------------------------------------------------------
     Fasta_Convert: Converts a directory of aligned fasta files into 
     both phylip and nexus formats. Moves new files into corresponding 
-    directories in th specified output directory. Note this should 
+    directories in the specified output directory. Note this should 
     only be used after records have been renamed with species or 
     accession names, as the original longer description
     lines containing whitespace will cause problems.

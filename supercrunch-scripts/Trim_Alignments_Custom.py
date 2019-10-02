@@ -11,7 +11,7 @@ SuperCRUNCH: Trim_Alignments_Custom module
     trimAl.
     
     The output format must be specified using the -f argument (choices: fasta, nexus, 
-    or phylip). Timmed alignment output files will be moved to following output 
+    or phylip). Trimmed alignment output files will be moved to the output 
     directory specified. 
 
     In general, this trimming function is very aggressive in removing columns, 
@@ -74,7 +74,7 @@ def get_args():
     trimAl.
     
     The output format must be specified using the -f argument (choices: fasta, nexus, 
-    or phylip). Timmed alignment output files will be moved to following output 
+    or phylip). Trimmed alignment output files will be moved to the output 
     directory specified. 
 
     In general, this trimming function is very aggressive in removing columns, 
