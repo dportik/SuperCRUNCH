@@ -74,7 +74,7 @@ New tutorials that use SuperCRUNCH v1.2 are under construction, please check bac
 
 SuperCRUNCH is currently described in a pre-print available on BioRxiv:
 
-+ Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://www.biorxiv.org/content/10.1101/538728v2.full.
++ Portik, D.M., and J.J. Wiens. (2019) SuperCRUNCH: A toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. BioRxiv, https://www.biorxiv.org/content/10.1101/538728v2.
 
 SuperCRUNCH is also in peer-review, and we hope to have a formal publication soon. 
 
