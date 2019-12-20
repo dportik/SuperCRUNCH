@@ -372,8 +372,8 @@ def get_all_commands(flist, aln, accurate, threads, mpath, table, mem, pass_fail
 
     elif aln == "all":
         commands = []
-        [commands.append(get_cmd(f, "clustalo", accurate, threads, mpath, table, mem)) for f in flist]
         [commands.append(get_cmd(f, "mafft", accurate, threads, mpath, table, mem)) for f in flist]
+        [commands.append(get_cmd(f, "clustalo", accurate, threads, mpath, table, mem)) for f in flist]
         [commands.append(get_cmd(f, "muscle", accurate, threads, mpath, table, mem)) for f in flist]
 
     else:
