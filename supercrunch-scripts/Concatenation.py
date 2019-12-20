@@ -310,7 +310,7 @@ BEGIN DATA;
 	DIMENSIONS  NTAX={0} NCHAR={1};
 	FORMAT DATATYPE=DNA  MISSING={2} GAP=-;
 MATRIX
-'''.format(len(taxa), len(concat_dict[random.choice(list(concat_dict.keys()))])), symbol))
+'''.format(len(taxa), len(concat_dict[random.choice(list(concat_dict.keys()))]), symbol))
             for taxon in taxa:
                 fh.write("\n{0} {1}".format(taxon, concat_dict[taxon]))
             fh.write("\n;\nEnd;")
@@ -350,7 +350,7 @@ def main():
               .format(len(concat_dict[random.choice(list(concat_dict.keys()))])))
     print("\tTotal number of sequences included = {:,}.".format(seq_count))
 
-    write_concatenated(taxa, concat_dict, args.outformat, args.symbol)
+    write_concatenated(taxa, concat_dict, args.outformat, sym_val)
     
     tf = datetime.now()
     te = tf - tb
