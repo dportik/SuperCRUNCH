@@ -73,7 +73,7 @@ def get_args():
 
     parser.add_argument("--outformat",
                             required=True,
-                            choices=["fasta", "phylip"],
+                            choices=["fasta", "phylip", "nexus"],
                             help="REQUIRED: The file format for the OUTPUT concatenated "
                             "alignment.")
     
@@ -284,7 +284,7 @@ def write_partitions(flist, lengths):
             fh_out.write("{0} = {1}-{2};\n".format(f, begin, end))
             bp_count += int(lengths[c])
 
-def write_concatenated(taxa, concat_dict, outformat):
+def write_concatenated(taxa, concat_dict, outformat, symbol):
     """
     Write output file in correct format (out_format) using the 
     concatenated sequence dictionary (concat_dict) and the list of taxa (taxa).
@@ -301,6 +301,19 @@ def write_concatenated(taxa, concat_dict, outformat):
             fh.write("{0} {1}\n".format(len(taxa), len(concat_dict[random.choice(list(concat_dict.keys()))])))
             for taxon in taxa:
                 fh.write("{0} {1}\n".format(taxon, concat_dict[taxon]))
+                
+    elif outformat == "nexus":
+        with open("Concatenated_Alignment.nex", 'a') as fh:
+            fh.write('''
+#NEXUS 
+BEGIN DATA;
+	DIMENSIONS  NTAX={0} NCHAR={1};
+	FORMAT DATATYPE=DNA  MISSING={2} GAP=-;
+MATRIX
+'''.format(len(taxa), len(concat_dict[random.choice(list(concat_dict.keys()))])), symbol))
+            for taxon in taxa:
+                fh.write("\n{0} {1}".format(taxon, concat_dict[taxon]))
+            fh.write("\n;\nEnd;")
 
 def main():
     tb = datetime.now()
@@ -337,7 +350,7 @@ def main():
               .format(len(concat_dict[random.choice(list(concat_dict.keys()))])))
     print("\tTotal number of sequences included = {:,}.".format(seq_count))
 
-    write_concatenated(taxa, concat_dict, args.outformat)
+    write_concatenated(taxa, concat_dict, args.outformat, args.symbol)
     
     tf = datetime.now()
     te = tf - tb

@@ -259,7 +259,7 @@ python Concatenation.py -i <input directory> -o <output dirctory> --in_format <i
 
 ##### `--out_format <choice>`
 
-> **Required**: The file format for the OUTPUT concatenated alignment. Choices = *fasta, phylip*.
+> **Required**: The file format for the OUTPUT concatenated alignment. Choices = *fasta, phylip, nexus*.
 
 ##### `-s <choice>`
 
@@ -279,7 +279,7 @@ python Concatenation.py -i /bin/Final_Alignments/ -o /bin/Concatenated/ --in_for
 
 Three output files are created in the specified output directory, including:
 
-+ `Concatenated_Alignment.fasta` or `Concatenated_Alignment.phylip`: The final concatenated alignment in the output format specified.
++ `Concatenated_Alignment.fasta`,`Concatenated_Alignment.phy`, or `Concatenated_Alignment.nex`: The final concatenated alignment in the output format specified.
 + `Data_Partitions.txt`: Text file displaying the order in which loci were concatenated and their corresponding base pairs within the alignment. These are the data partitions or charsets, and can be used for model testing or partitioning in analyses.
 + `Taxa_Loci_Count.log`: A count of the number of sequences that were available for each taxon/label, in other words the number of alignments the taxon/label was present in. If taxon names were used, this will be a full list of the species included in the concatenated alignment.
 
