@@ -238,7 +238,7 @@ def run_query(cur, whichname, qseq, qlist):
         [name_set.add(r['spname']) for r in results]
         
     elif whichname == "sspname":
-        cur.execute("SELECT * FROM records WHERE sspname IN ({0})'".format(qseq))
+        sql_query = "SELECT * FROM records WHERE sspname IN ({0})".format(qseq)
         cur.execute(sql_query, qlist)
         results = cur.fetchall()
         [acc_set.add(r['accession']) for r in results]

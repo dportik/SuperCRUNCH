@@ -180,7 +180,7 @@ def get_lengths(fdict, seqtype):
 def get_stats(l):
     """
     Function to calculate basic stats for the 
-    list of lengths, which are all integers.
+    list of lengths, which are floats.
     """
     avg = np.mean(l)
     std = np.std(l)
@@ -211,12 +211,12 @@ def run_calcs(flist, form, seqtype):
         
     return results
 
-def write_output(results, out_dir, seqtype):
+def write_output(results, outdir, seqtype):
     """
     Function to write output file of information
     which comes from the results list.
     """
-    os.chdir(out_dir)
+    os.chdir(outdir)
     
     if seqtype == "bases":
         outname = "Sequence_Length_Heterogeneity_Results_BasePairLengths.txt"
@@ -257,9 +257,8 @@ def main():
             write_output(results, args.outdir, args.seqtype)
     
             tf = datetime.now()
-            te = tf - tb
             print("\n\n--------------------------------------------------------------------------------------")
-            print("\nFinished. Elapsed time: {0} (H:M:S)\n".format(te))
+            print("\nFinished. Elapsed time: {0} (H:M:S)\n".format(tf - tb))
             print("--------------------------------------------------------------------------------------\n\n")    
 
 if __name__ == '__main__':

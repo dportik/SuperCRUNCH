@@ -372,67 +372,15 @@ def get_all_commands(flist, aln, accurate, threads, mpath, table, mem, pass_fail
 
     elif aln == "all":
         commands = []
-        [commands.append(get_cmd(f, "mafft", accurate, threads, mpath, table, mem)) for f in flist]
-        [commands.append(get_cmd(f, "clustalo", accurate, threads, mpath, table, mem)) for f in flist]
-        [commands.append(get_cmd(f, "muscle", accurate, threads, mpath, table, mem)) for f in flist]
+        commands.extend([get_cmd(f, "mafft", accurate, threads, mpath, table, mem) for f in flist])
+        commands.extend([get_cmd(f, "clustalo", accurate, threads, mpath, table, mem) for f in flist])
+        commands.extend([get_cmd(f, "muscle", accurate, threads, mpath, table, mem) for f in flist])
 
     else:
         commands = [get_cmd(f, aln, accurate, threads, mpath, table, mem) for f in flist]
 
     return commands
         
-def make_dirs(outdir, aln):
-    """
-    Creates path names for directories for all alignment
-    methods, but only creates the relevant directories
-    based on the aln argument supplied by the user. Returns
-    all directory paths (even those not created) to allow
-    output files to be moved to the proper directories 
-    during cleanup steps.
-    """
-    #get current path
-    os.chdir(outdir)
-    curpath = os.getcwd()
-    
-    #create paths using os.path.join() to avoid any issues
-    mafftdir = os.path.join(curpath, "Alignments-MAFFT")
-    muscledir = os.path.join(curpath, "Alignments-MUSCLE")
-    clustaldir = os.path.join(curpath, "Alignments-CLUSTALO")
-    macsedir = os.path.join(curpath, "Alignments-MACSE")    
-    macsecdir = os.path.join(curpath, "Alignments-MACSE", "Cleaned-Alignments")
-    macseodir = os.path.join(curpath, "Alignments-MACSE", "Additional-Outputs")
-
-    #create the directories using the above paths
-    #if the alignment method was selected by user
-    if aln == "mafft":
-        if not os.path.exists(mafftdir):
-            os.mkdir(mafftdir)
-
-    elif aln == "muscle":
-        if not os.path.exists(muscledir):
-            os.mkdir(muscledir)
-            
-    elif aln == "clustalo":
-        if not os.path.exists(clustaldir):
-            os.mkdir(clustaldir)
-            
-    elif aln == "macse":
-        if not os.path.exists(macsedir):
-            os.mkdir(macsedir)
-        if not os.path.exists(macsecdir):
-            os.mkdir(macsecdir)
-        if not os.path.exists(macseodir):
-            os.mkdir(macseodir)
-
-    elif aln == "all":
-        if not os.path.exists(mafftdir):
-            os.mkdir(mafftdir)
-        if not os.path.exists(muscledir):
-            os.mkdir(muscledir)
-        if not os.path.exists(clustaldir):
-            os.mkdir(clustaldir)
-        
-    return mafftdir, muscledir, clustaldir, macsecdir, macseodir
 
 def reformat(f, aln, outdir):
     """
@@ -459,9 +407,9 @@ def reformat(f, aln, outdir):
     try:
         shutil.move(outname, outdir)
     except:
-        os.remove(outname)
-        print("****ERROR: File {} already exists in {}".format(outname, outdir))
-        print("****ERROR: Please check directory!")
+        os.remove(os.path.join(outdir, outname))
+        shutil.move(outname, outdir)
+        print("\n\nWARNING: File '{}' already exists in:\n\t{}.\n\tReplacing previous version.".format(outname, outdir))
 
 def macse_reformat(f, outdir):
     """
@@ -485,64 +433,200 @@ def macse_reformat(f, outdir):
         for l in cleaned_lines:
             fh.write(l)
             
-    shutil.move(outname, outdir)
-    
+    try:
+        shutil.move(outname, outdir)
+    except:
+        os.remove(os.path.join(outdir, outname))
+        shutil.move(outname, outdir)
+        print("\n\nWARNING: File '{}' already exists in:\n\t{}.\n\tReplacing previous version.".format(outname, outdir))
 
-def cleanup(aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir):
+def cleanup(aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir, logpath):
     """
     Based on alignment method selected by user (aln), find the temporary
     output alignment file and produce the final output file using either
     the reformat() or macse_reformat() functions. 
     """
     if aln == "mafft":
-        [reformat(f, aln, mafftdir) for f in os.listdir('.') if f.endswith("_mafft_temp.fasta")]
+        temps = [f for f in os.listdir('.') if f.endswith("_mafft_temp.fasta") and os.stat(f).st_size != 0]
+        if not temps:
+            message = ("\n\n\nERROR:\tNo mafft output files were produced. Please ensure mafft is installed in path.\n\n\n")
+            write_log(logpath, message)
+            raise ValueError(message)
+        else:
+            for f in temps:
+                reformat(f, aln, mafftdir) 
         
     elif aln == "muscle":
-        [reformat(f, aln, muscledir) for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
-        
+        temps = [f for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
+        if not temps:
+            message = ("\n\n\nERROR:\tNo muscle output files were produced. Please ensure muscle is installed in path.\n\n\n")
+            write_log(logpath, message)
+            raise ValueError(message)
+        else:
+            for f in temps:
+                reformat(f, aln, muscledir)
+                
     elif aln == "clustalo":
-        [reformat(f, aln, clustaldir) for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+        temps = [f for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+        if not temps:
+            message = ("\n\n\nERROR:\tNo clustalo output files were produced. Please ensure clustalo is installed in path.\n\n\n")
+            write_log(logpath, message)
+            raise ValueError(message)
+        else:
+            for f in temps:
+                reformat(f, aln, clustaldir)
         
     elif aln == "macse":
-        [macse_reformat(f, macsecdir) for f in os.listdir('.') if f.endswith("_NT.fasta")]
-        [shutil.move(f, macseodir) for f in os.listdir('.') if f.endswith(("_AA.fasta", "_NT.fasta"))]
+        temps = [f for f in os.listdir('.') if f.endswith("_NT.fasta")]
+        if not temps:
+            message = ("\n\n\nERROR:\tNo macse output files were produced. Please ensure macse jar path is correct.\n\n\n")
+            write_log(logpath, message)
+            raise ValueError(message)
+        else:
+            for f in temps:
+                macse_reformat(f, macsecdir)
+        for f in [x for x in os.listdir('.') if x.endswith(("_AA.fasta", "_NT.fasta"))]:
+            try:
+                shutil.move(f, macseodir)
+            except:
+                os.remove(os.path.join(macseodir, f))
+                shutil.move(f, macseodir)
+                print("\n\nWARNING: File '{}' already exists in:\n\t{}.\n\tReplacing previous version.".format(f, macseodir))
         
     elif aln == "all":
-        [reformat(f, "mafft", mafftdir) for f in os.listdir('.') if f.endswith("_mafft_temp.fasta")]
-        [reformat(f, "muscle", muscledir) for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
-        [reformat(f, "clustalo", clustaldir) for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+        temps1 = [f for f in os.listdir('.') if f.endswith("_mafft_temp.fasta") and os.stat(f).st_size != 0]
+        for f in temps1:
+            reformat(f, "mafft", mafftdir)
+                
+        temps2 = [f for f in os.listdir('.') if f.endswith("_muscle_temp.fasta")]
+        for f in temps2:
+            reformat(f, "muscle", muscledir)
+                
+        temps3 = [f for f in os.listdir('.') if f.endswith("_clustalo_temp.fasta")]
+        for f in temps3:
+            reformat(f, "clustalo", clustaldir)
+
+def clear_dir(p, logpath):
+    message = ("WARNING: An output directory already exists:\n\t'{}'\n\tRemoving "
+                   "all files in this directory to prevent errors.\n".format(p))
+    print("\n{}".format(message))
+    write_log(logpath, message)
+    shutil.rmtree(p)
+    os.mkdir(p)
+
+def make_dirs(outdir, aln, logpath):
+    """
+    Creates path names for directories for all alignment
+    methods, but only creates the relevant directories
+    based on the aln argument supplied by the user. Returns
+    all directory paths (even those not created) to allow
+    output files to be moved to the proper directories 
+    during cleanup steps.
+    """
+    #get current path
+    os.chdir(outdir)
+    curpath = os.getcwd()
+    
+    #create paths using os.path.join() to avoid any issues
+    mafftdir = os.path.join(curpath, "Alignments-MAFFT")
+    muscledir = os.path.join(curpath, "Alignments-MUSCLE")
+    clustaldir = os.path.join(curpath, "Alignments-CLUSTALO")
+    macsedir = os.path.join(curpath, "Alignments-MACSE")    
+    macsecdir = os.path.join(curpath, "Alignments-MACSE", "Cleaned-Alignments")
+    macseodir = os.path.join(curpath, "Alignments-MACSE", "Additional-Outputs")
+
+    #create the directories using the above paths
+    #if the alignment method was selected by user
+    if aln == "mafft":
+        if not os.path.exists(mafftdir):
+            os.mkdir(mafftdir)
+            
+    elif aln == "muscle":
+        if not os.path.exists(muscledir):
+            os.mkdir(muscledir)
+            
+    elif aln == "clustalo":
+        if not os.path.exists(clustaldir):
+            os.mkdir(clustaldir)
+
+    elif aln == "macse":
+        for p in [macsedir, macsecdir, macseodir]:
+            if not os.path.exists(p):
+                os.mkdir(p)
+
+    elif aln == "all":
+        for p in [mafftdir, muscledir, clustaldir]:
+            if not os.path.exists(p):
+                os.mkdir(p)
+        
+    return mafftdir, muscledir, clustaldir, macsecdir, macseodir
+
+def check_clean(indir, logpath):
+    os.chdir(indir)
+    
+    prior_files = [f for f in os.listdir('.') if f.endswith(("clustalo_temp.fasta", "mafft_temp.fasta",
+                                                                 "muscle_temp.fasta", "MAFFT_Aligned.fasta",
+                                                                 "MUSCLE_Aligned.fasta", "CLUSTALO_Aligned.fasta",
+                                                                 "_AA.fasta", "_NT.fasta"))]
+    if prior_files:
+        message = ("WARNING: Found {:,} files that appear to be from a previous run:".format(len(prior_files)))
+        print("\n\n{}".format(message))
+        write_log(logpath, message)
+        for f in prior_files:
+            print("\t{}".format(f))
+            write_log(logpath, "\t{}".format(f))
+        print("\n\tRemoving these files now.\n")
+        for f in prior_files:
+            os.remove(f)
+            
+def write_log(logpath, s):
+    with open(logpath, 'a') as fh:
+        fh.write("{}\n".format(s))
        
 def main():
-    args = get_args()
     tb = datetime.now()
-    
-    mafftdir, muscledir, clustaldir, macsecdir, macseodir = make_dirs(args.outdir, args.aln)
-    
-    os.chdir(args.indir)
-    
-    finitial = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
-    flist = sorted([f for f in finitial
-                        if not f.endswith(("clustalo_temp.fasta",
-                                               "mafft_temp.fasta",
-                                               "muscle_temp.fasta",
-                                               "MAFFT_Aligned.fasta",
-                                               "MUSCLE_Aligned.fasta",
-                                               "CLUSTALO_Aligned.fasta",
-                                               "_AA.fasta",
-                                               "_NT.fasta"))])
+    args = get_args()
+    argd = vars(args)
+    settings = ("Align.py settings:\n-i: {0}\n"
+                    "-o: {1}\n"
+                    "-a: {2}\n"
+                    "--accurate: {3}\n"
+                    "--threads: {4}\n"
+                    "--mpath: {5}\n"
+                    "--table: {6}\n"
+                    "--mem: {7}\n"
+                    "--pass_fail: {8}\n".format(argd["indir"], argd["outdir"],
+                                                   argd["aln"], argd["accurate"],
+                                                    argd["threads"], argd["mpath"],
+                                                    argd["table"], argd["mem"],
+                                                    argd["pass_fail"]))
         
+    print("\n\n{}\n\n".format(settings))
+    logpath = os.path.join(args.outdir, "Align.log")
+    write_log(logpath, "Run executed: {}\n\n{}\n\n".format(datetime.now(), settings))
+    
+    mafftdir, muscledir, clustaldir, macsecdir, macseodir = make_dirs(args.outdir, args.aln, logpath)
+
+    check_clean(args.indir, logpath)
+
+    os.chdir(args.indir)
+    flist = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
+    if not flist:
+        raise ValueError(("\n\n\nNo files with the extension .fa or .fasta were found in the "
+                              "input directory:\n\t{}\n\n\n".format(indir)))
+    
     commands = get_all_commands(flist, args.aln, args.accurate, args.threads, args.mpath, args.table, args.mem, args.pass_fail)
     
     for c in commands:
         print("\n\n{}".format(c))
+        write_log(logpath, "{}: Executed: {}".format(datetime.now(), c))
         sp.call(c, shell=True)
-        cleanup(args.aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir)
+        cleanup(args.aln, mafftdir, muscledir, clustaldir, macsecdir, macseodir, logpath)
     
     tf = datetime.now()
-    te = tf - tb
-    print("\n\n--------------------------------------------------------------------------------------")
-    print("\nTotal time to create {2} aligments using {1}: {0} (H:M:S)\n".format(te, args.aln, len(commands)))
-    print("--------------------------------------------------------------------------------------\n\n")
+    print("\n\n{}".format("="*90))
+    print("\nTotal time to create {2} aligments using {1}: {0} (H:M:S)\n".format(tf - tb, args.aln, len(commands)))
+    print("{}\n\n".format("="*90))
         
 
 if __name__ == '__main__':
