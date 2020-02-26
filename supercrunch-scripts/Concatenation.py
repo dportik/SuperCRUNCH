@@ -73,7 +73,7 @@ def get_args():
 
     parser.add_argument("--outformat",
                             required=True,
-                            choices=["fasta", "phylip", "nexus"],
+                            choices=["fasta", "phylip", "nexus", "interleaved_nexus"],
                             help="REQUIRED: The file format for the OUTPUT concatenated "
                             "alignment.")
     
@@ -82,7 +82,15 @@ def get_args():
                             choices=["dash", "N", "?"],
                             help="REQUIRED: A base pair symbol used to represent missing "
                             "data when sequences are not available for a taxon.")
-    
+
+    parser.add_argument("--seqwrap",
+                            required=False,
+                            default="1000",
+                            type=int,
+                            help="OPTIONAL: For use with interleaved_nexus format option. "
+                            "The number of bp characters to include per line before "
+                            "splitting to an additional line.")
+
     return parser.parse_args()        
 
 def get_taxa_fasta(f):
@@ -284,11 +292,11 @@ def write_partitions(flist, lengths):
             fh_out.write("{0} = {1}-{2};\n".format(f, begin, end))
             bp_count += int(lengths[c])
 
-def write_concatenated(taxa, concat_dict, outformat, symbol):
+def write_concatenated(taxa, concat_dict, outformat, symbol, chunk):
     """
     Write output file in correct format (out_format) using the 
     concatenated sequence dictionary (concat_dict) and the list of taxa (taxa).
-    """    
+    """
     if outformat == "fasta":
         
         with open("Concatenated_Alignment.fasta", 'a') as fh:
@@ -314,6 +322,34 @@ MATRIX
             for taxon in taxa:
                 fh.write("\n{0} {1}".format(taxon, concat_dict[taxon]))
             fh.write("\n;\nEnd;")
+
+    elif outformat == "interleaved_nexus":
+        write_interleaved_nexus(taxa, concat_dict, outformat, symbol, chunk)
+
+def write_interleaved_nexus(taxa, concat_dict, outformat, symbol, chunk):
+    """
+    Write output file in nexus interleaved format using the 
+    specified sequence chunk size. 
+    """
+    seq_size = len(concat_dict[random.choice(list(concat_dict.keys()))])
+    with open("Concatenated_Alignment_Interleaved.nex", 'a') as fh:
+        fh.write('''
+#NEXUS 
+BEGIN DATA;
+	DIMENSIONS  NTAX={0} NCHAR={1};
+	FORMAT DATATYPE=DNA INTERLEAVE=YES MISSING={2} GAP=-;
+MATRIX
+'''.format(len(taxa), seq_size, symbol))
+
+    for i in range(0, seq_size, chunk):
+        with open("Concatenated_Alignment_Interleaved.nex", 'a') as fh:
+            fh.write("\n")
+            for taxon in taxa:
+                fh.write("\n{0} {1}".format(taxon, concat_dict[taxon][i:i+chunk]))
+
+    with open("Concatenated_Alignment_Interleaved.nex", 'a') as fh:
+        fh.write("\n;\nEnd;")
+    
 
 def main():
     tb = datetime.now()
@@ -350,12 +386,11 @@ def main():
               .format(len(concat_dict[random.choice(list(concat_dict.keys()))])))
     print("\tTotal number of sequences included = {:,}.".format(seq_count))
 
-    write_concatenated(taxa, concat_dict, args.outformat, sym_val)
+    write_concatenated(taxa, concat_dict, args.outformat, sym_val, args.seqwrap)
     
     tf = datetime.now()
-    te = tf - tb
     print("\n\n--------------------------------------------------------------------------------------")
-    print("\nFinished. Total elapsed time: {0} (H:M:S)\n".format(te))
+    print("\nFinished. Total elapsed time: {0} (H:M:S)\n".format(tf - tb))
     print("--------------------------------------------------------------------------------------\n\n")    
     
 if __name__ == '__main__':
