@@ -49,7 +49,9 @@ def get_args():
     (no duplicate names) or an error will be thrown. If a taxon is absent 
     from an alignment, a missing sequence is generated using the symbol 
     selected with the -s flag (can be an N, dash, or ?). The output format 
-    must be specified as fasta or phylip using the --outformat flag. 
+    must be specified using the --outformat flag, and includes fasta, phylip, 
+    nexus, and interleaved nexus. For interleaved nexus, the --seqwrap flag can be 
+    used to set the number of bp characters per line, otherwise the default is 100 bases.
 
     Output files are written to the specified output directory (-o).
 
@@ -85,11 +87,11 @@ def get_args():
 
     parser.add_argument("--seqwrap",
                             required=False,
-                            default="1000",
+                            default="100",
                             type=int,
                             help="OPTIONAL: For use with interleaved_nexus format option. "
                             "The number of bp characters to include per line before "
-                            "splitting to an additional line.")
+                            "splitting to an additional line. Default = 100.")
 
     return parser.parse_args()        
 
