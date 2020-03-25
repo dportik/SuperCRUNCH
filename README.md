@@ -52,15 +52,33 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 There are currently nine tutorials, which cover the full range of analyses run in the SuperCRUNCH publication. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. The tutorials include:
 
-- [**Iguania-Fast**](https://osf.io/x5hrm/): Construct a de novo species-level supermatrix for Iguania using "fast" settings (~60 loci, ~1,400 species). Takes ~1.5 hours to run and requires 15GB of space. Difficulty: Medium.
-- [**Iguania-Thorough**](https://osf.io/9gs32/): Construct a de novo species-level supermatrix for Iguania using "thorough" settings (~60 loci, ~1,400 species). Takes ~13 hours to run and requires 30GB of space. Difficulty: Hard.
-- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): Construct a vouchered population-level UCE supermatrix (~1,800 loci, <20 samples). Takes ~20 minutes to run and requires 350MB of space. Difficulty: Easy.
-- [**Kaloula-Species**](https://osf.io/crzp5/): Construct a species-level UCE supermatrix, which is a variation of the above tutorial (~1,800 loci, <20 samples). Takes ~20 minutes to run and requires 350MB of space. Difficulty: Easy.
-- [**Trachylepis-Vouchered**](https://osf.io/bgc5z/): Reconstruct a vouchered multi-locus phylogeography dataset from a published study (4 loci, ~100 samples). Takes ~1 minute to run and requires 10MB of space. Difficulty: Easy.
-- [**Trachylepis-Species**](https://osf.io/umswn/): Construct a species-level supermatrix from a published phylogeography dataset (~4 loci, 7 species). Takes ~1 minute to run and requires 10MB of space. Difficulty: Easy.
-- [**Callisaurus-Population**](https://osf.io/7gujb/): Construct a de novo multi-locus population-level dataset from multiple published sources (7 loci, ~250 sequences). Samples are NOT linked by voucher codes. Takes ~1 minute to run and requires 150MB of space. Difficulty: Easy.
-- [**Uma-Population**](https://osf.io/e28tu/): Construct a de novo multi-locus population-level dataset from multiple published sources (5 loci, ~200 sequences). Samples are NOT linked by voucher codes. Takes ~1 minute to run and requires 75MB of space. Difficulty: Easy.
-- [**Hyperoliid-Outgroup**](https://osf.io/q9nyx/): Incorporate published sequences (from GenBank) from an outgroup family with unpublished sequences from an ingroup family to create a species-level supermatrix (6 loci, ~350 species). Takes ~5 minutes and requires 100MB of space. Difficulty: Medium.
+- [**Iguania-Fast**](https://osf.io/x5hrm/): Construct a de novo species-level supermatrix for Iguania using "fast" settings (~60 loci, ~1,400 species). 
+    - Takes ~1.5 hours to run and requires 15GB of space. 
+    - Difficulty: Medium.
+- [**Iguania-Thorough**](https://osf.io/9gs32/): Construct a de novo species-level supermatrix for Iguania using "thorough" settings (~60 loci, ~1,400 species). 
+    - Takes ~13 hours to run and requires 30GB of space. 
+    - Difficulty: Hard.
+- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): Construct a vouchered population-level UCE supermatrix (~1,800 loci, <20 samples). 
+    - Takes ~20 minutes to run and requires 350MB of space. 
+    - Difficulty: Easy.
+- [**Kaloula-Species**](https://osf.io/crzp5/): Construct a species-level UCE supermatrix, which is a variation of the above tutorial (~1,800 loci, <20 samples). 
+    - Takes ~20 minutes to run and requires 350MB of space. 
+    - Difficulty: Easy.
+- [**Trachylepis-Vouchered**](https://osf.io/bgc5z/): Reconstruct a vouchered multi-locus phylogeography dataset from a published study (4 loci, ~100 samples). 
+    - Takes ~1 minute to run and requires 10MB of space. 
+    - Difficulty: Easy.
+- [**Trachylepis-Species**](https://osf.io/umswn/): Construct a species-level supermatrix from a published phylogeography dataset (~4 loci, 7 species). 
+    - Takes ~1 minute to run and requires 10MB of space. 
+    - Difficulty: Easy.
+- [**Callisaurus-Population**](https://osf.io/7gujb/): Construct a de novo multi-locus population-level dataset from multiple published sources (7 loci, ~250 sequences). Samples are NOT linked by voucher codes. 
+    - Takes ~1 minute to run and requires 150MB of space. 
+    - Difficulty: Easy.
+- [**Uma-Population**](https://osf.io/e28tu/): Construct a de novo multi-locus population-level dataset from multiple published sources (5 loci, ~200 sequences). Samples are NOT linked by voucher codes. 
+    - Takes ~1 minute to run and requires 75MB of space. 
+    - Difficulty: Easy.
+- [**Hyperoliid-Outgroup**](https://osf.io/q9nyx/): Incorporate published sequences (from GenBank) from an outgroup family with unpublished sequences from an ingroup family to create a species-level supermatrix (6 loci, ~350 species). 
+    - Takes ~5 minutes to run and requires 100MB of space. 
+    - Difficulty: Medium.
 
 
 ## Got a question, need some help, or have a suggestion?
