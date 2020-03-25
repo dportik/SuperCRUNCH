@@ -52,31 +52,40 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 There are currently nine tutorials, which cover the full range of analyses run in the SuperCRUNCH publication. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. The tutorials include:
 
-- [**Iguania-Fast**](https://osf.io/x5hrm/): **Construct a de novo species-level supermatrix for Iguania using "fast" settings (~60 loci, ~1,400 species).**
+- [**Iguania-Fast**](https://osf.io/x5hrm/): **Construct a de novo species-level supermatrix for Iguania using "fast" settings.**
+    - Produces supermatrix with 60 loci, 1,399 species, 12,978 sequences.
     - Takes ~1.5 hours to run and requires 15GB of space. 
     - Difficulty: Medium.
-- [**Iguania-Thorough**](https://osf.io/9gs32/): **Construct a de novo species-level supermatrix for Iguania using "thorough" settings (~60 loci, ~1,400 species).** 
+- [**Iguania-Thorough**](https://osf.io/9gs32/): **Construct a de novo species-level supermatrix for Iguania using "thorough" settings.** 
+    - Produces supermatrix with 61 loci, 1,426 species, 13,307 sequences.
     - Takes ~13 hours to run and requires 30GB of space. 
     - Difficulty: Hard.
-- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): **Construct a vouchered population-level UCE supermatrix (~1,800 loci, <20 samples).**
+- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): **Construct a vouchered population-level UCE supermatrix.**
+    - Produces supermatrix with 1,784 loci, 18 vouchered samples, 28,790 sequences.
     - Takes ~20 minutes to run and requires 350MB of space. 
     - Difficulty: Easy.
-- [**Kaloula-Species**](https://osf.io/crzp5/): **Construct a species-level UCE supermatrix, which is a variation of the above tutorial (~1,800 loci, <20 samples).** 
+- [**Kaloula-Species**](https://osf.io/crzp5/): **Construct a species-level UCE supermatrix, which is a variation of the above tutorial.** 
+    - Produces supermatrix with 1,784 loci, 14 species, 22,717 sequences.
     - Takes ~20 minutes to run and requires 350MB of space. 
     - Difficulty: Easy.
-- [**Trachylepis-Vouchered**](https://osf.io/bgc5z/): **Reconstruct a vouchered multi-locus phylogeography dataset from a published study (4 loci, ~100 samples).** 
+- [**Trachylepis-Vouchered**](https://osf.io/bgc5z/): **Reconstruct a vouchered multi-locus phylogeography dataset from a published study.** 
+    - Produces dataset with 4 loci, 108 vouchered samples, 400 sequences.
     - Takes ~1 minute to run and requires 10MB of space. 
     - Difficulty: Easy.
-- [**Trachylepis-Species**](https://osf.io/umswn/): **Construct a species-level supermatrix from a published phylogeography dataset (~4 loci, 7 species).** 
+- [**Trachylepis-Species**](https://osf.io/umswn/): **Construct a species-level supermatrix from a published phylogeography dataset.** 
+    - Produces supermatrix with 4 loci, 7 species, 26 sequences.
     - Takes ~1 minute to run and requires 10MB of space. 
     - Difficulty: Easy.
-- [**Callisaurus-Population**](https://osf.io/7gujb/): **Construct a de novo multi-locus population-level dataset from multiple published sources (7 loci, ~250 sequences). Samples are NOT linked by voucher codes.** 
+- [**Callisaurus-Population**](https://osf.io/7gujb/): **Construct a de novo multi-locus population-level dataset from multiple published sources. Samples are NOT linked by voucher codes.** 
+    - Produces dataset with 7 loci and 265 sequences.
     - Takes ~1 minute to run and requires 150MB of space. 
     - Difficulty: Easy.
-- [**Uma-Population**](https://osf.io/e28tu/): **Construct a de novo multi-locus population-level dataset from multiple published sources (5 loci, ~200 sequences). Samples are NOT linked by voucher codes.** 
+- [**Uma-Population**](https://osf.io/e28tu/): **Construct a de novo multi-locus population-level dataset from multiple published sources. Samples are NOT linked by voucher codes.** 
+    - Produces dataset with 5 loci and 234 sequences.
     - Takes ~1 minute to run and requires 75MB of space. 
     - Difficulty: Easy.
-- [**Hyperoliid-Outgroup**](https://osf.io/q9nyx/): **Incorporate published sequences (from GenBank) from an outgroup family with unpublished sequences from an ingroup family to create a species-level supermatrix (6 loci, ~350 species).** 
+- [**Hyperoliid-Outgroup**](https://osf.io/q9nyx/): **Incorporate published outgroup sequences from GenBank with unpublished ingroup sequences to create a custom supermatrix.** 
+    - Produces supermatrix with 6 loci, 365 samples, 1,724 sequences.
     - Takes ~5 minutes to run and requires 100MB of space. 
     - Difficulty: Medium.
 
