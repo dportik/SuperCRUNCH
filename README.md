@@ -48,23 +48,29 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 + [**Post-Alignment Tasks**](https://github.com/dportik/SuperCRUNCH/wiki/8:-Post-Alignment-Tasks)
 
 
+## Got a question, need some help, or have a suggestion?
+
+Please head to the [**SuperCRUNCH user group**](http://groups.google.com/group/supercrunch-users) and create a post. The user group can be found here: http://groups.google.com/group/supercrunch-users. 
+
+
+
 ## Tutorials and Examples
 
 There are currently nine tutorials, which cover the full range of analyses run in the SuperCRUNCH publication. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. The tutorials include:
 
-- [**Iguania-Fast**](https://osf.io/x5hrm/): **Construct a de novo species-level supermatrix for Iguania using "fast" settings.**
+- [**Iguania-Fast**](https://osf.io/x5hrm/): **Construct a very large species-level supermatrix for Iguania using "fast" settings.**
     - Produces supermatrix with 60 loci, 1,399 species, 12,978 sequences.
     - Takes ~1.5 hours to run and requires 15GB of space. 
     - Difficulty: Medium.
-- [**Iguania-Thorough**](https://osf.io/9gs32/): **Construct a de novo species-level supermatrix for Iguania using "thorough" settings.** 
+- [**Iguania-Thorough**](https://osf.io/9gs32/): **Construct a very large species-level supermatrix for Iguania using "thorough" settings.** 
     - Produces supermatrix with 61 loci, 1,426 species, 13,307 sequences.
     - Takes ~13 hours to run and requires 30GB of space. 
     - Difficulty: Hard.
-- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): **Construct a vouchered population-level UCE supermatrix.**
+- [**Kaloula-Vouchered**](https://osf.io/zxnq8/): **Construct a vouchered population-level UCE phylogenomic supermatrix.**
     - Produces supermatrix with 1,784 loci, 18 vouchered samples, 28,790 sequences.
     - Takes ~20 minutes to run and requires 350MB of space. 
     - Difficulty: Easy.
-- [**Kaloula-Species**](https://osf.io/crzp5/): **Construct a species-level UCE supermatrix, which is a variation of the above tutorial.** 
+- [**Kaloula-Species**](https://osf.io/crzp5/): **Construct a species-level UCE phylogenomic supermatrix, which is a variation of the above tutorial.** 
     - Produces supermatrix with 1,784 loci, 14 species, 22,717 sequences.
     - Takes ~20 minutes to run and requires 350MB of space. 
     - Difficulty: Easy.
@@ -76,12 +82,12 @@ There are currently nine tutorials, which cover the full range of analyses run i
     - Produces supermatrix with 4 loci, 7 species, 26 sequences.
     - Takes ~1 minute to run and requires 10MB of space. 
     - Difficulty: Easy.
-- [**Callisaurus-Population**](https://osf.io/7gujb/): **Construct a de novo multi-locus population-level dataset from multiple published sources. Samples are NOT linked by voucher codes.** 
-    - Produces dataset with 7 loci and 265 sequences.
+- [**Callisaurus-Population**](https://osf.io/7gujb/): **Construct a de novo multi-locus population-level dataset from multiple published sources.** 
+    - Produces dataset with 7 loci and 265 sequences. Samples are NOT linked by voucher codes.
     - Takes ~1 minute to run and requires 150MB of space. 
     - Difficulty: Easy.
-- [**Uma-Population**](https://osf.io/e28tu/): **Construct a de novo multi-locus population-level dataset from multiple published sources. Samples are NOT linked by voucher codes.** 
-    - Produces dataset with 5 loci and 234 sequences.
+- [**Uma-Population**](https://osf.io/e28tu/): **Construct a de novo multi-locus population-level dataset from multiple published sources.** 
+    - Produces dataset with 5 loci and 234 sequences. Samples are NOT linked by voucher codes.
     - Takes ~1 minute to run and requires 75MB of space. 
     - Difficulty: Easy.
 - [**Hyperoliid-Outgroup**](https://osf.io/q9nyx/): **Incorporate published outgroup sequences from GenBank with unpublished ingroup sequences to create a custom supermatrix.** 
@@ -89,10 +95,6 @@ There are currently nine tutorials, which cover the full range of analyses run i
     - Takes ~5 minutes to run and requires 100MB of space. 
     - Difficulty: Medium.
 
-
-## Got a question, need some help, or have a suggestion?
-
-Please head to the SuperCRUNCH-users forum and create a post. This is a google group that can be found here: http://groups.google.com/group/supercrunch-users. 
 
 ## Citation
 
