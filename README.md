@@ -50,7 +50,7 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 ## Tutorials and Examples
 
-New tutorials that use SuperCRUNCH v1.2 are under construction, please check back soon! 
+There are currently nine tutorials which cover the analyses run for the SuperCRUNCH publication. These tutorials can be found on the OSF SuperCRUNCH project page, available here: https://osf.io/bpt94/. Each tutorial includes all data and instructions necessary to run the analysis.
 
 ## Citation
 
