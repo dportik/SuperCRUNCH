@@ -14,7 +14,7 @@ SuperCRUNCH is described in more detail in the following publication:
 
 + Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, *In Press*.
 
-Pre-print available on BioRxiv: https://www.biorxiv.org/content/10.1101/538728v2.
+Pre-print available on BioRxiv: https://www.biorxiv.org/content/10.1101/538728v3.
 
 
 ## Installation
@@ -58,7 +58,7 @@ SuperCRUNCH was published as:
 
 + Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, *In Press*.
 
-A pre-print was made available on BioRxiv: https://www.biorxiv.org/content/10.1101/538728v2.
+A pre-print was made available on BioRxiv: https://www.biorxiv.org/content/10.1101/538728v3.
 
 ## Version
 
