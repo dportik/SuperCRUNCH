@@ -14,7 +14,7 @@ SuperCRUNCH is scalable and can be used to assemble a variety of datasets, rangi
 
 SuperCRUNCH is described in more detail in the following publication:
 
-+ Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, *Early View*. https://doi.org/10.1111/2041-210X.13392
++ Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, 11: 763-772. https://doi.org/10.1111/2041-210X.13392
 
 The article is available [**here**](https://github.com/dportik/SuperCRUNCH/tree/master/docs/publication), and the pre-print is available on BioRxiv [**here**](https://www.biorxiv.org/content/10.1101/538728v3).
 
@@ -102,7 +102,7 @@ There are currently nine tutorials, which cover the full range of analyses run i
 
 SuperCRUNCH was published as:
 
-+ Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, *Early View*. https://doi.org/10.1111/2041-210X.13392
++ Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, 11: 763-772. https://doi.org/10.1111/2041-210X.13392
 
 
 ## Version
