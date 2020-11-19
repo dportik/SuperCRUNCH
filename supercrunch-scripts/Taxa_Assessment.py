@@ -36,6 +36,7 @@ import time
 import sqlite3
 import numpy as np
 from Bio import SeqIO
+from Bio.SeqIO.FastaIO import SimpleFastaParser
 from datetime import datetime
 
 def get_args():
@@ -159,7 +160,7 @@ def parse_fasta_record(line, species, subspecies):
     accession = [l.strip('>') for l in line.split()][0]
 
     #convert line to uppercase for other strings
-    line = line.upper()
+    line = line.strip().upper()
     
     #get the 'species' name - first two strings following
     #the accession number
@@ -226,7 +227,7 @@ def build_sql_db(f, species, subspecies):
 
     return db
 
-def run_query(cur, whichname, qseq, qlist):
+def run_pos_query(cur, whichname, qseq, qlist):
     
     acc_set, name_set = set(), set()
     
@@ -246,10 +247,29 @@ def run_query(cur, whichname, qseq, qlist):
 
     return acc_set, name_set
 
+def run_neg_query(cur, whichname, qseq, qlist):
+    
+    acc_set, name_set = set(), set()
+    
+    if whichname == "spname":
+        sql_query = "SELECT * FROM records WHERE spname NOT IN ({0})".format(qseq)
+        cur.execute(sql_query, qlist)
+        results = cur.fetchall()
+        [acc_set.add(r['accession']) for r in results]
+        [name_set.add(r['spname']) for r in results]
+        
+    elif whichname == "sspname":
+        sql_query = "SELECT * FROM records WHERE sspname NOT IN ({0})".format(qseq)
+        cur.execute(sql_query, qlist)
+        results = cur.fetchall()
+        [acc_set.add(r['accession']) for r in results]
+        [name_set.add(r['sspname']) for r in results]
+
+    return acc_set, name_set
 
 def match_taxa(db, species, subspecies, no_subspecies):
     print("\n--------------------------------------------------------------------------------------\n")
-    print("Beginning taxon name matching.")
+    print("Gathering records with matched names.")
     conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -259,25 +279,25 @@ def match_taxa(db, species, subspecies, no_subspecies):
     spseq = ','.join(['?']*len(species))
     sspseq = ','.join(['?']*len(subspecies))
 
-    print("\n\tStarting SQL queries...")
+    print("\n\tStarting SQL queries.")
     namecount = int(0)
     if no_subspecies:
         print("\tSearching for species names...")
-        accs, spnames = run_query(cur, "spname", spseq, species)
+        accs, spnames = run_pos_query(cur, "spname", spseq, species)
         set_accs.update(accs)
         setsp.update(spnames)
         print("\t\tFinished.")
     
     else:
         print("\tSearching for species names...")
-        accs, spnames = run_query(cur, "spname", spseq, species)
+        accs, spnames = run_pos_query(cur, "spname", spseq, species)
         set_accs.update(accs)
         setsp.update(spnames)
         print("\t\tFinished.")
 
         if subspecies:
             print("\tSearching for subspecies names...")
-            accs, sspnames = run_query(cur, "sspname", sspseq, subspecies)
+            accs, sspnames = run_pos_query(cur, "sspname", sspseq, subspecies)
             set_accs.update(accs)
             setssp.update(sspnames)
             print("\t\tFinished.")
@@ -295,39 +315,53 @@ def match_taxa(db, species, subspecies, no_subspecies):
 
     return matched_accs, matched_spnames, matched_sspnames
 
-def get_unmatched_accs_names(db, matched_accs, no_subspecies):
+def get_unmatched_accs_names(db, species, subspecies, no_subspecies):
     print("\n--------------------------------------------------------------------------------------\n")
-    print("Gathering records with unmatched names.\n")
-    print("\tStarting SQL query...")
+    print("Gathering records with unmatched names.")
     conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
     badaccs, badsp, badssp = set(), set(), set()
+
+    spseq = ','.join(['?']*len(species))
+    sspseq = ','.join(['?']*len(subspecies))
+
+    print("\n\tStarting SQL queries.")
+    namecount = int(0)
+    if no_subspecies:
+        print("\tSearching for unmatched species names...")
+        accs, spnames = run_neg_query(cur, "spname", spseq, species)
+        badaccs.update(accs)
+        badsp.update(spnames)
+        print("\t\tFinished.")
     
-    accseq = ','.join(['?']*len(matched_accs))
-    sql_query = ("SELECT * FROM records WHERE accession NOT IN ({0})".format(accseq))
-    cur.execute(sql_query, matched_accs)
-    
-    results = cur.fetchall()
-    [badaccs.add(r['accession']) for r in results]
-    [badsp.add(r['spname']) for r in results]
-    [badssp.add(r['sspname']) for r in results]
-        
-    print("\t\tFinished.\n\n\tGathering sequences...")
-    
+    else:
+        print("\tSearching for unmatched species names...")
+        accs, spnames = run_neg_query(cur, "spname", spseq, species)
+        badaccs.update(accs)
+        badsp.update(spnames)
+        print("\t\tFinished.")
+
+        if subspecies:
+            print("\tSearching for unmatched subspecies names...")
+            accs, sspnames = run_neg_query(cur, "sspname", sspseq, subspecies)
+            badaccs.update(accs)
+            badssp.update(sspnames)
+            print("\t\tFinished.")
+
     unmatched_accs = sorted(badaccs)
     unmatched_spnames = sorted(badsp)
     unmatched_sspnames = sorted(badssp)
-    
-    print("\n\tFound {:,} sequences with an unmatched taxon name.".format(len(unmatched_accs)))
+
+    print("\n\tFound {:,} sequences with unmatched taxon names.".format(len(unmatched_accs)))
     print("\tFound {:,} unique unmatched species (two-part) names.".format(len(unmatched_spnames)))
     if not no_subspecies:
         print("\tFound {:,} unique unmatched subspecies (three-part) names.".format(len(unmatched_sspnames)))
     print("\n--------------------------------------------------------------------------------------\n")
-    
+        
     conn.close()
-    
+
     return unmatched_accs, unmatched_spnames, unmatched_sspnames
 
 def write_log(inlist, outname, namecase):
@@ -351,20 +385,40 @@ def index_fasta(f):
     records = SeqIO.index(f, "fasta")
     tf = datetime.now()
     te = tf - tb
-    print("\tTotal time to index fasta file: {0} (H:M:S)\n\n".format(te))
-
+    print("\tTotal time to index fasta file: {0} (H:M:S)".format(te))
+    print("\n--------------------------------------------------------------------------------------\n")
     return records
-    
+
+def index_db_fasta(f, outdir):
+    """
+    Use SeqIO index_db function to load fasta file, which
+    is the best option for massive files.
+    """
+    tb = datetime.now()
+    print("Indexing fasta file: {}".format(f.split('/')[-1]))
+    print("\tThis could take some time...")
+    index = os.path.join(outdir, "temp.idx")
+    records = SeqIO.index_db(index, f, "fasta")
+    tf = datetime.now()
+    te = tf - tb
+    print("\tTotal time to index fasta file: {0} (H:M:S)".format(te))
+    print("\n--------------------------------------------------------------------------------------\n")
+    return records        
+
 def write_fasta(records, acclist, outname):
     tb = datetime.now()
-    print("\tWriting {:,} sequence records to {}...".format(len(acclist), outname))
-    with open(outname, 'a') as fh:
-        for a in acclist:
-            fh.write((records[a]).format("fasta"))
+    print("Writing output file: {}".format(outname))
+    print("\tWriting {:,} sequence records.".format(len(acclist)))
+    chunk = 100
+    for i in range(0, len(acclist), chunk):
+        acc_chunk = acclist[i:i+chunk]
+        with open(outname, 'a') as fh:
+            for a in acc_chunk:
+                fh.write((records[a]).format("fasta"))
     tf = datetime.now()
     te = tf - tb
     print("\t\tElapsed time: {0} (H:M:S)\n\n".format(te))
-    
+                    
 def main():
     args = get_args()
     tb = datetime.now()
@@ -383,7 +437,7 @@ def main():
     matched_accs, matched_spnames, matched_sspnames =  match_taxa(db, species, subspecies, args.no_subspecies)
     allmatchednames = sorted(matched_spnames + matched_sspnames)
     
-    unmatched_accs, unmatched_spnames, unmatched_sspnames = get_unmatched_accs_names(db, matched_accs, args.no_subspecies)
+    unmatched_accs, unmatched_spnames, unmatched_sspnames = get_unmatched_accs_names(db, species, subspecies, args.no_subspecies)
     
     write_log(matched_accs, "Matched_Records_Accession_Numbers.log", False)
     write_log(unmatched_accs, "Unmatched_Records_Accession_Numbers.log", False)
@@ -393,10 +447,16 @@ def main():
         pass
     else:
         write_log(unmatched_sspnames, "Unmatched_Records_Subspecies_Names.log", True)
+        
+    # set 5GB size limit for indexing input fasta without SQL option
+    if os.path.getsize(args.input) > 5000000000:
+        records = index_db_fasta(args.input, args.outdir)
+    else:
+        records = index_fasta(args.input)
 
-    records = index_fasta(args.input)
     write_fasta(records, matched_accs, "Matched_Taxa.fasta")
     write_fasta(records, unmatched_accs, "Unmatched_Taxa.fasta")
+        
     
     tf = datetime.now()
     te = tf - tb
