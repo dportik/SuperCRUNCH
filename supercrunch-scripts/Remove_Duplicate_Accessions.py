@@ -24,6 +24,7 @@ GNU General Public Lincense
 import argparse
 import os
 from Bio import SeqIO
+from datetime import datetime
 
 def get_args():
     """
@@ -68,11 +69,17 @@ def remove_dup_seqs(records):
         yield record
 
 def main():
+    tb = datetime.now()
     args = get_args()
     os.chdir(args.outdir)
     prefix = args.input.split('/')[-1].split('.')[0]
     records = remove_dup_seqs(SeqIO.parse(args.input, "fasta"))
     write_fasta = SeqIO.write(records, "{}-Cleaned.fasta".format(prefix), "fasta")
+    tf = datetime.now()
+    te = tf - tb
+    print("\n\n--------------------------------------------------------------------------------------")
+    print("\nFinished. Total elapsed time: {0} (H:M:S)\n".format(te))
+    print("--------------------------------------------------------------------------------------\n\n")    
     
 if __name__ == '__main__':
     main()
