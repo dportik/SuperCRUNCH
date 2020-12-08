@@ -119,7 +119,7 @@ def parse_loci_terms(f):
     with open(f, 'r') as fh_f:
         for line in fh_f:
             #if line not blank, split by tab, replace all quotes and remove whitespace
-            cols = [l.replace('\"','').strip().upper() for l in line.split('\t')
+            cols = [l.replace('\"','').replace(",", '').replace(":", '').replace(")", '').replace("(", '').strip().upper() for l in line.split('\t')
                         if line.strip()]
             #for sublist in list, split by semi-colon
             split_cols = [c.split(";") for c in cols]
