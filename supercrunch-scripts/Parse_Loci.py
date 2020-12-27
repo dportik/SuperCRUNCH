@@ -106,7 +106,7 @@ def get_args():
 
 def parse_loci_terms(f):
     """
-    Input file is tab delimited, four columns:
+    Input file is tab delimited, FOUR columns:
     [Locus ID] [Locus abbreviation] [Locus string] [negative terms]
     Columns two and three can contain multiple search items,
     but if so must be separated by semicolon character (;).
