@@ -54,6 +54,7 @@ import subprocess as sp
 import shutil
 import itertools
 import operator
+import numpy as np
 from datetime import datetime
 from Bio import SeqIO
 
@@ -200,14 +201,39 @@ def parse_clusters(f, cluster_file, fdict):
 
     #write largest cluster to new fasta file
     cluster_db = "{0}_clusterDB.fasta".format(f.split('.')[0])
+
+    #get all accessions for the largest cluster
+    main_cluster_accs = []
+    for string in sublists[0]:
+        if '>' in string and '...' in string:
+            accession = string.split('>')[1].split('...')[0]
+            main_cluster_accs.append(accession)
+        
+    #need to do a quick seq length check to eliminate unruly long sequences
+    # get sequence lengths
+    main_cluster_seq_lengths = sorted([len(fdict[acc].seq) for acc in main_cluster_accs])
+    # calculate q1, median, q3
+    p25, p50, p75, p95 = int(np.percentile(main_cluster_seq_lengths, 25)), int(np.percentile(main_cluster_seq_lengths, 50)), int(np.percentile(main_cluster_seq_lengths, 75)),  int(np.percentile(main_cluster_seq_lengths, 95))
+    print("\n\t25th percentile sequence length = {:,} bp".format(p25))
+    print("\t50th percentile sequence length = {:,} bp".format(p50))
+    print("\t75th percentile sequence length = {:,} bp".format(p75))
+    print("\t95th percentile sequence length = {:,} bp".format(p95))
+    print("\n\tExcluding all seqs > 1.3 x 95th percentile ({:,} bp) from reference cluster as a precaution:".format(int(1.3*p95)))
+    # remove any sequence that is > 95th percentile, make explicit
+    length_filtered_accs = []
+    for acc in main_cluster_accs:
+        if len(fdict[acc].seq) <= int(1.3*p95):
+            length_filtered_accs.append(acc)
+        else:
+            print("\t\tExcluding sequence {}: {:,} bp...".format(acc, len(fdict[acc].seq)))
+    if len(length_filtered_accs) == len(main_cluster_accs):
+        print("\t\tNo sequences exceeded length filter, all retained.")
+    #length_filtered_accs = [acc for acc in main_cluster_accs if len(fdict[acc].seq) < p90]
     
     with open(cluster_db, 'a') as fh:
-        #access the biggest cluster, get all seqs
-        for string in sublists[0]:
-            if '>' in string and '...' in string:
-                accession = string.split('>')[1].split('...')[0]
-                #use fdict to look up accession and write record
-                fh.write((fdict[accession]).format("fasta"))
+        for acc in length_filtered_accs:
+            #use fdict to look up accession and write record
+            fh.write((fdict[acc]).format("fasta"))
                 
     return cluster_db
             
@@ -398,6 +424,7 @@ def parse_blastn_output6_NoSelfHits(blast_output, merge_strategy, bp_bridge):
     """
     Get information from blast output file based on merge_strategy
     selected. See annotations below.
+    columns = qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
     """
     print("\n--------------------------------------------------------------------------------------\n")
     #extract file lines and sorted list of accession numbers from blast output file
@@ -563,7 +590,7 @@ def cleanup(cluster_outs, clustdir, blastdir, logdir, fdir):
     [shutil.move(f, blastdir) for f in os.listdir('.') if f.endswith("blast_results.txt")]
     [os.remove(f) for f in os.listdir('.') if os.stat(f).st_size == 0 and f.endswith("_extracted.fasta")]
     [shutil.move(f, fdir) for f in os.listdir('.') if f.endswith("_extracted.fasta")]
-    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin"))]
+    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin", ".ndb", ".not", ".ntf", ".nto"))]
     
     print("\tDone!\n")
 

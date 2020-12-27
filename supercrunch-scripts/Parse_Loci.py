@@ -106,8 +106,8 @@ def get_args():
 
 def parse_loci_terms(f):
     """
-    Input file is tab delimited, three columns:
-    [Locus ID] [Locus abbreviation] [Locus string]
+    Input file is tab delimited, four columns:
+    [Locus ID] [Locus abbreviation] [Locus string] [negative terms]
     Columns two and three can contain multiple search items,
     but if so must be separated by semicolon character (;).
     """
@@ -308,20 +308,43 @@ def build_sql_db(f, db, species, subspecies, no_subspecies):
 
 
 def prep_terms(l):
+    """
+    A simple function to prep the abbreviation and description terms from the
+    loci_list (l). Adds spaces to either side of abbreviations. Merges all 
+    terms (abbreviations and descriptions) into a single list, returns that list. 
+    """
     padded = [" {} ".format(t) for t in l[1]]
     terms = padded + l[2]
+    print("\tThere are {} total search terms to use.".format(len(terms)))
+    
     return terms
+
+def prep_negative_terms(l):
+    """
+    Prepares SQL query syntax for all negative search terms. The 
+    resulting string will be used when running searchs to exclude records 
+    containing this description terms.
+    """
+    neg_search_string = ""
+    if l[3][0] != "N/A":
+        print("\tExcluding records with these terms in sequence description: {}\n".format(" ,".join(l[3])))
+        for neg in l[3]:
+            neg_search_string += " AND description NOT LIKE '%{0}%'".format(neg)
+    else:
+        print("\tNo negative search terms included for sequence descriptions.\n")
+    
+    return neg_search_string
 
 def perform_searches(cur, l, spseq, species, exclude_accs):
     print("\nSearching for {}:\n".format(l[0][0]))
     
     terms = prep_terms(l)
-
+    neg_search_string = prep_negative_terms(l)
     acc_set = set()
     excluded = int(0)
     
     for t in terms:
-        sql_query = "SELECT * FROM records WHERE spname IN ({0}) AND description LIKE '%{1}%'".format(spseq, t)
+        sql_query = "SELECT * FROM records WHERE spname IN ({0}) AND description LIKE '%{1}%'{2}".format(spseq, t, neg_search_string)
         #print sql_query
         cur.execute(sql_query, species)
         results = cur.fetchall()

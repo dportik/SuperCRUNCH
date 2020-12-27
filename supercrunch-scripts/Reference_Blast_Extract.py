@@ -494,7 +494,7 @@ def cleanup(blastdir, logdir, fdir):
     [shutil.move(f, logdir) for f in os.listdir('.') if f.startswith(("Log_File", "Log_BadSeqs"))]
     [shutil.move(f, blastdir) for f in os.listdir('.') if f.endswith("blast_results.txt")]
     [shutil.move(f, fdir) for f in os.listdir('.') if f.endswith("_extracted.fasta")]
-    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin"))]
+    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin", ".ndb", ".not", ".ntf", ".nto"))]
     
     print("\tDone!\n")
 
