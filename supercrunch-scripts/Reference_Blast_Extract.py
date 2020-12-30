@@ -358,6 +358,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy, bp_bridge):
     """
     Get information from blast output file based on merge_strategy
     selected. See annotations below.
+    columns = qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
     """
     print("\n---------------------------------------------------------------------------\n")
     #extract file lines and sorted list of accession numbers from blast output file
