@@ -186,6 +186,16 @@ def get_args():
                                          "25","26","27","28","29","30","31"],
                             help="REQUIRED for -f translate: Specifies translation table.")
     
+    parser.add_argument("--accessions_include",
+                            required=False,
+                            help="OPTIONAL: The full path to a text file containing the "
+                            "accession numbers that should be selected, if present.")
+    
+    parser.add_argument("--accessions_exclude",
+                            required=False,
+                            help="OPTIONAL: The full path to a text file containing the "
+                            "accession numbers that must never be selected.")
+    
     parser.add_argument("--onlyinclude",
                             required=False,
                             help="OPTIONAL: The full path to a text file containing the "
@@ -198,6 +208,23 @@ def get_args():
                             "many, many loci).")
     
     return parser.parse_args()
+
+def parse_accessions_include(f):
+    with open(f, 'r') as fh:
+        include_accessions_list = [line.strip() for line in fh if line.strip()]
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Found {:,} accessions that must be selected, if present.".format(len(include_accessions_list)))
+    
+    return include_accessions_list
+
+def parse_accessions_exclude(f):
+    with open(f, 'r') as fh:
+        exclude_accessions_list = [line.strip() for line in fh if line.strip()]
+    print("\n--------------------------------------------------------------------------------------\n")
+    print("Found {:,} accessions that must be excluded, if present.".format(len(exclude_accessions_list)))
+    
+    return exclude_accessions_list
+
 
 def parse_taxa(f):
     """
@@ -410,7 +437,8 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
     return accession, sp_name, ssp_name, voucher
 
 def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
-                    length, randomize, no_subspecies, vouchered, quiet):
+                    length, randomize, no_subspecies, vouchered, quiet,
+                    include_accessions_list, exclude_accessions_list):
     """
     Function to select sequence(s). Heavily annotated
     to explain decision tree, options, and variables
@@ -482,7 +510,20 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
         #species name if we are using the allseqs option.
         
         #make a sorted list of unique accession numbers
-        availableseqs = sorted(set([r['accession'] for r in allresults]))
+        initialseqs = sorted(set([r['accession'] for r in allresults]))
+        if initialseqs:
+            if not quiet:
+                print("\n\n\t{}:".format(t.capitalize()))
+                print("\n\t\tNumber of unfiltered sequences available: {}".format(len(initialseqs)))
+
+        availableseqs = [i for i in initialseqs if i not in exclude_accessions_list]
+
+        if len(initialseqs) > len(availableseqs):
+             print("\n\t\tExcluded {:,} accessions from starting set of {:,} sequences:".format(len(initialseqs)-len(availableseqs), len(initialseqs)))
+             for acc in sorted(set(initialseqs) - set(availableseqs)):
+                print("\t\t\t{}".format(acc))
+        if not availableseqs:
+            print("\t\tNo valid sequences left, skipping taxon!")
 
         #add all accession numbers to the unfiltered accession list
         #which can be used to download all seqs for this fasta file
@@ -495,14 +536,13 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
             taxon_accs.append([t.capitalize(), acc_join])
 
         
-        resultlist = [[r['accession'], r['length'], r['voucher'], r['translation'],
+        initialresultlist = [[r['accession'], r['length'], r['voucher'], r['translation'],
                            r['spname'].capitalize(), r['sspname'].capitalize()] for r in results]
-
+        #filter out accs to exclude
+        resultlist = [entry for entry in initialresultlist if entry[0] not in exclude_accessions_list]
+        
         #make sure we have results
         if resultlist:
-            if not quiet:
-                print("\n\n\t{}:".format(t.capitalize()))
-                print("\n\t\tNumber of unfiltered sequences available: {}".format(len(availableseqs)))
 
             #if only vouchered seqs desired, use list comprehension
             #to find entries that have yes in voucher column
@@ -526,16 +566,25 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
                 #option for choosing the longest sequence available
                 if seq_filter == "length":
                     if not quiet:
-                        print("\t\tNumber of filtered sequences available: {}".format(len(resultlist)))
+                        print("\n\t\tNumber of min-length filtered sequences available: {}".format(len(resultlist)))
                         print("\n\t\tFiltered sequences: [Accession, Sequence Length]")
                         for r in resultlist:
                             print("\t\t\t\t[{}, {}]".format(r[0], r[1]))
                     
                     #option for taking only the longest sequence
                     if seq_selection == "oneseq":
-                        writing_acc_list.append(resultlist[0][0])
-                        if not quiet:
-                            print("\n\t\tSelecting sequence: {}".format(resultlist[0][0]))
+                        if include_accessions_list:
+                            include_results = [entry for entry in resultlist if entry[0] in include_accessions_list]
+                            if include_results:
+                                if not quiet:
+                                    print("\n\t\tENFORCING ACCESSION INCLUSION of sequence: {}".format(include_results[0][0]))
+                                writing_acc_list.append(include_results[0][0])
+                            else:
+                                writing_acc_list.append(resultlist[0][0])
+                        else:
+                            writing_acc_list.append(resultlist[0][0])
+                            if not quiet:
+                                print("\n\t\tSelecting sequence: {}".format(resultlist[0][0]))
                         #create list that contains taxon name, accession, length, vouchered, translation, availableseqs
                         all_seq_info.append([t.capitalize(), resultlist[0][0],
                                                  resultlist[0][1], resultlist[0][2],
@@ -743,7 +792,7 @@ def make_locus_db(f, species, subspecies, no_subspecies, seq_filter, tcode, quie
 
 def filter_runner(flist, species, subspecies, seq_selection, seq_filter, length,
                       randomize, no_subspecies, vouchered, tcode, quiet,
-                      fdir, ldir, adir):
+                      fdir, ldir, adir, include_accessions_list, exclude_accessions_list):
     """
     Function to run main tasks. Connect to the 
     constructed SQL database, get taxon names from
@@ -788,7 +837,8 @@ def filter_runner(flist, species, subspecies, seq_selection, seq_filter, length,
         all_acc_list, writing_acc_list, all_seq_info, taxon_accs = filter_seqs(locus, cur, taxa,
                                                                                    seq_selection, seq_filter,
                                                                                    length, randomize, no_subspecies,
-                                                                                   vouchered, quiet)
+                                                                                   vouchered, quiet, include_accessions_list,
+                                                                                   exclude_accessions_list)
         #write the filtered fasta file and all log files
         write_fasta(f, locus, seq_selection, writing_acc_list, fdir)
         write_species_log(locus, all_seq_info, ldir)
@@ -835,6 +885,16 @@ def make_dirs():
 def main():
     args = get_args()
     tb = datetime.now()
+
+    if args.accessions_include:
+        include_accessions_list =  parse_accessions_include(args.accessions_include)
+    else:
+        include_accessions_list = []
+
+    if args.accessions_exclude:
+        exclude_accessions_list =  parse_accessions_exclude(args.accessions_exclude)
+    else:
+        exclude_accessions_list = []
     
     species, subspecies = parse_taxa(args.taxa)
     
@@ -857,7 +917,7 @@ def main():
     
     filter_runner(flist, species, subspecies, args.seq_selection, args.seq_filter, args.min_length,
                       args.randomize, args.no_subspecies, args.vouchered, tcode, args.quiet,
-                      fdir, ldir, adir)
+                      fdir, ldir, adir, include_accessions_list, exclude_accessions_list)
     
     tf = datetime.now()
     te = tf - tb
