@@ -1,0 +1,17 @@
+# USAGE: conda env create -f supercrunch-conda-env.yml
+name: supercrunch
+channels:
+- bioconda
+- conda-forge
+- defaults
+dependencies:
+- python=3.7
+- numpy
+- matplotlib
+- biopython
+- blast=2.10.1
+- cd-hit=4.8.1
+- mafft=7.475
+- muscle=3.8.31
+- clustalo=1.2.4
+- trimal=1.4.1
