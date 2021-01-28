@@ -123,7 +123,14 @@ def parse_loci_terms(f):
                         if line.strip()]
             #for sublist in list, split by semi-colon
             split_cols = [c.split(";") for c in cols]
+            # make backward compatible with three column locus search terms files
+            if len(split_cols) == 3:
+                split_cols.append(['N/A'])
             loci_info.append(split_cols)
+            print("\n\n\tLocus {} terms:\n\t\tAbbreviation(s): {}\n\t\tDescription(s): {}\n\t\tNegative Term(s): {}".format(split_cols[0][0],
+                                                                                                                              "\n\t\t\t\t".join(split_cols[1]),
+                                                                                                                              "\n\t\t\t\t".join(split_cols[2]),
+                                                                                                                              "\n\t\t\t\t".join(split_cols[3])))
             
     print("\tFound {:,} loci to search.".format(len(loci_info)))
     return loci_info
@@ -237,31 +244,43 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
                          .replace("(", '')
                          .replace("<", '')
                          .split()[3:]))+" "
+        # debug line
+        #print(description)
     else:
         description = "NA"
 
     #try to obtain a field/museum/sample code using the keywords
     #voucher, isolate, and strain in the description line
     if 'VOUCHER' in description:
-        parts = description.split('VOUCHER ')[-1].split()
-        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
-            voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+        if len([i for i in description.split('VOUCHER ') if i]) > 1:
+            parts = description.split('VOUCHER ')[-1].split()
+            if parts[0].replace("-", "").isalpha() and len(parts) > 1:
+                voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+            else:
+                voucher = "Voucher_{}".format(parts[0])
         else:
-            voucher = "Voucher_{}".format(parts[0])
+            voucher = "NA"
             
     elif 'ISOLATE' in description:
-        parts = description.split('ISOLATE ')[-1].split()
-        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
-            voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+        if len([i for i in description.split('ISOLATE ') if i]) > 1:
+            parts = description.split('ISOLATE ')[-1].split()
+            if parts[0].replace("-", "").isalpha() and len(parts) > 1:
+                voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+            else:
+                voucher = "Voucher_{}".format(parts[0])
         else:
-            voucher = "Voucher_{}".format(parts[0])
+            voucher = "NA"
             
     elif 'STRAIN' in description:
-        parts = description.split('STRAIN ')[-1].split()
-        if parts[0].replace("-", "").isalpha() and len(parts) > 1:
-            voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+        if len([i for i in description.split('STRAIN ') if i]) > 1:
+            parts = description.split('STRAIN ')[-1].split()
+            if parts[0].replace("-", "").isalpha() and len(parts) > 1:
+                voucher = "Voucher_{}_{}".format(parts[0], parts[1])
+            else:
+                voucher = "Voucher_{}".format(parts[0])
         else:
-            voucher = "Voucher_{}".format(parts[0])
+            voucher = "NA"
+                
     else:
         voucher = "NA"
         
