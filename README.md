@@ -18,9 +18,9 @@
 + Automate multiple sequence alignment using Clustal-O, MAFFT, Muscle, and MACSE.
 + Generate accession tables for supermatrices, for all genes and species included.
 + Relabel GenBank sequences using species names, accession numbers, and/or voucher codes.
-+ Trim alignments using trimAl or a custom trimming routine
-+ Convert fasta format to phylip and nexus
-+ Concatenate any number of fasta or phylip alignment files to create concatenated alignments
++ Trim alignments using trimAl or a custom trimming routine.
++ Convert fasta format to phylip and nexus.
++ Concatenate any number of fasta or phylip alignment files. Outputs a concatenated alignment, data partitions, and counts of loci for all species included. 
 + And many other tasks!
 
 
