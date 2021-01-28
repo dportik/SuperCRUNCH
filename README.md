@@ -28,13 +28,9 @@ A visual overview of the major steps in SuperCRUNCH is shown below:
 
 ![SuperCrunch workflow](https://github.com/dportik/SuperCRUNCH/blob/master/docs/Figure-1.jpg)
 
+SuperCRUNCH is highly modular and analyses do not require running the full pipeline. There are many entry points which can provide useful tools for manipulating your phylogenetic and phylogeographic datasets.
+
 ## Citation 
-
-SuperCRUNCH is described in more detail in the following publication:
-
-+ Portik, D.M., and J.J. Wiens. (2020) SuperCRUNCH: A bioinformatics toolkit for creating and manipulating supermatrices and other large phylogenetic datasets. Methods in Ecology and Evolution, 11: 763-772. https://doi.org/10.1111/2041-210X.13392
-
-The article is available [**here**](https://github.com/dportik/SuperCRUNCH/tree/master/docs/publication), and the pre-print is available on BioRxiv [**here**](https://www.biorxiv.org/content/10.1101/538728v3).
 
 SuperCRUNCH is described in more detail in the following publication:
 
@@ -45,9 +41,9 @@ The article is available [**here**](https://github.com/dportik/SuperCRUNCH/tree/
 
 ## Installation
 
-There are several external dependencies required to run SuperCRUNCH, including [**Biopython**](https://biopython.org/), [**NCBI-BLAST+**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [**CD-HIT-EST**](http://weizhongli-lab.org/cd-hit/), [**MAFFT**](https://mafft.cbrc.jp/alignment/software/), [**Muscle**](https://www.drive5.com/muscle/), [**Clustal-O**](http://www.clustal.org/omega/), [**MACSE**](https://bioweb.supagro.inra.fr/macse/), and [**trimAl**](http://trimal.cgenomics.org/). 
+There are several dependencies required to run SuperCRUNCH, including Python packages ([**Biopython**](https://biopython.org/) and numpy), as well as external tools ([**NCBI-BLAST+**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [**CD-HIT-EST**](http://weizhongli-lab.org/cd-hit/), [**MAFFT**](https://mafft.cbrc.jp/alignment/software/), [**Muscle**](https://www.drive5.com/muscle/), [**Clustal-O**](http://www.clustal.org/omega/), [**MACSE**](https://bioweb.supagro.inra.fr/macse/), and [**trimAl**](http://trimal.cgenomics.org/)). 
 
-Installation of these requirements is easy and fast using `conda`. The [supercrunch-conda-env.yml](https://github.com/dportik/SuperCRUNCH/blob/master/supercrunch-conda-env.yml) file can be used to create the correct conda environment:
+Installation of these requirements is fast and easy using `conda`. The [supercrunch-conda-env.yml](https://github.com/dportik/SuperCRUNCH/blob/master/supercrunch-conda-env.yml) file can be used to create the correct conda environment:
 
 ```
 conda create -f supercrunch-conda-env.yml
@@ -61,7 +57,9 @@ conda activate supercrunch
 
 You can then run all SuperCRUNCH modules in this environment. 
 
-NOTE - this will install all requirements except for `MACSE`, which is a jar file that must be downloaded from [**here**](https://bioweb.supagro.inra.fr/macse/index.php?menu=releases) (get V2.05). For non-conda installation of these packages, please see the [**Installation Instructions**](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions) wiki. 
+**NOTE** - this will install all requirements except for `MACSE`, which is a jar file that must be downloaded from [**here**](https://bioweb.supagro.inra.fr/macse/index.php?menu=releases) (get V2.05). 
+
+For non-conda installation of these packages, please see the [**Installation Instructions**](https://github.com/dportik/SuperCRUNCH/wiki/Installation-Instructions) wiki. 
 
 SuperCRUNCH itself consists of a set of modules written in Python (compatible with 2.7 and 3.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows using a program like Cygwin. 
 
@@ -95,7 +93,7 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 ## Tutorials and Examples
 
-Several tutorials were made available as part of the original SuperCRUNCH publication, which cover the full range of analyses run in the SuperCRUNCH publication. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. An overview of the tutorials available can be found on the [Tutorials wiki](https://github.com/dportik/SuperCRUNCH/wiki/Tutorials).
+Several tutorials were made available as part of the original SuperCRUNCH publication, which cover the full range of analyses available. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. An overview of the tutorials available can be found on the [Tutorials wiki](https://github.com/dportik/SuperCRUNCH/wiki/Tutorials).
 
 ## Got a question, need some help, or have a suggestion?
 
