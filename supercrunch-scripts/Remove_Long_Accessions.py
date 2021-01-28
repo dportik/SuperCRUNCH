@@ -1,11 +1,8 @@
 '''
-SuperCRUNCH: Remove_Duplicate_Accessions module
+SuperCRUNCH: Remove_Long_Accessions module
                             
-    Remove_Duplicate_Accessions: Search through a fasta file and remove any duplicate 
-    records, based on identical accession numbers. This prevents errors from happening 
-    in BioPython when a fasta file is attempted to be read in as a dictionary, as no 
-    duplicate keys are allowed. The generator function used here makes it efficient 
-    to run this for massively large files. 
+    Remove_Long_Accessions: Remove all sequences exceeding length specified by --seqlength
+    argument. If mtDNA genomes are to be included, this number should be greater than 20kb. 
 
 -------------------------
 Compatible with Python 2.7 & 3.7
@@ -31,15 +28,9 @@ def get_args():
     Get arguments from command line.
     """
     parser = argparse.ArgumentParser(
-            description="""------------------------------------------------------------------------------
-    Remove_Duplicate_Accessions: Search through a fasta file and remove any duplicate 
-    records, based on identical accession numbers. This prevents errors from happening 
-    in BioPython when a fasta file is attempted to be read in as a dictionary, as no 
-    duplicate keys are allowed. The generator function used here makes it efficient 
-    to run this for massively large files. 
-
-    DEPENDENCIES: Python: BioPython.
-	------------------------------------------------------------------------------""")
+            description="""Remove_Long_Accessions: Remove all sequences exceeding length specified by --seqlength
+    argument. If mtDNA genomes are to be included, this number should be greater than 20kb.""")
+    
     parser.add_argument("-i", "--input",
                             required=True,
                             help="REQUIRED: The full path to a fasta file of "
