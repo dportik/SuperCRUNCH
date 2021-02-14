@@ -121,18 +121,18 @@ def parse_loci_terms(f):
             #if line not blank, split by tab, replace all quotes and remove whitespace
             cols = [l.replace('\"','').replace(",", '').replace(":", '').replace(")", '').replace("(", '').strip().upper() for l in line.split('\t')
                         if line.strip()]
+            # make backward compatible with three column locus search terms files
+            if len(cols) <= 3:
+                cols.append('N/A')
             #for sublist in list, split by semi-colon
             split_cols = [c.split(";") for c in cols]
-            # make backward compatible with three column locus search terms files
-            if len(split_cols) == 3:
-                split_cols.append(['N/A'])
             loci_info.append(split_cols)
             print("\n\n\tLocus {} terms:\n\t\tAbbreviation(s): {}\n\t\tDescription(s): {}\n\t\tNegative Term(s): {}".format(split_cols[0][0],
                                                                                                                               "\n\t\t\t\t".join(split_cols[1]),
                                                                                                                               "\n\t\t\t\t".join(split_cols[2]),
                                                                                                                               "\n\t\t\t\t".join(split_cols[3])))
             
-    print("\tFound {:,} loci to search.".format(len(loci_info)))
+    print("\n\n\tFound {:,} loci to search.".format(len(loci_info)))
     return loci_info
 
 def parse_taxa(f):
