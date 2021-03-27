@@ -8,7 +8,7 @@ dependencies:
 - python=3.7
 - numpy
 - matplotlib
-- biopython
+- biopython=1.77
 - blast=2.10.1
 - cd-hit=4.8.1
 - mafft=7.475
