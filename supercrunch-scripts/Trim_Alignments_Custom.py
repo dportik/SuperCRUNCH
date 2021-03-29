@@ -170,7 +170,7 @@ def alignment_consensus(alignment):
     Return consensus for an alignment object using BioPython.
     """
     consensus = []
-    for pos in xrange(alignment.get_alignment_length()):
+    for pos in range(alignment.get_alignment_length()):
         col = alignment[:,pos].upper()
         cnt = Counter(col)
         base, occurrence = cnt.most_common(1)[0]
@@ -216,7 +216,7 @@ def running_average(alignment, window_size, proportion, threshold):
     good_alignment = []
     taxa = len(alignment)
     majority_of_characters = int(round(proportion * taxa, 0))
-    for column in xrange(alignment.get_alignment_length()):
+    for column in range(alignment.get_alignment_length()):
         column_count = Counter(alignment[:, column])
         if column_count['-'] <= majority_of_characters:
             del column_count['-']
@@ -227,14 +227,14 @@ def running_average(alignment, window_size, proportion, threshold):
         else:
             good_alignment.append(False)
     good_alignment = numpy.array(good_alignment)
-    for start_clip in xrange(good_alignment.size):
+    for start_clip in range(good_alignment.size):
         if good_alignment[start_clip] != False:
             window = good_alignment[start_clip: start_clip + window_size]
             proportion = float(sum(window)) / len(window)
             if proportion > threshold:
                 break
     reverse_good_alignment = good_alignment[::-1]
-    for end_clip in xrange(reverse_good_alignment.size):
+    for end_clip in range(reverse_good_alignment.size):
         if reverse_good_alignment[end_clip] != False:
             window = reverse_good_alignment[end_clip: end_clip + window_size]
             proportion = float(sum(window)) / len(window)
@@ -292,13 +292,13 @@ def stage_two_trimming(s1_trimmed, window_size, max_divergence, min_len):
         bad_start = 0
         bad_end = len(sequence)
         compare = (seq_array != consensus_array[start:end])
-        for bad_start in xrange(compare.size):
+        for bad_start in range(compare.size):
             window = compare[bad_start: bad_start + window_size]
             divergence = float(sum(window))/window.size
             if divergence < max_divergence:
                 break
         reversed_compare = compare[::-1]
-        for bad_end in xrange(reversed_compare.size):
+        for bad_end in range(reversed_compare.size):
             window = reversed_compare[bad_end: bad_end + window_size]
             divergence = float(sum(window))/window.size
             if divergence < max_divergence:
