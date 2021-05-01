@@ -252,7 +252,7 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
     #try to obtain a field/museum/sample code using the keywords
     #voucher, isolate, and strain in the description line
     if 'VOUCHER' in description:
-        if len([i for i in description.split('VOUCHER ') if i]) > 1:
+        if len([i for i in description.split('VOUCHER ')]) > 1:
             parts = description.split('VOUCHER ')[-1].split()
             if parts[0].replace("-", "").isalpha() and len(parts) > 1:
                 voucher = "Voucher_{}_{}".format(parts[0], parts[1])
@@ -262,7 +262,7 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
             voucher = "NA"
             
     elif 'ISOLATE' in description:
-        if len([i for i in description.split('ISOLATE ') if i]) > 1:
+        if len([i for i in description.split('ISOLATE ')]) > 1:
             parts = description.split('ISOLATE ')[-1].split()
             if parts[0].replace("-", "").isalpha() and len(parts) > 1:
                 voucher = "Voucher_{}_{}".format(parts[0], parts[1])
@@ -272,7 +272,7 @@ def parse_fasta_record(line, species, subspecies, no_subspecies):
             voucher = "NA"
             
     elif 'STRAIN' in description:
-        if len([i for i in description.split('STRAIN ') if i]) > 1:
+        if len([i for i in description.split('STRAIN ')]) > 1:
             parts = description.split('STRAIN ')[-1].split()
             if parts[0].replace("-", "").isalpha() and len(parts) > 1:
                 voucher = "Voucher_{}_{}".format(parts[0], parts[1])
