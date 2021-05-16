@@ -95,6 +95,8 @@ SuperCRUNCH has extensive documentation which can be accessed through the wiki t
 
 Several tutorials were made available as part of the original SuperCRUNCH publication, which cover the full range of analyses available. These tutorials can be found on the [OSF SuperCRUNCH project page](https://osf.io/bpt94/). Each tutorial includes all data and instructions necessary to replicate the analysis. An overview of the tutorials available can be found on the [Tutorials wiki](https://github.com/dportik/SuperCRUNCH/wiki/Tutorials).
 
+A new set of tutorials is available as part of a study testing alignment and trimming combinations (Portik & Wiens, 2021 - Do Alignment and Trimming Methods Matter for Phylogenomic (UCE) Analyses?). The complete set of data and instructions are available at https://osf.io/qa9r8/. 
+
 ## Reporting Issues, Getting Help, and Providing Suggestions
 
 For main analysis issues and/or bugs, please create an issue on github [here](https://github.com/dportik/SuperCRUNCH/issues). Make sure you include the details of your analysis (inputs, outputs, commands) to assist the troubleshooting. The [**SuperCRUNCH user group**](http://groups.google.com/group/supercrunch-users) can also be used to create a post.
