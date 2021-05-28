@@ -523,7 +523,8 @@ def filter_seqs(locus, cur, taxa, seq_selection, seq_filter,
              for acc in sorted(set(initialseqs) - set(availableseqs)):
                 print("\t\t\t{}".format(acc))
         if not availableseqs:
-            print("\t\tNo valid sequences left, skipping taxon!")
+            if not quiet:
+                print("\t\tNo valid sequences left, skipping taxon!")
 
         #add all accession numbers to the unfiltered accession list
         #which can be used to download all seqs for this fasta file
@@ -845,6 +846,7 @@ def filter_runner(flist, species, subspecies, seq_selection, seq_filter, length,
         write_species_accs(locus, taxon_accs, adir)
         write_batch_entrez_accs(locus, all_acc_list, adir)
         #remove the sql db for this locus
+        conn.close()
         os.remove(db)
         #show elapsed time on screen
         f = datetime.now()
