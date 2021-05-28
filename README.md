@@ -66,8 +66,11 @@ SuperCRUNCH itself consists of a set of modules written in Python (compatible wi
 ## Version
 
 The current release of **SuperCRUNCH** is [**v1.3.1**](https://github.com/dportik/SuperCRUNCH/releases). Please see below for important changes.
- 
-#### Changes in v1.3:
+
+#### Changes in v1.3.1:
+  - Fixed a bug in `Parse_Loci.py` that was causing vouchers to not be formatted correctly in the output files, which prevented the voucher feature from being used in downstream modules. 
+
+#### Changes in v1.3.0:
   - Added a `conda` environment recipe for SuperCRUNCH, allowing easy installation of all requirements except MACSE.
   - `Parse_Loci.py`: Added new feature that allows a term to be added to the loci search terms that will exclude a record if a match is found. For example, adding the negative term `pseudogene` will exclude all records containing that word, even if they match the other abbreviation or description terms. This requires a four-column search terms file, where the fourth column is the negative term (`N/A` in this column indicates no negative term should be used). This module was made backwards-compatible with the three-column search terms file - if a fourth column is not present the `N/A` is automatically generated.
   - `Filter_Seqs_and_Species.py`: Added `--accessions_include` flag. This points to a text file of accession numbers (one per line). When used with the `--seq_selection oneseq` option, if an accession included in the list is found in the available seqs for a taxon and gene, it must be selected. This is not just an "allowed list", this list will override other settings for selection such as length. Also added the `--accessions_exclude` flag, which points to a text file of accession numbers (one per line). These accessions will NEVER be selected - they are removed from all searches. This is the equivalent of including a "blocked list".
