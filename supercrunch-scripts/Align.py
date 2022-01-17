@@ -613,7 +613,7 @@ def main():
     flist = sorted([f for f in os.listdir('.') if f.endswith((".fasta", ".fa"))])
     if not flist:
         raise ValueError(("\n\n\nNo files with the extension .fa or .fasta were found in the "
-                              "input directory:\n\t{}\n\n\n".format(indir)))
+                              "input directory:\n\t{}\n\n\n".format(args.indir)))
     
     commands = get_all_commands(flist, args.aln, args.accurate, args.threads, args.mpath, args.table, args.mem, args.pass_fail)
     
