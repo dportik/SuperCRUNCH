@@ -101,6 +101,7 @@ def filter_fasta(indir, outdir, min_seqs):
     os.chdir(indir)
     
     pass_count, fail_count = int(0), int(0)
+    pass_names, fail_names = [], []
     
     flist = [f for f in os.listdir('.') if f.endswith(('.fa', '.fasta'))]
     print("\n\nFound {0:,} total fasta files.\nProcessing...".format(len(flist)))
@@ -111,9 +112,11 @@ def filter_fasta(indir, outdir, min_seqs):
         if val is True:
             shutil.copy(f, outdir)
             pass_count += 1
+            pass_names.append(f)
             
         elif val is False:
             fail_count += 1
+            fail_names.append(f)
             
     print("\n\n{0:,} fasta files passed the minimum sequence filter (>={2} seqs)."
               "\n{1:,} fasta files failed the minimum sequence filter (>={2} seqs).\n\n"
@@ -121,6 +124,13 @@ def filter_fasta(indir, outdir, min_seqs):
     
     print("Fasta files with >= {0} records have been copied to: {1}\n\n"
               .format(min_seqs, outdir))
+
+    print("\n\nFasta files passing filter:")
+    for n in sorted(pass_names):
+        print("\t{}".format(n))
+    print("\n\nFasta files failing filter:")
+    for n in sorted(fail_names):
+        print("\t{}".format(n))
 
 def count_fasta(indir, min_seqs):
     """
@@ -131,6 +141,7 @@ def count_fasta(indir, min_seqs):
     os.chdir(indir)
     
     pass_count, fail_count = int(0), int(0)
+    pass_names, fail_names = [], []
     
     flist = [f for f in os.listdir('.') if f.endswith(('.fa', '.fasta'))]
     print("\n\nFound {0:,} total fasta files.\nProcessing...".format(len(flist)))
@@ -140,13 +151,22 @@ def count_fasta(indir, min_seqs):
         
         if val is True:
             pass_count += 1
+            pass_names.append(f)
             
         elif val is False:
             fail_count += 1
+            fail_names.append(f)
             
     print("\n\n{0:,} fasta files passed the minimum sequence filter (>={2} seqs)."
               "\n{1:,} fasta files failed the minimum sequence filter (>={2} seqs).\n\n"
               .format(pass_count, fail_count, min_seqs))
+    
+    print("\n\nFasta files passing filter:")
+    for n in sorted(pass_names):
+        print("\t{}".format(n))
+    print("\n\nFasta files failing filter:")
+    for n in sorted(fail_names):
+        print("\t{}".format(n))
     
 def make_dirs(outdir):
     """
