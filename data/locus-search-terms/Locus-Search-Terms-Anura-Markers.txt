@@ -1,0 +1,118 @@
+BDNF	BDNF	brain-derived neurotrophic factor;brain derived neurotrophic factor	N/A
+BMP2	BMP2	bone morphogenetic protein 2	N/A
+CMYC	CMYC;C-MYC	cellular myelocytomatosis;cellular-myelocytomatosis proto-oncogene;myelocytomatosis proto oncogene;cellular-myelocytomatosis	intron
+CRYBA	CRYBA	beta-crystallin;beta crystallin	N/A
+CXCR4	CXCR4	chemokine C-X-C motif receptor 4;C-X-C chemokine receptor type 4;CXC chemokine receptor type 4;chemokine receptor 4;chemokine receptor type 4	N/A
+H3A	H3A	Histone 3A; Histone H3A	N/A
+MC1R	MC1R	melanocortin receptor 1;melanocortin 1 receptor	N/A
+MYH	MYH	myosin heavy chain	N/A
+NCX1	NCX1;NCX-1	sodium-calcium exchanger;sodium calcium exchanger;sodium/calcium exchanger	N/A
+NT3	NT3;NTF3	neurotrophin-3;neurotrophin 3	N/A
+POMC	POMC	pro-opiomelanocortin;proopiomelanocortin	N/A
+RAG1	RAG1;RAG-1	recombination activating protein 1;recombination-activating protein 1	N/A
+RAG2	RAG2;RAG-2	recombination activating protein 2;recombination-activating protein 2	N/A
+RHO	RHO;RHOD	rhodopsin	exon 3;exons 3;exon 4
+SIA	SIA	seventh-in-absentia;seventh in absentia;seven in absentia;seven-in-absentia	N/A
+SLC8A3	SLC8A3	solute carrier family 8 member 3; solute-carrier family 8 member 3	N/A
+TNS3	TNS3	tensin 3	N/A
+TYR	TYR	tyrosinase	N/A
+ZFX	ZFX	zinc finger E-box binding homeobox 2;Zinc Finger Protein X-Linked	N/A
+mtDNA_12S	12S	12S ribosomal RNA;small subunit ribosomal;12S rRNA;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_16S	16S	16S ribosomal RNA;large subunit ribosomal;16S rRNA;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_CO1	CO1;COX1;COI	cytochrome oxidase subunit 1;oxidase subunit I;oxidase subunit 1;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_CYTB	CYTB;CYT-B	cytochrome b;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_ND1	ND1	dehydrogenase subunit 1;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_ND2	ND2	dehydrogenase subunit 2;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+mtDNA_ND4	ND4	dehydrogenase subunit 4;mitochondrion complete genome;mitochondrial DNA complete genome;mitochondrion partial genome;partial mitochondrial genome;complete mitochondrial genome	pseudogene
+Feng_ADNP	ADNP	activity-dependent neuroprotector homeobox;activity-dependent neuroprotector	N/A
+Feng_ANKRD50	ANKRD50; KIAA1223	ankyrin repeat domain 50	N/A
+Feng_ARID2	ARID2;ARID	AT rich interactive domain 2;AT-Rich Interaction Domain 2;AT-rich interactive domain 2;ARID Domain-Containing Protein 2	N/A
+Feng_ARSI	ARSI	arylsulfatase family member I;Arylsulfatase I	N/A
+Feng_B3GALT1	B3GALT1	Beta-1,3-Galactosyltransferase 1;Beta 1,3-Galactosyltransferase, Polypeptide 1;Beta3Gal-T1;beta 13-galactosyltransferase polypeptide 1	N/A
+Feng_BPTF	BPTF	bromodomain PHD finger transcription factor;Bromodomain And PHD Finger-Containing Transcription Factor;Bromodomain And PHD Domain Transcription Factor	N/A
+Feng_CAND1	CAND1	cullin-associated and neddylation-dissociated 1;Cullin Associated And Neddylation Dissociated 1;Cullin-Associated NEDD8-Dissociated Protein 1;cullin-associated and neddylation-dissociated protein 1;cullin associated and neddylation dissociated protein 1	N/A
+Feng_CASR	CASR	calcium-sensing receptor;Calcium Sensing Receptor	N/A
+Feng_CELSR3	CELSR3	cadherin EGF LAG seven-pass G-type receptor 3;Adhesion G Protein-Coupled Receptor C3	N/A
+Feng_CHST1	CHST1	carbohydrate keratan sulfate Gal-6 sulfotransferase 1;Carbohydrate Sulfotransferase 1	N/A
+Feng_CILP	CILP;CILP-1	cartilage intermediate layer protein, nucleotide pyrophosphohydrolase; Cartilage Intermediate Layer Protein	N/A
+Feng_CPT2	CPT2	carnitine palmitoyltransferase 2;Carnitine Palmitoyltransferase II	N/A
+Feng_DBC1	DBC1;BRINP1	bone morphogenetic protein/retinoic acid inducible neural-specific 1;BMP/Retinoic Acid Inducible Neural Specific 1;BMP/Retinoic Acid-Inducible Neural-Specific Protein 1	N/A
+Feng_DCHS1	DCHS1	dachsous cadherin-related 1;Protein Dachsous Homolog 1	N/A
+Feng_DET1	DET1	de-etiolated homolog 1;DET1 Partner Of COP1 E3 Ubiquitin Ligase;DET1, COP1 Ubiquitin Ligase Partner	N/A
+Feng_DISP1	DISP1	dispatched homolog 1;Dispatched RND Transporter Family Member 1;Protein Dispatched Homolog 1;dispatched-like protein 1	N/A
+Feng_DISP2	DISP2	dispatched homolog 2;Dispatched RND Transporter Family Member 2	N/A
+Feng_DMXL1	DMXL1	Dmx-like 1;Dmx Like 1;DmX-Like Protein 1	N/A
+Feng_DNAH3	DNAH3	dynein axonemal heavy chain 3;dynein axonemal heavy chain 3s	N/A
+Feng_DOLK	DOLK	dolichol kinase	N/A
+Feng_DOPEY1	DOPEY1	dopey family member 1;DOP1 Leucine Zipper Like Protein A;Protein Dopey-1	N/A
+Feng_DSEL	DSEL	dermatan sulfate epimerase-like;Dermatan Sulfate Epimerase Like	N/A
+Feng_ENC1	ENC1	ectodermal-neural cortex 1;Ectoderm-Neural Cortex Protein 1;Ectoderm Neural Cortex 1	N/A
+Feng_EVPL	EVPK;EVPL	envoplakin	N/A
+Feng_EXOC8	EXOC8	exocyst complex component 8;Exocyst Complex 84 KDa Subunit	N/A
+Feng_EXTL3	EXTL3	exostosin-like glycosyltransferase 3;Exostosin Like Glycosyltransferase 3;Exostosin-Like 3;Exostosin Like 3	N/A
+Feng_FAT1	FAT1	FAT atypical cadherin 1;FAT Tumor Suppressor 1	N/A
+Feng_FAT4	FAT4	FAT atypical cadherin 4;FAT Tumor Suppressor Homolog 4	N/A
+Feng_FEM1B	FEM1B	fem-1 homolog b;FEM1-Beta	N/A
+Feng_FICD	FICD	FIC domain containing;FIC Domain Protein;FIC Domain-Containing	N/A
+Feng_FILIP1	FILIP1	filamin A interacting protein 1;Filamin-A-Interacting Protein 1	N/A
+Feng_FLRT3	FLRT3	fibronectin leucine rich transmembrane protein 3;Fibronectin-Like Domain-Containing Leucine-Rich Transmembrane Protein 3;Leucine-Rich Repeat Transmembrane Protein	N/A
+Feng_FREM2	FREM2	FRAS1 related extracellular matrix protein 2;FRAS1-Related Extracellular Matrix Protein 2;FRAS1 Related Extracellular Matrix Protein 2	N/A
+Feng_FUT9	FUT9	fucosyltransferase 9 (alpha (1,3) fucosyltransferase)	N/A
+Feng_FZD4	FZD4	frizzled family receptor 4;Frizzled Class Receptor 4;Frizzled 4	N/A
+Feng_GGPS1	GGPS1	geranylgeranyl diphosphate synthase 1;Geranylgeranyl Pyrophosphate Synthase	N/A
+Feng_GLCE	GLCE	glucuronic acid epimerase;D-Glucuronyl C5-Epimerase	N/A
+Feng_GPER	GPER	G protein-coupled estrogen receptor 1;G protein coupled estrogen receptor 1	N/A
+Feng_GRIN3A	GRIN3A	glutamate receptor, ionotropic, N-methyl-D-aspartate 3A;lutamate Ionotropic Receptor NMDA Type Subunit 3A;Glutamate Receptor Ionotropic, NMDA 3A	N/A
+Feng_GRM2	GRM2	glutamate receptor, metabotropic 2;Metabotropic Glutamate Receptor 2;glutamate metabotropic receptor 2	N/A
+Feng_HYP	HYP	PR domain containing 11	N/A
+Feng_IRS1	IRS1;IRS-1	insulin receptor substrate 1	N/A
+Feng_KBTBD2	KBTBD2	kelch repeat and BTB (POZ) domain containing 2;Kelch Repeat And BTB Domain-Containing Protein 2;Kelch Repeat And BTB Domain Containing 2;kelch repeat and btb poz domain-containing 2	N/A
+Feng_KCNF1	KCNF1	potassium voltage-gated channel, subfamily F, member 1;Potassium Voltage-Gated Channel Modifier Subfamily F;Potassium Channel, Voltage Gated Subfamily F, Member 1;potassium voltage-gated channel modifier subfamily f member 1	N/A
+Feng_KIAA2013	KIAA2013	KIAA2013; Uncharacterized Protein KIAA2013	N/A
+Feng_LCT	LCT;LAC	lactase	N/A
+Feng_LIG4	LIG4;LIG4S;LIG-4	ligase IV, DNA, ATP-dependent;DNA Ligase 4;DNA Ligase IV	N/A
+Feng_LINGO1	LINGO1	leucine rich repeat and Ig domain containing 1;Leucine-Rich Repeat And Immunoglobulin Domain-Containing Protein 1;Leucine-Rich Repeat Neuronal Protein 1	N/A
+Feng_LINGO2	LINGO2	leucine rich repeat and Ig domain containing 2;Leucine-Rich Repeat And Immunoglobulin-Like Domain-Containing Nogo Receptor-Interacting Protein 2	N/A
+Feng_LPHN2	LPHN2	latrophilin 2;Latrophilin-2;Adhesion G Protein-Coupled Receptor L2	N/A
+Feng_LRRC8D	LRRC8D	leucine rich repeat containing 8 family, member D;Leucine Rich Repeat Containing 8	N/A
+Feng_LRRN1	LRRN1	leucine rich repeat neuronal 1;Leucine-Rich Repeat Neuronal Protein 1;Leucine-Rich Repeat Protein 1;leucine-rich repeat neuronal 1	N/A
+Feng_LRRN3	LRRN3	leucine rich repeat neuronal 3;Leucine-Rich Repeat Protein, Neuronal 3;Leucine-Rich Repeat Neuronal 3	N/A
+Feng_LRRTM4	LRRTM4	leucine rich repeat transmembrane neuronal 4;Leucine-Rich Repeat Transmembrane Neuronal Protein 4	N/A
+Feng_MB21D2	MB21D2	Mab-21 domain containing 2;Mab-21 Domain-Containing Protein 2	N/A
+Feng_MED1	MED1	xxxxxxxx	N/A
+Feng_MED13	MED13	mediator complex subunit 13	N/A
+Feng_MGAT4C	MGAT4C	mannosyl (alpha-1,3-)-glycoprotein beta-1,4-N-acetylglucosaminyltransferase, isozyme C	N/A
+Feng_MIOS	MIOS	missing oocyte, meiosis regulator, homolog;Meiosis Regulator For Oocyte Development	N/A
+Feng_MSH6	MSH6	mutS homolog 6;mutS protein 6;dna mismatch repair protein msh6	N/A
+Feng_MYCBP2	MYCBP2;MYC-BP2	MYC binding protein 2, E3 ubiquitin protein ligase;MYC Binding Protein 2	N/A
+Feng_NHS	NHS	Nance-Horan syndrome;NHS Actin Remodeling Regulator	N/A
+Feng_NTN1	NTN1	netrin 1;netrin-1	N/A
+Feng_P2RY1	P2RY1	purinergic receptor P2Y, G-protein coupled, 1;purinergic receptor P2Y;P2Y Purinoceptor 1	N/A
+Feng_PANX2	PANX2	pannexin 2;pannexin-2	N/A
+Feng_PCDH1	PCDH1	Cadherin-Like Protein 1	N/A
+Feng_PCDH10	PCDH10	protocadherin 10;protocadherin-10	N/A
+Feng_PCLO	PCLO	piccolo presynaptic cytomatrix protein;Protein Piccolo	N/A
+Feng_PDP1	PDP1	pyruvate dehyrogenase phosphatase catalytic subunit 1	N/A
+Feng_PIK3CG	PIK3CG	phosphatidylinositol-4,5-bisphosphate 3-kinase, catalytic subunit gamma;PtdIns-3-Kinase Subunit Gamma	N/A
+Feng_PPL	PPL	periplakin	N/A
+Feng_RERE	RERE	arginine-glutamic acid dipeptide	N/A
+Feng_REV3L	REV3L	polymerase (DNA directed), zeta, catalytic subunit;polymerase zeta catalytic subunit;REV3-like	N/A
+Feng_ROR2	ROR2	tyrosine kinase-like orphan receptor 2;Neurotrophic Tyrosine Kinase, Receptor-Related 2;Tyrosine Kinase Like Orphan Receptor 2	N/A
+Feng_RP2	RP2	retinitis pigmentosa 2;RP2 Activator	N/A
+Feng_SACS	SACS	spastic ataxia of Charlevoix-Saguenay;Sacsin Molecular Chaperone;sacsin	N/A
+Feng_SALL1	SALL1	sal-like 1;Spalt Like Transcription Factor 1;Sal-Like Protein 1;Sal-1	N/A
+Feng_SETBP1	SETBP1	SET binding protein 1;SET-Binding Protein	N/A
+Feng_SH3BP4	SH3BP4	SH3-domain binding protein 4;SH3 Domain Binding Protein 4;SH3 Domain-Binding Protein 4	N/A
+Feng_SLITRK1	SLITRK1	SLIT and NTRK-like family, member 1;SLIT And NTRK-Like Protein 1	N/A
+Feng_SOCS5	SOCS5;SOCS-5	suppressor of cytokine signaling 5	N/A
+Feng_SPEN	SPEN	Spen Family Transcriptional Repressor;spen homolog transcriptional regulator	N/A
+Feng_STON2	STON2;STN2	stonin 2;Stonin-2	N/A
+Feng_SVEP1	SVEP1	sushi, von Willebrand factor type A, EGF and pentraxin domain containing 1;Von Willebrand Factor Type A, EGF And Pentraxin Domain-Containing Protein 1	N/A
+Feng_TTN	TTN	titin	N/A
+Feng_VCPIP1	VCPIP1;VCPIP	valosin containing protein (p97)/p47 complex interacting protein 1;Valosin Containing Protein Interacting Protein 1;Valosin-Containing Protein P97/P47 Complex-Interacting Protein 1	N/A
+Feng_VPS18	VPS18	vacuolar protein sorting 18 homolog;Vacuolar Protein Sorting-Associated Protein 18;Vacuolar Protein Sorting 18	N/A
+Feng_WFIKKN2	WFIKKN2	WAP, follistatin/kazal, immunoglobulin, kunitz and netrin domain containing 2;WAP, Follistatin, Immunoglobulin, Kunitz And NTR Domain-Containing-Related Protein;WAP, Kazal, Immunoglobulin, Kunitz And NTR Domain-Containing Protein 2	N/A
+Feng_ZBED4	ZBED4	zinc finger, BED-type containing 4;Zinc Finger BED Domain-Containing Protein 4;Zinc Finger BED Domain Containing 4	N/A
+Feng_ZEB1	ZEB1	zinc finger E-box binding homeobox 1;Zinc Finger E-Box-Binding Homeobox 1	N/A
+Feng_ZFPM2	ZFPM2	zinc finger protein, FOG family member 2;Zinc Finger Protein 2	N/A
+Feng_ZHX2	ZHX2	zinc fingers and homeoboxes 2;Zinc Fingers And Homeoboxes Protein 2;Zinc Finger And Homeodomain Protein 2	N/A
