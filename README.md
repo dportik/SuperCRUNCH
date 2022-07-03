@@ -63,24 +63,6 @@ For non-conda installation of these packages, please see the [**Installation Ins
 
 SuperCRUNCH itself consists of a set of modules written in Python (compatible with 2.7 and 3.7) that function as stand-alone command-line scripts. These modules are available in the [supercrunch-scripts](https://github.com/dportik/SuperCRUNCH/tree/master/supercrunch-scripts) folder. They can be downloaded and executed independently without the need to install SuperCRUNCH as a Python package or library, making them easy to use and edit. The scripts function independently, and do not require being contained or used in the same directory. SuperCRUNCH scripts can be run using Mac OSX (10.10+) and Linux, and can also work with Windows using a program like Cygwin. 
 
-## Version
-
-The current release of **SuperCRUNCH** is [**v1.3.1**](https://github.com/dportik/SuperCRUNCH/releases). Please see below for important changes.
-
-#### Changes in v1.3.1:
-  - Fixed a bug in `Parse_Loci.py` that was causing vouchers to not be formatted correctly in the output files, which prevented the voucher feature from being used in downstream modules. 
-
-#### Changes in v1.3.0:
-  - Added a `conda` environment recipe for SuperCRUNCH, allowing easy installation of all requirements except MACSE.
-  - `Parse_Loci.py`: Added new feature that allows a term to be added to the loci search terms that will exclude a record if a match is found. For example, adding the negative term `pseudogene` will exclude all records containing that word, even if they match the other abbreviation or description terms. This requires a four-column search terms file, where the fourth column is the negative term (`N/A` in this column indicates no negative term should be used). This module was made backwards-compatible with the three-column search terms file - if a fourth column is not present the `N/A` is automatically generated.
-  - `Filter_Seqs_and_Species.py`: Added `--accessions_include` flag. This points to a text file of accession numbers (one per line). When used with the `--seq_selection oneseq` option, if an accession included in the list is found in the available seqs for a taxon and gene, it must be selected. This is not just an "allowed list", this list will override other settings for selection such as length. Also added the `--accessions_exclude` flag, which points to a text file of accession numbers (one per line). These accessions will NEVER be selected - they are removed from all searches. This is the equivalent of including a "blocked list".
-  - `Taxa_Assessment.py`: Altered SQL search query for "unmatched" taxa to avoid sql variable limit maximum issue. Also, now invokes the `SeqIO.index_db()` method for sequence files >5GB, rather than using `SeqIO.index()` method, which is much more memory efficient for big data. The `SeqIO.index_db()` method is already used in `Parse_Loci.py`.
-  - `Cluster_Blast_Extract.py`: Added feature to remove problematic long sequences if they somehow end up in the main cluster of sequences for a gene. The new filter removes all seqs that are 1.3x the length of the 95th percentile of all lengths.
-  - Added a new `Remove_Long_Accessions.py` module, which can filter a downloaded GenBank fasta file to remove extremely long sequences (>150kb). This will eliminate whole genome sequencing records, which are not useful for SuperCRUNCH.
-  - Updated recognition for file extensions produced by updated blastn tools (`.ndb`, `.not`, `.ntf`, `.nto`).
-
-For complete version history please see the [releases](https://github.com/dportik/SuperCRUNCH/releases).
-
 
 ## Complete Instructions for Analyses
 
@@ -103,6 +85,28 @@ A new set of tutorials is available as part of a study testing alignment and tri
 ## Reporting Issues, Getting Help, and Providing Suggestions
 
 For main analysis issues and/or bugs, please create an issue on github [here](https://github.com/dportik/SuperCRUNCH/issues). Make sure you include the details of your analysis (inputs, outputs, commands) to assist the troubleshooting. The [**SuperCRUNCH user group**](http://groups.google.com/group/supercrunch-users) can also be used to create a post.
+
+## Version
+
+The current release of **SuperCRUNCH** is [**v1.3.2**](https://github.com/dportik/SuperCRUNCH/releases). Please see below for important changes.
+
+#### Changes in v1.3.2:
+  - Increased speed for `Cluster_Blast_Extract.py` and `Reference_Blast_Extract.py` by changing underlying data structure used to gather blast coordinates per accession.
+
+
+#### Changes in v1.3.1:
+  - Fixed a bug in `Parse_Loci.py` that was causing vouchers to not be formatted correctly in the output files, which prevented the voucher feature from being used in downstream modules. 
+
+#### Changes in v1.3.0:
+  - Added a `conda` environment recipe for SuperCRUNCH, allowing easy installation of all requirements except MACSE.
+  - `Parse_Loci.py`: Added new feature that allows a term to be added to the loci search terms that will exclude a record if a match is found. For example, adding the negative term `pseudogene` will exclude all records containing that word, even if they match the other abbreviation or description terms. This requires a four-column search terms file, where the fourth column is the negative term (`N/A` in this column indicates no negative term should be used). This module was made backwards-compatible with the three-column search terms file - if a fourth column is not present the `N/A` is automatically generated.
+  - `Filter_Seqs_and_Species.py`: Added `--accessions_include` flag. This points to a text file of accession numbers (one per line). When used with the `--seq_selection oneseq` option, if an accession included in the list is found in the available seqs for a taxon and gene, it must be selected. This is not just an "allowed list", this list will override other settings for selection such as length. Also added the `--accessions_exclude` flag, which points to a text file of accession numbers (one per line). These accessions will NEVER be selected - they are removed from all searches. This is the equivalent of including a "blocked list".
+  - `Taxa_Assessment.py`: Altered SQL search query for "unmatched" taxa to avoid sql variable limit maximum issue. Also, now invokes the `SeqIO.index_db()` method for sequence files >5GB, rather than using `SeqIO.index()` method, which is much more memory efficient for big data. The `SeqIO.index_db()` method is already used in `Parse_Loci.py`.
+  - `Cluster_Blast_Extract.py`: Added feature to remove problematic long sequences if they somehow end up in the main cluster of sequences for a gene. The new filter removes all seqs that are 1.3x the length of the 95th percentile of all lengths.
+  - Added a new `Remove_Long_Accessions.py` module, which can filter a downloaded GenBank fasta file to remove extremely long sequences (>150kb). This will eliminate whole genome sequencing records, which are not useful for SuperCRUNCH.
+  - Updated recognition for file extensions produced by updated blastn tools (`.ndb`, `.not`, `.ntf`, `.nto`).
+
+For complete version history please see the [releases](https://github.com/dportik/SuperCRUNCH/releases).
 
 
 ## License
