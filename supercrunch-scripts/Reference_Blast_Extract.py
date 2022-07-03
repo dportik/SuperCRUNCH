@@ -332,15 +332,17 @@ def one_coord_nospan(merged_coords):
 def get_accs_and_contents(f):
     """
     Extract information from blast output file (f),
-    including a list of split lines and a list of 
-    accession numbers. Returns both lists.
+    including a dictionary entry per acc with list of coord lists, 
+    and a list of accession numbers. Returns both file dictionary and acc list.
     """
     #First create a set of accn numbers, which we will turn into
     #a list, sort, and iterate over. At the same time, store the file
     #contents as a split and stripped list of items.
     print("Parsing contents in {}...\n".format(f))
     accn_set = set()
-    file_contents = []
+    file_dict = {}
+    #make dictionary structure where:
+    #dict[accession] = [[coord1, coord2,], [coord1,coord2]]
     
     with open(f, 'r') as fh_in:
         for line in fh_in:
@@ -348,11 +350,19 @@ def get_accs_and_contents(f):
             #by the tab character, resulting in a list of file line contents
             parts = [l.strip() for l in line.split('\t')]
             accn_set.add(parts[0])
-            file_contents.append(parts)
-            
+            # check if acc in dictionary yet
+            if parts[0] not in file_dict:
+                # make sure not a self hit
+                if parts[0] != parts[1]:
+                    # add acc as key and start list of coords
+                    file_dict[parts[0]] = [[int(parts[6]) - int(1), int(parts[7]) - int(1)]]
+            else:
+                if parts[0] != parts[1]:
+                    file_dict[parts[0]].append([int(parts[6]) - int(1), int(parts[7]) - int(1)])
+
     accn_list = sorted(accn_set)
 
-    return file_contents, accn_list
+    return file_dict, accn_list
 
 def parse_blastn_output6_NoSelfHits(outname, merge_strategy, bp_bridge):
     """
@@ -362,7 +372,7 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy, bp_bridge):
     """
     print("\n---------------------------------------------------------------------------\n")
     #extract file lines and sorted list of accession numbers from blast output file
-    file_contents, accn_list = get_accs_and_contents(outname)
+    file_dict, accn_list = get_accs_and_contents(outname)
     
     #create a list containing only the important info: [accn, [start1 bp, stop1 bp]]
     #if multiple sections blasted to reference then list will look like this:
@@ -376,18 +386,13 @@ def parse_blastn_output6_NoSelfHits(outname, merge_strategy, bp_bridge):
         #ie an on-screen progress report
         if count != int(0) and count % int(100) == 0:
         	print("\t\tProcessed hits for {:,} accessions...".format(count))
-        #initiate list to store all bp coordinates found for this accn 
-        coord_list = []
-        #iterate over the file contents
-        for l in file_contents:
-            #find accn match, but exclude self-hits if they exist
-            if l[0] == a and l[1] != a:
-                #add coords to list based on the index of the split line
-                #subtract 1 to adjust indexing for output
-                coord1 = int(l[6]) - int(1)
-                coord2 = int(l[7]) - int(1)
-                coord_list.append([coord1, coord2])
-                
+        # dictionary structure is:
+        # dict[accession] = [[coord1, coord2, ], [coord1, coord2]]
+        if a in file_dict:
+            coord_list = file_dict[a]
+        else:
+            coord_list = []
+
         #make sure coord list not empty (ie blast results were pure self hits)
         if coord_list:
             #use merge function to merge all overlapping coordinates found in blast output file
@@ -492,11 +497,16 @@ def cleanup(blastdir, logdir, fdir):
     """
     print("\nCleaning up output files...")
 
-    [shutil.move(f, logdir) for f in os.listdir('.') if f.startswith(("Log_File", "Log_BadSeqs"))]
-    [shutil.move(f, blastdir) for f in os.listdir('.') if f.endswith("blast_results.txt")]
-    [shutil.move(f, fdir) for f in os.listdir('.') if f.endswith("_extracted.fasta")]
-    [os.remove(f) for f in os.listdir('.') if f.endswith((".nsq", ".nhr", ".nin", ".ndb", ".not", ".ntf", ".nto"))]
-    
+    for f in os.listdir('.'):
+        if f.startswith(("Log_File", "Log_BadSeqs")):
+            shutil.move(f, logdir)
+        elif f.endswith("blast_results.txt"):
+            shutil.move(f, blastdir)
+        elif f.endswith("_extracted.fasta"):
+            shutil.move(f, fdir)
+        elif f.endswith((".nsq", ".nhr", ".nin", ".ndb", ".not", ".ntf", ".nto", ".njs")):
+            os.remove(f)
+
     print("\tDone!\n")
 
 def make_dirs(outdir):
