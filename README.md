@@ -46,7 +46,7 @@ There are several dependencies required to run SuperCRUNCH, including Python pac
 Installation of these requirements is fast and easy using `conda`. The [supercrunch-conda-env.yml](https://github.com/dportik/SuperCRUNCH/blob/master/supercrunch-conda-env.yml) file can be used to create the correct conda environment:
 
 ```
-conda create -f supercrunch-conda-env.yml
+conda env create -f supercrunch-conda-env.yml
 ```
 
 The resulting conda environment can then be activated using:
