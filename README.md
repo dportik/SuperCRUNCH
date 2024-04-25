@@ -112,7 +112,3 @@ For complete version history please see the [releases](https://github.com/dporti
 ## License
 
 GNU Lesser General Public License v3.0
-
-## Contact
-
-SuperCRUNCH is written and maintained by Daniel Portik (daniel.portik@gmail.com)
